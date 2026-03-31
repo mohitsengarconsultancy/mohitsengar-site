@@ -107,18 +107,10 @@ const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "Who is Mohit Sengar?",
+      name: "What does the first engagement look like?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Mohit Sengar is an award-winning Chief Technology Officer (CTO) and full-stack technology leader with over 11 years of enterprise experience. He is the CTO of Invatu Technologies and has collaborated with 47+ clients across e-commerce, healthcare, finance, parking management, theme park operations, and more. He holds the prestigious Top Rated Plus badge on Upwork (top 1%) with a 100% job success rate.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What does Mohit Sengar specialize in?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Mohit Sengar specializes in digital transformation, enterprise integration and automation, full-stack development, AI & machine learning, blockchain, IoT, and technology team leadership. He has expertise across multiple industries including e-commerce, healthcare, finance, parking management, and theme park operations.",
+        text: "We start with a free 30-minute call where Mohit learns about your business, tech stack, and goals. If there's a fit, he'll propose an engagement model — fractional, project-based, or advisory — with clear scope and timeline. No pressure, no obligation.",
       },
     },
     {
@@ -126,31 +118,39 @@ const faqSchema = {
       name: "What is a fractional CTO?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "A fractional CTO is an experienced technology executive who provides part-time CTO services to companies that need strategic technology leadership but may not require or afford a full-time CTO. Mohit Sengar offers fractional CTO services, bringing 11+ years of enterprise experience to help businesses with technology strategy, team building, and digital transformation.",
+        text: "A fractional CTO is an experienced technology executive who provides part-time CTO services to companies that need strategic technology leadership but may not require or afford a full-time CTO. Mohit Sengar offers fractional CTO services, bringing 11+ years of enterprise experience to help with technology strategy, team building, architecture decisions, and digital transformation — typically 10-20 hours per week.",
       },
     },
     {
       "@type": "Question",
-      name: "How can I hire Mohit Sengar?",
+      name: "How much does it cost to work with Mohit Sengar?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "You can hire Mohit Sengar by scheduling a call through his website at mohitsengar.org. He offers CTO-as-a-service, full-stack development, digital transformation consulting, and enterprise integration services. He is also available on Upwork where he holds Top Rated Plus status.",
+        text: "It depends on the engagement model. Fractional CTO retainers, project-based architecture reviews, and one-time due diligence assessments are all priced differently. Mohit is transparent about pricing from the first call — no surprises.",
       },
     },
     {
       "@type": "Question",
-      name: "What awards has Mohit Sengar received?",
+      name: "What if it's not a good fit?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Mohit Sengar received the Outstanding Leadership Award at Dubai's Internet 2.0 Conference in February 2024 for his adept leadership and transformative impact as CTO of Invatu Technologies. He also holds the Upwork Top Rated Plus badge, reserved for the top 1% of freelancers.",
+        text: "No hard feelings. The initial call is free, and Mohit only proposes next steps if he genuinely believes he can help. He has turned down work that wasn't the right match — his 100% success rate depends on it.",
       },
     },
     {
       "@type": "Question",
-      name: "What is Mohit Sengar's experience on Upwork?",
+      name: "Can Mohit Sengar work with my existing team?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Mohit Sengar has accumulated over 29,000 hours of work on Upwork with a 100% job success rate. He has collaborated with 47+ clients and earned the Top Rated Plus badge, which is reserved for the top 1% of freelancers on the platform. He consistently receives 5-star feedback from clients.",
+        text: "Absolutely. Most engagements involve integrating with existing developers. Mohit doesn't replace your team — he makes them more effective through better architecture, clearer processes, and strategic technical direction.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How quickly can Mohit Sengar start?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Typically within 1-2 weeks. For urgent needs, availability can be prioritized. Discuss your timeline on the free strategy call.",
       },
     },
   ],
