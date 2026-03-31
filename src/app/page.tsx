@@ -6,64 +6,64 @@ import { useState, useEffect, useCallback } from "react";
 /* ─── Data ─── */
 const PROJECTS = [
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/0af7543c-3cdb-4f93-b68b-7df8638b8361/OIP.jpg?format=500w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/0af7543c-3cdb-4f93-b68b-7df8638b8361/OIP.jpg?format=1500w",
     url: "https://www.apcoa.com/",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/37abed93-0f49-4714-b8de-02a75edb2c7e/project+2.jpg?format=500w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/37abed93-0f49-4714-b8de-02a75edb2c7e/project+2.jpg?format=1500w",
     url: "https://www.ferrariworldabudhabi.com/",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/4d6b52d0-5854-4072-82c5-578890380aca/project+3.jpg?format=500w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/4d6b52d0-5854-4072-82c5-578890380aca/project+3.jpg?format=1500w",
     url: "https://www.social27.com/",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/aec1829d-bfe9-4041-8796-b2280ff0fc14/6.png?format=500w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/aec1829d-bfe9-4041-8796-b2280ff0fc14/6.png?format=1500w",
     url: "https://vourity.com/",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/8564f9ed-bad5-48a4-88e7-99c2885850d1/7.png?format=500w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/8564f9ed-bad5-48a4-88e7-99c2885850d1/7.png?format=1500w",
     url: "https://www.mohitsengar.org/",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/858cdd95-a314-4ad6-b0bb-d700c748a43b/8.jpg?format=500w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/858cdd95-a314-4ad6-b0bb-d700c748a43b/8.jpg?format=1500w",
     url: "https://www.atlashxm.com/",
   },
 ];
 
 const TESTIMONIALS = [
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/7a779e68-a5ad-4b43-ad71-94681b13f938/1705059028589+%281%29.jpg?format=300w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/7a779e68-a5ad-4b43-ad71-94681b13f938/1705059028589+%281%29.jpg?format=500w",
     name: "Talal Alhabib",
     source: "Linkedin",
     text: "I had the pleasure of engaging with Mohit Sengar in a fireside chat on Extended Reality (XR) at the Internet 2.0 conference. Mohit's command over XR technology and its applications across various sectors is truly impressive.",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/b516d56e-dec7-4388-bcac-f48f847fcb0a/1703223085288.jpeg?format=300w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/b516d56e-dec7-4388-bcac-f48f847fcb0a/1703223085288.jpeg?format=500w",
     name: "Nathan Jaskot",
     source: "Linkedin",
     text: "Working with Mohit has been great! He is a technical expert in all things development! I can consistently rely on him to provide great advice, technical expertise and well developed solutions. Highly recommended",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/2538d18d-37d2-4b9e-8254-73167297a56f/1703973581380.jpeg?format=300w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/2538d18d-37d2-4b9e-8254-73167297a56f/1703973581380.jpeg?format=500w",
     name: "Erlend B\u00e5rli-Olsen",
     source: "Linkedin",
     text: "My absolute pleasure to endorse Mohit Sengar, an invaluable asset & the pivotal force behind our success at APCOA Parkings GmbH. Mohit has consistently demonstrated exceptional technical acumen & unwavering dedication to our projects.",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/06068382-bd7d-4d0c-be35-49f19d6cdc79/1628239985242.jpeg?format=300w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/06068382-bd7d-4d0c-be35-49f19d6cdc79/1628239985242.jpeg?format=500w",
     name: "Emma Lucas",
     source: "Linkedin",
     text: "I highly recommend Mohit for his exceptional support, timely actions, and platform development skills. His expertise and dedication have been invaluable to our project's success. A skilled and reliable developer.",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/4ff7fc70-8861-4ac9-b404-f054fd6fdecf/1706266379429.jpeg?format=300w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/4ff7fc70-8861-4ac9-b404-f054fd6fdecf/1706266379429.jpeg?format=500w",
     name: "Max Aronsson",
     source: "Linkedin",
     text: "Competent and trustworthy fullstack developer. Mohit is communicative and a great team player. Was always available and open to new ideas and thrived in a fast changing environment. Solved complex problems during many years of collaboration.",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/a5839266-d46b-4551-ad24-43a97f65254a/1571034712113.jpeg?format=300w",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/a5839266-d46b-4551-ad24-43a97f65254a/1571034712113.jpeg?format=500w",
     name: "Nadia O.",
     source: "Linkedin",
     text: "Your contributions have helped us bring our idea to life and also positioned our application as a game-changer in the legal tech domain. Your efforts as a full-stack software engineer are exceptional.",
@@ -71,38 +71,38 @@ const TESTIMONIALS = [
 ];
 
 const GALLERY_IMAGES = [
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/3a095eef-42f0-481e-84ae-b4c9b4cc2ed4/AE2I0340+8r.jpeg",
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/d8a3b65e-909e-42a7-843d-0b7a670e6188/AE2I0064+8r+%281%29+%281%29.jpeg",
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/bc90efcf-34cf-4db6-8749-470d25386253/AE2I0026+8r+%281%29.jpeg",
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/97845543-35f7-45d5-8f7b-57f0cccb1d40/AE2I0071+8r+%281%29+%281%29.jpeg",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/3a095eef-42f0-481e-84ae-b4c9b4cc2ed4/AE2I0340+8r.jpeg?format=1500w",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/d8a3b65e-909e-42a7-843d-0b7a670e6188/AE2I0064+8r+%281%29+%281%29.jpeg?format=1500w",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/bc90efcf-34cf-4db6-8749-470d25386253/AE2I0026+8r+%281%29.jpeg?format=1500w",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/97845543-35f7-45d5-8f7b-57f0cccb1d40/AE2I0071+8r+%281%29+%281%29.jpeg?format=1500w",
 ];
 
 const NGO_IMAGES = [
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/fd38e3c1-3d8a-4e54-bfbb-4e42819fe088/dream+girl+foundation.jpg",
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/dd7aea22-0953-4dbc-8c3a-44bc554b62da/4.jpg",
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/6398d751-6a2a-460f-bb2e-215cf257a57b/dream+girl+foundation+2.jpg",
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/80198371-a4ab-464b-96ff-b8b7ffd8f156/Screenshot+2024-03-15+171305.png",
-  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/94d00bfa-e955-4bdd-a3e6-216f55b218e6/3.jpg",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/fd38e3c1-3d8a-4e54-bfbb-4e42819fe088/dream+girl+foundation.jpg?format=1000w",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/dd7aea22-0953-4dbc-8c3a-44bc554b62da/4.jpg?format=1000w",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/6398d751-6a2a-460f-bb2e-215cf257a57b/dream+girl+foundation+2.jpg?format=1000w",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/80198371-a4ab-464b-96ff-b8b7ffd8f156/Screenshot+2024-03-15+171305.png?format=1000w",
+  "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/94d00bfa-e955-4bdd-a3e6-216f55b218e6/3.jpg?format=1000w",
 ];
 
 const SERVICES = [
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/5436cc70-7c51-4e8b-8ba9-a3d878aa3856/activity123.jpg",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/5436cc70-7c51-4e8b-8ba9-a3d878aa3856/activity123.jpg?format=1500w",
     title: "Team Collaboration",
     text: "At Invatu, we prioritize team collaboration and employee well-being through various activities, including team-building exercises, knowledge-sharing sessions, and wellness programs.",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/732a2359-e805-4cb2-b612-9355150bafdd/activity+new.jpg",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/732a2359-e805-4cb2-b612-9355150bafdd/activity+new.jpg?format=1500w",
     title: "Swift Deployment",
     text: "Invatu excels in swift deployment strategies, deploying solutions swiftly by leveraging agile methodologies and robust pipelines to seamlessly integrate software solutions.",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/667ca948-302a-422c-8bde-8b425aae5086/fast+123.jpg",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/667ca948-302a-422c-8bde-8b425aae5086/fast+123.jpg?format=1500w",
     title: "Rapid Solutions",
     text: "We prioritize rapid, high-quality solutions. Through continuous integration and automated testing, we accelerate development cycles, reducing time-to-market.",
   },
   {
-    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/d6487db7-3a3a-4bea-850a-b7b31e2a562a/cropped-techevery-icon.jpg",
+    img: "https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/d6487db7-3a3a-4bea-850a-b7b31e2a562a/cropped-techevery-icon.jpg?format=1500w",
     title: "Cutting-edge Technology",
     text: "From AI and machine learning to blockchain and IoT, we harness the latest advancements to drive digital transformation and deliver cutting-edge solutions.",
   },
@@ -152,9 +152,10 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/5c71fefb-3ec5-4f7d-bffc-1163e0368382/AE2I0342-8r.jpg"
+            src="https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/5c71fefb-3ec5-4f7d-bffc-1163e0368382/AE2I0342-8r.jpg?format=2500w"
             alt="Mohit Sengar"
             fill
+            sizes="100vw"
             className="object-cover"
             priority
           />
@@ -209,6 +210,7 @@ export default function Home() {
                   src={src}
                   alt={`Award gallery ${i + 1}`}
                   fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -247,6 +249,7 @@ export default function Home() {
                         src={p.img}
                         alt={`Project ${i + 1}`}
                         fill
+                        sizes="(max-width: 768px) 100vw, 1152px"
                         className="object-contain bg-white"
                       />
                     </a>
@@ -319,6 +322,7 @@ export default function Home() {
                       src={t.img}
                       alt={t.name}
                       fill
+                      sizes="96px"
                       className="object-cover"
                     />
                   </div>
@@ -399,9 +403,10 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative aspect-[4/5] rounded-xl overflow-hidden">
               <Image
-                src="https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/27ef5486-f51c-4cc0-a62f-9d4c22b05825/AE2I0340+8r.jpeg"
+                src="https://images.squarespace-cdn.com/content/v1/65f18952eca3e72b336ecef5/27ef5486-f51c-4cc0-a62f-9d4c22b05825/AE2I0340+8r.jpeg?format=1500w"
                 alt="Mohit Sengar"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
               />
             </div>
@@ -459,6 +464,7 @@ export default function Home() {
                   src={src}
                   alt={`NGO collaboration ${i + 1}`}
                   fill
+                  sizes="(max-width: 768px) 50vw, 20vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -489,6 +495,7 @@ export default function Home() {
                     src={s.img}
                     alt={s.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
