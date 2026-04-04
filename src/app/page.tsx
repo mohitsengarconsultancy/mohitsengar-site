@@ -147,6 +147,15 @@ const SOCIAL_LINKS = [
   },
 ];
 
+const NAV_LINKS = [
+  { label: "Services", href: "#services" },
+  { label: "About", href: "#about" },
+  { label: "Projects", href: "#projects" },
+  { label: "Testimonials", href: "#testimonials" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Contact", href: "#contact" },
+];
+
 /* ─── Carousel Hook ─── */
 function useCarousel(length: number, interval = 4000) {
   const [index, setIndex] = useState(0);
@@ -159,6 +168,102 @@ function useCarousel(length: number, interval = 4000) {
   return { index, next, prev, setIndex };
 }
 
+/* ─── Sticky Header ─── */
+function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-black/90 backdrop-blur-sm shadow-lg" : "bg-transparent"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
+        <a href="#" className="text-white font-bold text-lg">Mohit Sengar</a>
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-6">
+          {NAV_LINKS.map((link) => (
+            <a key={link.href} href={link.href} className="text-white/80 hover:text-mint text-sm transition-colors py-2">
+              {link.label}
+            </a>
+          ))}
+          <a
+            href="https://calendly.com/mohitsengarr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-mint hover:bg-mint-dark text-black font-semibold px-4 py-2 rounded-md text-sm transition-colors active:scale-95"
+          >
+            Book a Call
+          </a>
+        </nav>
+        {/* Hamburger */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden text-white p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? (
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
+      </div>
+      {/* Mobile menu */}
+      {menuOpen && (
+        <nav className="md:hidden bg-black/95 backdrop-blur-sm border-t border-white/10">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className="block px-6 py-4 text-white/80 hover:text-mint hover:bg-white/5 transition-colors text-base"
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      )}
+    </header>
+  );
+}
+
+/* ─── Back to Top ─── */
+function BackToTop() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 600);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className="fixed bottom-24 md:bottom-8 right-6 z-40 bg-black/80 hover:bg-black text-white w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-95"
+      aria-label="Back to top"
+    >
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  );
+}
+
 /* ─── FAQ Accordion ─── */
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
@@ -166,12 +271,12 @@ function FAQItem({ q, a }: { q: string; a: string }) {
     <div className="border-b border-gray-200">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex justify-between items-center py-5 text-left"
+        className="w-full flex justify-between items-center py-5 px-2 text-left min-h-[56px]"
         aria-expanded={open}
       >
-        <span className="text-lg font-semibold pr-4">{q}</span>
+        <span className="text-base md:text-lg font-semibold pr-4">{q}</span>
         <svg
-          className={`w-5 h-5 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -180,7 +285,9 @@ function FAQItem({ q, a }: { q: string; a: string }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {open && <p className="pb-5 text-gray-600 leading-relaxed">{a}</p>}
+      <div className={`overflow-hidden transition-all duration-300 ${open ? "max-h-96 pb-5" : "max-h-0"}`}>
+        <p className="px-2 text-gray-600 leading-relaxed">{a}</p>
+      </div>
     </div>
   );
 }
@@ -208,15 +315,17 @@ function EmailCapture() {
     <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
       <input
         type="email"
+        inputMode="email"
+        autoComplete="email"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
-        className="flex-1 px-4 py-3 rounded-md border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-mint"
+        className="flex-1 px-4 py-3 rounded-md border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-mint min-h-[48px]"
       />
       <button
         type="submit"
-        className="bg-mint hover:bg-mint-dark text-black font-semibold px-6 py-3 rounded-md transition-colors whitespace-nowrap"
+        className="bg-mint hover:bg-mint-dark active:scale-95 text-black font-semibold px-6 py-3 rounded-md transition-all whitespace-nowrap min-h-[48px]"
       >
         Get the Playbook
       </button>
@@ -229,7 +338,22 @@ export default function Home() {
   const testimonialCarousel = useCarousel(TESTIMONIALS.length, 5000);
 
   return (
-    <main className="bg-white text-black">
+    <main className="bg-white text-black" role="main">
+      <Header />
+      <BackToTop />
+
+      {/* ═══ Floating Mobile CTA ═══ */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-black/95 backdrop-blur-sm px-4 py-3 border-t border-white/10">
+        <a
+          href="https://calendly.com/mohitsengarr"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full bg-mint hover:bg-mint-dark active:scale-[0.98] text-black font-semibold py-3 rounded-md transition-all text-center text-base"
+        >
+          Book a Free Strategy Session
+        </a>
+      </div>
+
       {/* ═══ HERO ═══ */}
       <section className="relative min-h-screen flex items-center justify-start overflow-hidden">
         <div className="absolute inset-0">
@@ -243,12 +367,12 @@ export default function Home() {
           />
           <div className="absolute inset-0 bg-black/40" />
         </div>
-        <div className="relative z-10 text-left text-white px-6 md:px-16 lg:px-24 max-w-7xl w-full animate-fade-in-up">
-          <p className="text-sm md:text-base uppercase tracking-widest text-mint mb-4 font-semibold">Mohit Sengar &mdash; Official Website</p>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 max-w-2xl">
+        <div className="relative z-10 text-left text-white px-6 md:px-16 lg:px-24 max-w-7xl w-full animate-fade-in-up pt-20">
+          <p className="text-xs md:text-base uppercase tracking-widest text-mint mb-4 font-semibold">Mohit Sengar &mdash; Official Website</p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 max-w-2xl">
             I Help Founders Build Engineering Teams That Actually Ship
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-xl leading-relaxed">
+          <p className="text-base md:text-xl text-gray-200 mb-8 max-w-xl leading-relaxed">
             14 years. 47+ companies. $0 in missed deadlines. Mohit Sengar is an award-winning
             fractional CTO based in Dubai who plugs into your startup and builds the tech org
             you need &mdash; without the $400K/year salary.
@@ -257,7 +381,7 @@ export default function Home() {
             href="https://calendly.com/mohitsengarr"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-mint hover:bg-mint-dark text-black font-semibold px-8 py-4 rounded-md transition-colors text-lg"
+            className="hidden md:inline-block bg-mint hover:bg-mint-dark active:scale-95 text-black font-semibold px-8 py-4 rounded-md transition-all text-lg"
           >
             Book a Free 30-Min Strategy Session &rarr;
           </a>
@@ -275,17 +399,17 @@ export default function Home() {
           ].map((s) => (
             <div key={s.label}>
               <div className="text-2xl md:text-3xl font-bold text-mint">{s.num}</div>
-              <div className="text-sm text-gray-400 mt-1">{s.label}</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-1">{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* ═══ PROBLEM / AGITATION ═══ */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-16 md:py-20 px-6 bg-white">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8">Sound Familiar?</h2>
-          <div className="text-lg text-gray-700 leading-relaxed space-y-6 text-left">
+          <h2 className="text-2xl md:text-4xl font-bold mb-8">Sound Familiar?</h2>
+          <div className="text-base md:text-lg text-gray-700 leading-relaxed space-y-6 text-left">
             <p>
               You&apos;ve got a product vision but your engineering team keeps
               missing deadlines. You&apos;ve hired developers &mdash; some
@@ -298,7 +422,7 @@ export default function Home() {
               your architecture won&apos;t scale past the next funding round,
               and every week you delay costs you runway.
             </p>
-            <p className="text-black font-semibold text-xl text-center">
+            <p className="text-black font-semibold text-lg md:text-xl text-center">
               You don&apos;t need another developer. You need a technical leader
               who&apos;s built this before &mdash; 47 times.
             </p>
@@ -307,38 +431,38 @@ export default function Home() {
       </section>
 
       {/* ═══ HOW I WORK WITH YOU ═══ */}
-      <section className="py-20 px-6 bg-gray-50" id="services">
+      <section className="py-16 md:py-20 px-6 bg-gray-50" id="services">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl md:text-5xl font-bold mb-4">
               How I Work With You
             </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
               Every engagement starts with a free 30-minute strategy call where
               I assess your situation and recommend next steps &mdash; no
               obligation.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             {ENGAGEMENT_MODELS.map((m) => (
               <div
                 key={m.title}
-                className="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100"
+                className="bg-white rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100"
               >
                 <div className="w-12 h-12 bg-mint/15 rounded-lg flex items-center justify-center mb-4 text-mint">
                   {m.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-3">{m.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{m.desc}</p>
+                <h3 className="text-lg md:text-xl font-bold mb-3">{m.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base">{m.desc}</p>
               </div>
             ))}
           </div>
-          <div className="text-center mt-12">
+          <div className="text-center mt-10 md:mt-12">
             <a
               href="https://calendly.com/mohitsengarr"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block bg-mint hover:bg-mint-dark text-black font-semibold px-8 py-4 rounded-md transition-colors text-lg"
+              className="inline-block bg-mint hover:bg-mint-dark active:scale-95 text-black font-semibold px-8 py-4 rounded-md transition-all text-base md:text-lg"
             >
               Book a Free Strategy Session &rarr;
             </a>
@@ -347,9 +471,9 @@ export default function Home() {
       </section>
 
       {/* ═══ TRACK RECORD ═══ */}
-      <section className="py-20 px-6 bg-white" id="about">
+      <section className="py-16 md:py-20 px-6 bg-white" id="about">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
               <Image
                 src="/images/stats-photo.jpeg"
@@ -360,16 +484,16 @@ export default function Home() {
               />
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <h2 className="text-2xl md:text-4xl font-bold mb-6">
                 Why Companies Trust Me
               </h2>
-              <p className="text-gray-600 mb-8 leading-relaxed">
+              <p className="text-gray-600 mb-8 leading-relaxed text-sm md:text-base">
                 I&apos;ve spent 14 years building technology that works &mdash;
                 for 47+ companies across healthcare, fintech, e-commerce,
                 parking management, and theme park operations. Here&apos;s what
                 that track record looks like:
               </p>
-              <ul className="space-y-5">
+              <ul className="space-y-4 md:space-y-5">
                 {[
                   "Collaborated with 47+ clients across diverse industries worldwide",
                   "100% job success rate — I don't take on work I can't deliver",
@@ -377,13 +501,13 @@ export default function Home() {
                   "29,000+ hours of engineering leadership delivered",
                   "Outstanding Leadership Award — Internet 2.0 Conference, Dubai 2024",
                 ].map((stat, i) => (
-                  <li key={i} className="flex gap-4 items-start">
+                  <li key={i} className="flex gap-3 md:gap-4 items-start">
                     <span className="mt-1 flex-shrink-0 w-6 h-6 bg-mint rounded-full flex items-center justify-center">
                       <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
-                    <span className="text-gray-700 leading-relaxed">{stat}</span>
+                    <span className="text-gray-700 leading-relaxed text-sm md:text-base">{stat}</span>
                   </li>
                 ))}
               </ul>
@@ -393,12 +517,12 @@ export default function Home() {
       </section>
 
       {/* ═══ LEAD MAGNET / EMAIL CAPTURE ═══ */}
-      <section className="py-16 px-6 bg-black text-white">
+      <section className="py-12 md:py-16 px-6 bg-black text-white">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">
+          <h2 className="text-xl md:text-3xl font-bold mb-3">
             Not Ready to Talk Yet? No Problem.
           </h2>
-          <p className="text-gray-300 mb-8 leading-relaxed">
+          <p className="text-gray-300 mb-8 leading-relaxed text-sm md:text-base">
             Get my free <strong>Fractional CTO Playbook</strong> &mdash; how to
             get CTO-level strategy without the full-time salary. Sent straight
             to your inbox.
@@ -409,27 +533,28 @@ export default function Home() {
       </section>
 
       {/* ═══ AWARD ═══ */}
-      <section className="py-20 px-6 bg-gray-50" id="awards">
+      <section className="py-16 md:py-20 px-6 bg-gray-50" id="awards">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-10 md:mb-12">
+            <h2 className="text-2xl md:text-4xl font-bold mb-4">
               Outstanding Leadership Award
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Honored at Dubai&apos;s Internet 2.0 Conference, February 2024,
               for transformative impact in steering Invatu Technologies towards
               innovation and success.
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {GALLERY_IMAGES.map((src, i) => (
               <div key={i} className="relative aspect-[3/4] rounded-lg overflow-hidden group">
                 <Image
                   src={src}
                   alt={`Mohit Sengar at Internet 2.0 Conference Dubai - photo ${i + 1}`}
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
                 />
               </div>
             ))}
@@ -438,17 +563,17 @@ export default function Home() {
       </section>
 
       {/* ═══ PROJECTS ═══ */}
-      <section className="py-20 px-6 bg-white" id="projects">
+      <section className="py-16 md:py-20 px-6 bg-white" id="projects">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-4">
             Companies I&apos;ve Worked With
           </h2>
-          <p className="text-center text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
+          <p className="text-center text-base md:text-lg text-gray-600 mb-10 md:mb-12 max-w-3xl mx-auto">
             From enterprise parking systems across Europe to theme park digital
             experiences in Abu Dhabi &mdash; I&apos;ve delivered across
             industries and continents.
           </p>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {PROJECTS.map((p, i) => (
               <a
                 key={i}
@@ -463,12 +588,13 @@ export default function Home() {
                     alt={p.name}
                     fill
                     sizes="(max-width: 768px) 50vw, 200px"
-                    className="object-contain p-10"
+                    className="object-contain p-6 md:p-10"
+                    loading="lazy"
                   />
                 </div>
-                <div className="p-5">
-                  <h3 className="font-bold text-lg">{p.name}</h3>
-                  <p className="text-gray-500 text-sm mt-1">{p.result}</p>
+                <div className="p-3 md:p-5">
+                  <h3 className="font-bold text-sm md:text-lg">{p.name}</h3>
+                  <p className="text-gray-500 text-xs md:text-sm mt-1">{p.result}</p>
                 </div>
               </a>
             ))}
@@ -477,9 +603,9 @@ export default function Home() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-20 px-6 bg-gray-50" id="testimonials">
+      <section className="py-16 md:py-20 px-6 bg-gray-50" id="testimonials">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-10 md:mb-12">
             What Clients Say
           </h2>
           <div className="relative overflow-hidden">
@@ -488,13 +614,13 @@ export default function Home() {
               style={{ transform: `translateX(-${testimonialCarousel.index * 100}%)` }}
             >
               {TESTIMONIALS.map((t, i) => (
-                <div key={i} className="carousel-slide flex flex-col items-center text-center px-6">
-                  <div className="relative w-20 h-20 rounded-full overflow-hidden mb-5">
-                    <Image src={t.img} alt={t.name} fill sizes="80px" className="object-cover" />
+                <div key={i} className="carousel-slide flex flex-col items-center text-center px-4 md:px-6">
+                  <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden mb-4 md:mb-5">
+                    <Image src={t.img} alt={t.name} fill sizes="80px" className="object-cover" loading="lazy" />
                   </div>
-                  <h3 className="text-lg font-bold">{t.name}</h3>
-                  <span className="text-sm text-mint mb-4">{t.role}</span>
-                  <p className="text-gray-600 max-w-xl leading-relaxed italic">
+                  <h3 className="text-base md:text-lg font-bold">{t.name}</h3>
+                  <span className="text-sm text-mint mb-3 md:mb-4">{t.role}</span>
+                  <p className="text-gray-600 max-w-xl leading-relaxed italic text-sm md:text-base">
                     &ldquo;{t.text}&rdquo;
                   </p>
                 </div>
@@ -502,7 +628,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex justify-center items-center gap-4 mt-8">
-            <button onClick={testimonialCarousel.prev} className="bg-white hover:bg-gray-100 shadow-sm rounded-full w-10 h-10 flex items-center justify-center transition-colors" aria-label="Previous testimonial">
+            <button onClick={testimonialCarousel.prev} className="bg-white hover:bg-gray-100 shadow-sm rounded-full w-11 h-11 flex items-center justify-center transition-colors active:scale-95" aria-label="Previous testimonial">
               <ChevronLeft />
             </button>
             <div className="flex gap-2">
@@ -510,12 +636,12 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => testimonialCarousel.setIndex(i)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${i === testimonialCarousel.index ? "bg-mint" : "bg-gray-300"}`}
+                  className={`w-3 h-3 rounded-full transition-colors ${i === testimonialCarousel.index ? "bg-mint" : "bg-gray-300"}`}
                   aria-label={`Go to testimonial ${i + 1}`}
                 />
               ))}
             </div>
-            <button onClick={testimonialCarousel.next} className="bg-white hover:bg-gray-100 shadow-sm rounded-full w-10 h-10 flex items-center justify-center transition-colors" aria-label="Next testimonial">
+            <button onClick={testimonialCarousel.next} className="bg-white hover:bg-gray-100 shadow-sm rounded-full w-11 h-11 flex items-center justify-center transition-colors active:scale-95" aria-label="Next testimonial">
               <ChevronRight />
             </button>
           </div>
@@ -523,9 +649,9 @@ export default function Home() {
       </section>
 
       {/* ═══ FAQ ═══ */}
-      <section className="py-20 px-6 bg-white" id="faq">
+      <section className="py-16 md:py-20 px-6 bg-white" id="faq">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-10 md:mb-12">
             Common Questions
           </h2>
           <div>
@@ -537,12 +663,12 @@ export default function Home() {
       </section>
 
       {/* ═══ FINAL CTA ═══ */}
-      <section className="py-20 px-6 bg-mint/10">
+      <section className="py-16 md:py-20 px-6 bg-mint/10">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">
             Ready to Stop Worrying About Engineering?
           </h2>
-          <p className="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
+          <p className="text-gray-600 text-base md:text-lg mb-8 max-w-xl mx-auto">
             Book a free 30-minute strategy session. I&apos;ll audit your current
             situation and give you 3 actionable recommendations &mdash; no
             strings attached.
@@ -551,7 +677,7 @@ export default function Home() {
             href="https://calendly.com/mohitsengarr"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-mint hover:bg-mint-dark text-black font-semibold px-10 py-4 rounded-md transition-colors text-lg"
+            className="inline-block bg-mint hover:bg-mint-dark active:scale-95 text-black font-semibold px-8 md:px-10 py-4 rounded-md transition-all text-base md:text-lg"
           >
             Book Your Free Strategy Session &rarr;
           </a>
@@ -559,12 +685,12 @@ export default function Home() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="bg-black text-white py-16 px-6" id="contact">
+      <footer className="bg-black text-white py-12 md:py-16 px-6 pb-24 md:pb-16" id="contact" role="contentinfo">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-12 mb-12">
+          <div className="grid md:grid-cols-3 gap-10 md:gap-12 mb-10 md:mb-12">
             <div>
               <h3 className="text-xl font-bold mb-4">Mohit Sengar</h3>
-              <p className="text-gray-400 leading-relaxed">
+              <p className="text-gray-400 leading-relaxed text-sm md:text-base">
                 Award-winning CTO and fractional technology leader. 14+ years
                 helping companies build engineering teams that ship.
               </p>
@@ -573,19 +699,19 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
                 Get in Touch
               </h3>
-              <ul className="space-y-2 text-gray-300">
+              <ul className="space-y-3 text-gray-300">
                 <li>
-                  <a href="mailto:mohitsingh.shiv@gmail.com" className="hover:text-mint transition-colors">
+                  <a href="mailto:mohitsingh.shiv@gmail.com" className="hover:text-mint transition-colors py-2 inline-block">
                     mohitsingh.shiv@gmail.com
                   </a>
                 </li>
-                <li>Based in Dubai &amp; India, working globally</li>
+                <li className="text-sm">Based in Dubai &amp; India, working globally</li>
                 <li>
                   <a
                     href="https://calendly.com/mohitsengarr"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-mint transition-colors"
+                    className="hover:text-mint transition-colors py-2 inline-block"
                   >
                     Schedule a Call &rarr;
                   </a>
@@ -596,14 +722,14 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
                 Connect
               </h3>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 {SOCIAL_LINKS.map((link) => (
                   <a
                     key={link.name}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-mint transition-colors"
+                    className="text-gray-400 hover:text-mint transition-colors w-11 h-11 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10"
                     aria-label={`${link.name} profile`}
                   >
                     {link.icon}
