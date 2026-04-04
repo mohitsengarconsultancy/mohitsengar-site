@@ -240,7 +240,7 @@ export default function Home() {
   return (
     <main className="bg-white text-black">
       {/* ═══ HERO ═══ */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-start overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="/images/hero.jpg"
@@ -252,11 +252,11 @@ export default function Home() {
           />
           <div className="absolute inset-0 bg-black/40" />
         </div>
-        <div className="relative z-10 text-center text-white px-6 max-w-4xl animate-fade-in-up">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+        <div className="relative z-10 text-left text-white px-6 md:px-16 lg:px-24 max-w-7xl w-full animate-fade-in-up">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 max-w-2xl">
             I Help Founders Build Engineering Teams That Actually Ship
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-xl leading-relaxed">
             14 years. 47+ companies. $0 in missed deadlines. As a fractional
             CTO, I plug into your startup and build the tech org you need
             &mdash; without the $400K/year salary.
