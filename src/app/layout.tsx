@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title:
       "Mohit Sengar – Award-Winning CTO & Technology Leader | Official Site",
     description:
-      "Mohit Sengar is an award-winning CTO based in Dubai. Sengar specializes in AI, automation, software development, blockchain, and digital transformation. Top Rated Plus on Upwork with 100% job success rate.",
+      "Mohit Sengar is an award-winning CTO based in Dubai. Sengar specializes in AI, automation, software development, blockchain, and digital transformation. 100% job success rate across 47+ clients.",
     url: SITE_URL,
     siteName: "Mohit Sengar",
     images: [
@@ -92,7 +92,6 @@ const personSchema = {
     "https://www.linkedin.com/in/mohitsengarr/",
     "https://www.instagram.com/soft.mohit/",
     "https://github.com/mohitsengarr",
-    "https://www.upwork.com/freelancers/mohitsengar",
     "https://twitter.com/mohitsengarr",
   ],
 };
