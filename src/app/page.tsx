@@ -253,13 +253,14 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
         <div className="relative z-10 text-left text-white px-6 md:px-16 lg:px-24 max-w-7xl w-full animate-fade-in-up">
+          <p className="text-sm md:text-base uppercase tracking-widest text-mint mb-4 font-semibold">Mohit Sengar &mdash; Official Website</p>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 max-w-2xl">
             I Help Founders Build Engineering Teams That Actually Ship
           </h1>
           <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-xl leading-relaxed">
-            14 years. 47+ companies. $0 in missed deadlines. As a fractional
-            CTO, I plug into your startup and build the tech org you need
-            &mdash; without the $400K/year salary.
+            14 years. 47+ companies. $0 in missed deadlines. Mohit Sengar is an award-winning
+            fractional CTO based in Dubai who plugs into your startup and builds the tech org
+            you need &mdash; without the $400K/year salary.
           </p>
           <a
             href="https://calendly.com/mohitsengarr"
@@ -587,7 +588,7 @@ export default function Home() {
                     mohitsingh.shiv@gmail.com
                   </a>
                 </li>
-                <li>Based in India, working globally</li>
+                <li>Based in Dubai &amp; India, working globally</li>
                 <li>
                   <a
                     href="https://calendly.com/mohitsengarr"
@@ -624,7 +625,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-8 border-t border-gray-800 text-sm text-gray-500 text-center">
-            &copy; {new Date().getFullYear()} Mohit Sengar. All rights reserved.
+            &copy; {new Date().getFullYear()} Mohit Sengar &mdash; Official Site. All rights reserved.
           </div>
         </div>
       </footer>

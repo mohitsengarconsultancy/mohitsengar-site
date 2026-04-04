@@ -5,9 +5,9 @@ const SITE_URL = "https://www.mohitsengar.org";
 
 export const metadata: Metadata = {
   title:
-    "Mohit Sengar | CTO & Full-Stack Technology Leader | 14+ Years Experience",
+    "Mohit Sengar – Award-Winning CTO & Technology Leader | Official Site",
   description:
-    "Mohit Sengar is an award-winning CTO and full-stack technology leader with 14+ years of enterprise experience. Specializing in digital transformation, team leadership, and cutting-edge technology strategy.",
+    "Mohit Sengar is an award-winning CTO and technology leader based in Dubai with 14+ years of enterprise experience. Sengar specializes in AI, automation, software development, blockchain, and digital transformation for startups and enterprises worldwide.",
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: SITE_URL,
@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title:
-      "Mohit Sengar | CTO & Full-Stack Technology Leader | 14+ Years Experience",
+      "Mohit Sengar – Award-Winning CTO & Technology Leader | Official Site",
     description:
-      "Award-winning CTO and full-stack technology leader. Specializing in digital transformation, enterprise integration, and technology strategy. Top Rated Plus on Upwork with 100% job success rate.",
+      "Mohit Sengar is an award-winning CTO based in Dubai. Sengar specializes in AI, automation, software development, blockchain, and digital transformation. Top Rated Plus on Upwork with 100% job success rate.",
     url: SITE_URL,
     siteName: "Mohit Sengar",
     images: [
@@ -39,9 +39,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mohit Sengar | CTO & Full-Stack Technology Leader",
+    title: "Mohit Sengar – Award-Winning CTO & Technology Leader",
     description:
-      "Award-winning CTO with 14+ years experience. Specializing in digital transformation, enterprise integration, and technology strategy.",
+      "Mohit Sengar – award-winning CTO based in Dubai with 14+ years experience. Specializing in AI, automation, blockchain, and digital transformation.",
     images: [`${SITE_URL}/images/hero.jpg`],
   },
   other: {
@@ -53,23 +53,35 @@ const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Mohit Sengar",
+  alternateName: "Sengar",
   jobTitle: "Chief Technology Officer",
   description:
-    "Award-winning CTO and full-stack technology leader with 14+ years of enterprise experience specializing in digital transformation, team leadership, and cutting-edge technology strategy.",
+    "Mohit Sengar is an award-winning CTO and technology leader based in Dubai with 14+ years of enterprise experience. Sengar specializes in AI, automation, software development, blockchain, and digital transformation.",
   url: SITE_URL,
   image: `${SITE_URL}/images/hero.jpg`,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Dubai",
+    addressCountry: "AE",
+  },
+  nationality: {
+    "@type": "Country",
+    name: "India",
+  },
   worksFor: {
     "@type": "Organization",
     name: "Invatu Technologies",
     url: "https://invatu.com",
   },
   knowsAbout: [
+    "AI & Machine Learning",
+    "Automation",
+    "Software Development",
+    "Blockchain",
     "Digital Transformation",
     "Full-Stack Development",
     "Enterprise Integration",
     "Team Leadership",
-    "AI & Machine Learning",
-    "Blockchain",
     "IoT",
     "E-commerce",
     "Healthcare Technology",
@@ -78,8 +90,10 @@ const personSchema = {
   award: "Outstanding Leadership Award - Internet 2.0 Conference Dubai 2024",
   sameAs: [
     "https://www.linkedin.com/in/mohitsengarr/",
+    "https://www.instagram.com/soft.mohit/",
     "https://github.com/mohitsengarr",
     "https://www.upwork.com/freelancers/mohitsengar",
+    "https://twitter.com/mohitsengarr",
   ],
 };
 
