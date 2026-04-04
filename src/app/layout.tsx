@@ -5,9 +5,9 @@ const SITE_URL = "https://www.mohitsengar.org";
 
 export const metadata: Metadata = {
   title:
-    "Mohit Sengar | CTO & Full-Stack Technology Leader | 11+ Years Experience",
+    "Mohit Sengar | CTO & Full-Stack Technology Leader | 14+ Years Experience",
   description:
-    "Mohit Sengar is an award-winning CTO and full-stack technology leader with 11+ years of enterprise experience. Specializing in digital transformation, team leadership, and cutting-edge technology strategy.",
+    "Mohit Sengar is an award-winning CTO and full-stack technology leader with 14+ years of enterprise experience. Specializing in digital transformation, team leadership, and cutting-edge technology strategy.",
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: SITE_URL,
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title:
-      "Mohit Sengar | CTO & Full-Stack Technology Leader | 11+ Years Experience",
+      "Mohit Sengar | CTO & Full-Stack Technology Leader | 14+ Years Experience",
     description:
       "Award-winning CTO and full-stack technology leader. Specializing in digital transformation, enterprise integration, and technology strategy. Top Rated Plus on Upwork with 100% job success rate.",
     url: SITE_URL,
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Mohit Sengar | CTO & Full-Stack Technology Leader",
     description:
-      "Award-winning CTO with 11+ years experience. Specializing in digital transformation, enterprise integration, and technology strategy.",
+      "Award-winning CTO with 14+ years experience. Specializing in digital transformation, enterprise integration, and technology strategy.",
     images: [`${SITE_URL}/images/hero.jpg`],
   },
   other: {
@@ -55,7 +55,7 @@ const personSchema = {
   name: "Mohit Sengar",
   jobTitle: "Chief Technology Officer",
   description:
-    "Award-winning CTO and full-stack technology leader with 11+ years of enterprise experience specializing in digital transformation, team leadership, and cutting-edge technology strategy.",
+    "Award-winning CTO and full-stack technology leader with 14+ years of enterprise experience specializing in digital transformation, team leadership, and cutting-edge technology strategy.",
   url: SITE_URL,
   image: `${SITE_URL}/images/hero.jpg`,
   worksFor: {
@@ -118,7 +118,7 @@ const faqSchema = {
       name: "What is a fractional CTO?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "A fractional CTO is an experienced technology executive who provides part-time CTO services to companies that need strategic technology leadership but may not require or afford a full-time CTO. Mohit Sengar offers fractional CTO services, bringing 11+ years of enterprise experience to help with technology strategy, team building, architecture decisions, and digital transformation — typically 10-20 hours per week.",
+        text: "A fractional CTO is an experienced technology executive who provides part-time CTO services to companies that need strategic technology leadership but may not require or afford a full-time CTO. Mohit Sengar offers fractional CTO services, bringing 14+ years of enterprise experience to help with technology strategy, team building, architecture decisions, and digital transformation — typically 10-20 hours per week.",
       },
     },
     {

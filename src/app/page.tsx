@@ -106,7 +106,7 @@ const FAQS = [
   },
   {
     q: "What is a fractional CTO?",
-    a: "A fractional CTO is an experienced technology executive who provides part-time CTO services to companies that need strategic technology leadership but may not require or afford a full-time CTO. I bring 11+ years of enterprise experience to help with technology strategy, team building, architecture decisions, and digital transformation — typically 10-20 hours per week.",
+    a: "A fractional CTO is an experienced technology executive who provides part-time CTO services to companies that need strategic technology leadership but may not require or afford a full-time CTO. I bring 14+ years of enterprise experience to help with technology strategy, team building, architecture decisions, and digital transformation — typically 10-20 hours per week.",
   },
   {
     q: "How much does it cost to work with you?",
@@ -257,7 +257,7 @@ export default function Home() {
             I Help Founders Build Engineering Teams That Actually Ship
           </h1>
           <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
-            11 years. 47+ companies. $0 in missed deadlines. As a fractional
+            14 years. 47+ companies. $0 in missed deadlines. As a fractional
             CTO, I plug into your startup and build the tech org you need
             &mdash; without the $400K/year salary.
           </p>
@@ -358,13 +358,13 @@ export default function Home() {
       <section className="py-20 px-6 bg-white" id="about">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative aspect-[4/5] rounded-xl overflow-hidden">
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
               <Image
                 src="/images/stats-photo.jpeg"
                 alt="Mohit Sengar - Award-winning CTO"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                className="object-cover object-top"
               />
             </div>
             <div>
@@ -372,7 +372,7 @@ export default function Home() {
                 Why Companies Trust Me
               </h2>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                I&apos;ve spent 11 years building technology that works &mdash;
+                I&apos;ve spent 14 years building technology that works &mdash;
                 for 47+ companies across healthcare, fintech, e-commerce,
                 parking management, and theme park operations. Here&apos;s what
                 that track record looks like:
@@ -465,13 +465,13 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="group bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-shadow border border-gray-100"
               >
-                <div className="relative aspect-[16/10] bg-white flex items-center justify-center p-6">
+                <div className="relative aspect-[3/2] bg-white flex items-center justify-center">
                   <Image
                     src={p.img}
                     alt={p.name}
                     fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-contain p-4"
+                    sizes="(max-width: 768px) 50vw, 200px"
+                    className="object-contain p-10"
                   />
                 </div>
                 <div className="p-5">
@@ -573,7 +573,7 @@ export default function Home() {
             <div>
               <h3 className="text-xl font-bold mb-4">Mohit Sengar</h3>
               <p className="text-gray-400 leading-relaxed">
-                Award-winning CTO and fractional technology leader. 11+ years
+                Award-winning CTO and fractional technology leader. 14+ years
                 helping companies build engineering teams that ship.
               </p>
             </div>
@@ -583,8 +583,8 @@ export default function Home() {
               </h3>
               <ul className="space-y-2 text-gray-300">
                 <li>
-                  <a href="mailto:mohit@mohitsengar.org" className="hover:text-mint transition-colors">
-                    mohit@mohitsengar.org
+                  <a href="mailto:mohitsingh.shiv@gmail.com" className="hover:text-mint transition-colors">
+                    mohitsingh.shiv@gmail.com
                   </a>
                 </li>
                 <li>Based in India, working globally</li>
