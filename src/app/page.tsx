@@ -247,10 +247,10 @@ export default function Home() {
             alt="Mohit Sengar speaking at technology conference"
             fill
             sizes="100vw"
-            className="object-cover"
+            className="object-cover object-top"
             priority
           />
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
         <div className="relative z-10 text-center text-white px-6 max-w-4xl animate-fade-in-up">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
