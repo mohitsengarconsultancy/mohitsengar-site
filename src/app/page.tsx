@@ -719,7 +719,7 @@ export default function Home() {
                 <motion.div
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.4, ease: EASE_OUT }}
-                  className="relative aspect-[3/4] rounded-xl overflow-hidden"
+                  className="relative aspect-[3/2] rounded-xl overflow-hidden"
                 >
                   <Image
                     src={src}
