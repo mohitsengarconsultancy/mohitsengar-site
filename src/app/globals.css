@@ -112,6 +112,14 @@ body {
   border-color: rgba(141, 217, 191, 0.15);
 }
 
+/* ─── Line clamp ─── */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* ─── Sticky showcase helpers ─── */
 .sticky-showcase {
   position: sticky;

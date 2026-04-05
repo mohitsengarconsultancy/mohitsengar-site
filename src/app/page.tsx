@@ -186,6 +186,7 @@ const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
+  { label: "News", href: "#news" },
   { label: "Testimonials", href: "#testimonials" },
   { label: "FAQ", href: "#faq" },
   { label: "Contact", href: "#contact" },
@@ -392,6 +393,126 @@ function EmailCapture() {
         Get the Playbook
       </button>
     </form>
+  );
+}
+
+/* ─── AI News Section ─── */
+interface NewsItem {
+  title: string;
+  url: string;
+  date: string;
+  source: string;
+  summary: string;
+}
+
+function AINewsSection() {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState("");
+
+  useEffect(() => {
+    fetch("/api/news")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.news) {
+          setNews(data.news);
+          setLastUpdated(
+            data.lastUpdated
+              ? new Date(data.lastUpdated).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : ""
+          );
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]" id="news">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14 md:mb-16">
+            <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
+            <h2 className="text-2xl md:text-4xl font-bold tracking-tight">AI News & Insights</h2>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white/[0.03] rounded-2xl border border-white/[0.06] p-6 animate-pulse">
+                <div className="h-4 bg-white/10 rounded w-1/3 mb-4" />
+                <div className="h-5 bg-white/10 rounded w-full mb-2" />
+                <div className="h-5 bg-white/10 rounded w-2/3 mb-4" />
+                <div className="h-3 bg-white/5 rounded w-full mb-2" />
+                <div className="h-3 bg-white/5 rounded w-4/5" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!news.length) return null;
+
+  return (
+    <section className="py-24 md:py-32 px-6 bg-[#0A0A0A] border-y border-white/5" id="news">
+      <div className="max-w-6xl mx-auto">
+        <Reveal>
+          <div className="text-center mb-14 md:mb-16">
+            <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
+            <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
+              AI News & Insights
+            </h2>
+            <p className="text-white/40 text-base md:text-lg max-w-2xl mx-auto">
+              Curated breaking news from the world of artificial intelligence,
+              updated daily.
+            </p>
+            {lastUpdated && (
+              <p className="text-white/20 text-xs mt-3">Last updated: {lastUpdated}</p>
+            )}
+          </div>
+        </Reveal>
+        <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-5" stagger={0.08}>
+          {news.map((item, i) => (
+            <StaggerItem key={i}>
+              <motion.a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.3, ease: EASE_OUT }}
+                className="block bg-white/[0.03] rounded-2xl border border-white/[0.06] hover:border-mint/20 transition-all duration-500 p-6 h-full group"
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-mint/70 text-xs font-medium uppercase tracking-wider">{item.source}</span>
+                  <span className="text-white/20 text-xs">&bull;</span>
+                  <span className="text-white/30 text-xs">{item.date}</span>
+                </div>
+                <h3 className="text-base md:text-lg font-bold text-white/90 group-hover:text-mint transition-colors duration-300 mb-3 leading-snug line-clamp-3">
+                  {item.title}
+                </h3>
+                {item.summary && (
+                  <p className="text-white/40 text-sm leading-relaxed line-clamp-3">
+                    {item.summary}
+                  </p>
+                )}
+                <div className="mt-4 flex items-center gap-1 text-mint/60 group-hover:text-mint text-xs font-medium transition-colors duration-300">
+                  Read more
+                  <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </motion.a>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </div>
+    </section>
   );
 }
 
@@ -835,6 +956,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ═══ AI NEWS ═══ */}
+      <AINewsSection />
 
       {/* ═══ FAQ ═══ */}
       <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]" id="faq">
