@@ -90,7 +90,8 @@ const personSchema = {
   award: "Outstanding Leadership Award - Internet 2.0 Conference Dubai 2024",
   sameAs: [
     "https://www.linkedin.com/in/mohitsengarr/",
-    "https://www.instagram.com/soft.mohit/",
+    "https://www.instagram.com/mohitsengarr/",
+    "https://www.youtube.com/@mohitsengarr",
     "https://github.com/mohitsengarr",
     "https://twitter.com/mohitsengarr",
   ],
@@ -112,6 +113,23 @@ const organizationSchema = {
     "Custom Software Development",
     "Automation",
   ],
+};
+
+const videoSchema = {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  name: "Mohit Sengar — Technology Leadership & Innovation",
+  description:
+    "Watch Mohit Sengar discuss technology leadership, AI, and digital transformation. Award-winning CTO and fractional technology leader based in Dubai.",
+  thumbnailUrl: `${SITE_URL}/images/hero.jpg`,
+  uploadDate: "2024-02-01",
+  contentUrl: "https://www.youtube.com/watch?v=EY4CJU8LNAE",
+  embedUrl: "https://www.youtube.com/embed/EY4CJU8LNAE",
+  publisher: {
+    "@type": "Person",
+    name: "Mohit Sengar",
+    url: SITE_URL,
+  },
 };
 
 const blogSchema = {
@@ -211,6 +229,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(videoSchema),
           }}
         />
         <script
