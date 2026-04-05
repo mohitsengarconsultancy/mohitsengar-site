@@ -225,14 +225,14 @@ function Header() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "bg-black/80 backdrop-blur-xl shadow-2xl shadow-black/20" : "bg-transparent"
+        scrolled ? "bg-[var(--color-nav-bg)] backdrop-blur-xl shadow-2xl shadow-black/20" : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16 md:h-20">
         <a href="#" className="text-white font-bold text-lg tracking-tight">Mohit Sengar</a>
         <nav className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
-            <a key={link.href} href={link.href} className="text-white/60 hover:text-white text-sm transition-colors duration-300 py-2">
+            <a key={link.href} href={link.href} className="text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors duration-300 py-2">
               {link.label}
             </a>
           ))}
@@ -240,7 +240,7 @@ function Header() {
             href="https://calendly.com/mohitsengarr"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-mint hover:bg-mint-dark text-black font-semibold px-5 py-2.5 rounded-full text-sm transition-all duration-300 active:scale-95 hover:shadow-lg hover:shadow-mint/20"
+            className="bg-mint hover:bg-mint-hover active:bg-mint-pressed text-black font-semibold px-5 py-2.5 rounded-full text-sm transition-all duration-300 active:scale-95 hover:shadow-lg hover:shadow-mint/20"
           >
             Book a Call
           </a>
@@ -274,7 +274,7 @@ function Header() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05, duration: 0.3 }}
-                className="block px-6 py-4 text-white/70 hover:text-mint hover:bg-white/5 transition-colors text-base"
+                className="block px-6 py-4 text-[var(--color-text-secondary)] hover:text-mint hover:bg-white/5 transition-colors text-base"
               >
                 {link.label}
               </motion.a>
@@ -318,17 +318,17 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false);
   return (
     <Reveal delay={index * 0.06}>
-      <div className="border-b border-white/10">
+      <div className="border-b border-[var(--color-border)]">
         <button
           onClick={() => setOpen(!open)}
           className="w-full flex justify-between items-center py-6 px-2 text-left min-h-[56px] group"
           aria-expanded={open}
         >
-          <span className="text-base md:text-lg font-medium pr-4 text-white/90 group-hover:text-mint transition-colors duration-300">{q}</span>
+          <span className="text-base md:text-lg font-medium pr-4 text-white group-hover:text-mint transition-colors duration-300">{q}</span>
           <motion.svg
             animate={{ rotate: open ? 180 : 0 }}
             transition={{ duration: 0.4, ease: EASE_IN_OUT }}
-            className="w-5 h-5 flex-shrink-0 text-white/40"
+            className={`w-5 h-5 flex-shrink-0 transition-colors duration-300 ${open ? "text-mint" : "text-[var(--color-text-muted)]"}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -346,7 +346,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
               transition={{ duration: 0.4, ease: EASE_OUT }}
               className="overflow-hidden"
             >
-              <p className="px-2 pb-6 text-white/50 leading-relaxed">{a}</p>
+              <p className="px-2 pb-6 text-[var(--color-text-secondary)] leading-relaxed">{a}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -368,8 +368,8 @@ function EmailCapture() {
   if (submitted) {
     return (
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-4">
-        <p className="text-mint font-semibold text-lg">Thanks! Check your inbox.</p>
-        <p className="text-white/40 text-sm mt-1">The playbook is on its way.</p>
+        <p className="text-[var(--color-success)] font-semibold text-lg">Thanks! Check your inbox.</p>
+        <p className="text-[var(--color-text-muted)] text-sm mt-1">The playbook is on its way.</p>
       </motion.div>
     );
   }
@@ -384,11 +384,11 @@ function EmailCapture() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
-        className="flex-1 px-4 py-3 rounded-full bg-white/10 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-mint/50 focus:border-mint/30 min-h-[48px] transition-all duration-300"
+        className="flex-1 px-4 py-3 rounded-full bg-surface-2 border border-[var(--color-border)] text-white placeholder-[var(--color-text-placeholder)] focus:outline-none focus:ring-2 focus:ring-mint/50 focus:border-mint/60 min-h-[48px] transition-all duration-300"
       />
       <button
         type="submit"
-        className="bg-mint hover:bg-mint-dark active:scale-95 text-black font-semibold px-6 py-3 rounded-full transition-all whitespace-nowrap min-h-[48px] hover:shadow-lg hover:shadow-mint/20"
+        className="bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-95 text-black font-semibold px-6 py-3 rounded-full transition-all whitespace-nowrap min-h-[48px] hover:shadow-lg hover:shadow-mint/20"
       >
         Get the Playbook
       </button>
@@ -475,7 +475,7 @@ function AINewsSection() {
       <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]" id="news" aria-label="AI News & Insights">
         <div className="max-w-6xl mx-auto">
           <header className="text-center mb-14 md:mb-16">
-            <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
+            <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
             <h2 className="text-2xl md:text-4xl font-bold tracking-tight">AI News & Insights</h2>
           </header>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5" role="list" aria-busy="true">
@@ -501,11 +501,11 @@ function AINewsSection() {
       <div className="max-w-6xl mx-auto">
         <Reveal>
           <header className="text-center mb-14 md:mb-16">
-            <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
+            <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
             <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
               AI News & Insights
             </h2>
-            <p className="text-white/40 text-base md:text-lg max-w-2xl mx-auto">
+            <p className="text-[var(--color-text-secondary)] text-base md:text-lg max-w-2xl mx-auto">
               Curated breaking news from the world of artificial intelligence,
               updated daily by Mohit Sengar.
             </p>
@@ -530,23 +530,23 @@ function AINewsSection() {
                   itemProp="url"
                 >
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-mint/70 text-xs font-medium uppercase tracking-wider" itemProp="publisher" itemScope itemType="https://schema.org/Organization">
+                    <span className="text-[var(--color-accent-label)] text-xs font-medium uppercase tracking-wider" itemProp="publisher" itemScope itemType="https://schema.org/Organization">
                       <span itemProp="name">{item.source}</span>
                     </span>
-                    <span className="text-white/20 text-xs" aria-hidden="true">&bull;</span>
-                    <time className="text-white/30 text-xs" itemProp="datePublished" dateTime={item.date}>
+                    <span className="text-[var(--color-text-placeholder)] text-xs" aria-hidden="true">&bull;</span>
+                    <time className="text-[var(--color-text-muted)] text-xs" itemProp="datePublished" dateTime={item.date}>
                       {item.date}
                     </time>
                   </div>
-                  <h3 className="text-base md:text-lg font-bold text-white/90 group-hover:text-mint transition-colors duration-300 mb-3 leading-snug line-clamp-3" itemProp="headline">
+                  <h3 className="text-base md:text-lg font-bold text-white group-hover:text-mint transition-colors duration-300 mb-3 leading-snug line-clamp-3" itemProp="headline">
                     {item.title}
                   </h3>
                   {item.summary && (
-                    <p className="text-white/40 text-sm leading-relaxed line-clamp-3" itemProp="description">
+                    <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed line-clamp-3" itemProp="description">
                       {item.summary}
                     </p>
                   )}
-                  <div className="mt-4 flex items-center gap-1 text-mint/60 group-hover:text-mint text-xs font-medium transition-colors duration-300" aria-label={`Read full article: ${item.title}`}>
+                  <div className="mt-4 flex items-center gap-1 text-[var(--color-accent-label)] group-hover:text-mint text-xs font-medium transition-colors duration-300" aria-label={`Read full article: ${item.title}`}>
                     Read more
                     <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -623,7 +623,7 @@ export default function Home() {
           href="https://calendly.com/mohitsengarr"
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full bg-mint hover:bg-mint-dark active:scale-[0.98] text-black font-semibold py-3.5 rounded-full transition-all text-center text-base"
+          className="block w-full bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-[0.98] text-black font-semibold py-3.5 rounded-full transition-all text-center text-base"
         >
           Book a Free Strategy Session
         </a>
@@ -652,7 +652,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.3 }}
-            className="text-xs md:text-sm uppercase tracking-[0.2em] text-mint mb-6 font-medium"
+            className="text-xs md:text-sm uppercase tracking-[0.2em] text-[var(--color-accent-label)] mb-6 font-medium"
           >
             Mohit Sengar &mdash; Official Website
           </motion.p>
@@ -661,7 +661,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.5 }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1] mb-8 max-w-3xl tracking-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1] mb-8 max-w-3xl tracking-tight text-white"
           >
             I Help Founders Build Engineering Teams That Actually Ship
           </motion.h1>
@@ -670,7 +670,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.7 }}
-            className="text-base md:text-lg text-white/60 mb-10 max-w-xl leading-relaxed"
+            className="text-base md:text-lg text-[var(--color-text-secondary)] mb-10 max-w-xl leading-relaxed"
           >
             14 years. 47+ companies. $0 in missed deadlines. Mohit Sengar is an award-winning
             fractional CTO based in Dubai who plugs into your startup and builds the tech org
@@ -684,7 +684,7 @@ export default function Home() {
             href="https://calendly.com/mohitsengarr"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:inline-block bg-mint hover:bg-mint-dark active:scale-95 text-black font-semibold px-8 py-4 rounded-full transition-all text-base hover:shadow-xl hover:shadow-mint/20"
+            className="hidden md:inline-block bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-95 text-black font-semibold px-8 py-4 rounded-full transition-all text-base hover:shadow-xl hover:shadow-mint/20"
           >
             Book a Free 30-Min Strategy Session &rarr;
           </motion.a>
@@ -697,7 +697,7 @@ export default function Home() {
           transition={{ delay: 1.5, duration: 1 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
         >
-          <span className="text-white/30 text-xs uppercase tracking-widest">Scroll</span>
+          <span className="text-[var(--color-text-muted)] text-xs uppercase tracking-widest">Scroll</span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -719,19 +719,19 @@ export default function Home() {
           ].map((s) => (
             <StaggerItem key={s.label}>
               <div className="text-3xl md:text-4xl font-bold text-mint tracking-tight">{s.num}</div>
-              <div className="text-xs md:text-sm text-white/40 mt-2 uppercase tracking-wider">{s.label}</div>
+              <div className="text-xs md:text-sm text-[var(--color-text-secondary)] mt-2 uppercase tracking-wider">{s.label}</div>
             </StaggerItem>
           ))}
         </StaggerContainer>
       </section>
 
       {/* ═══ PROBLEM / AGITATION ═══ */}
-      <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]">
+      <section className="py-24 md:py-32 px-6 bg-surface">
         <div className="max-w-3xl mx-auto">
           <Reveal>
-            <h2 className="text-2xl md:text-5xl font-bold mb-12 text-center tracking-tight">Sound Familiar?</h2>
+            <h2 className="text-2xl md:text-5xl font-bold mb-12 text-center tracking-tight text-white">Sound Familiar?</h2>
           </Reveal>
-          <div className="text-base md:text-lg text-white/50 leading-relaxed space-y-8 text-left">
+          <div className="text-base md:text-lg text-[var(--color-text-secondary)] leading-relaxed space-y-8 text-left">
             <Reveal delay={0.1}>
               <p>
                 You&apos;ve got a product vision but your engineering team keeps
@@ -763,11 +763,11 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <Reveal>
             <div className="text-center mb-16 md:mb-20">
-              <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Services</p>
-              <h2 className="text-2xl md:text-5xl font-bold mb-6 tracking-tight">
+              <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Services</p>
+              <h2 className="text-2xl md:text-5xl font-bold mb-6 tracking-tight text-white">
                 How I Work With You
               </h2>
-              <p className="text-white/40 text-base md:text-lg max-w-2xl mx-auto">
+              <p className="text-[var(--color-text-secondary)] text-base md:text-lg max-w-2xl mx-auto">
                 Every engagement starts with a free 30-minute strategy call where
                 I assess your situation and recommend next steps &mdash; no obligation.
               </p>
@@ -780,7 +780,7 @@ export default function Home() {
                   {m.icon}
                 </div>
                 <h3 className="text-lg md:text-xl font-bold mb-3 text-white">{m.title}</h3>
-                <p className="text-white/40 leading-relaxed text-sm md:text-base">{m.desc}</p>
+                <p className="text-[var(--color-text-secondary)] leading-relaxed text-sm md:text-base">{m.desc}</p>
               </PremiumCard>
             ))}
           </div>
@@ -790,7 +790,7 @@ export default function Home() {
                 href="https://calendly.com/mohitsengarr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-mint hover:bg-mint-dark active:scale-95 text-black font-semibold px-8 py-4 rounded-full transition-all text-base md:text-lg hover:shadow-xl hover:shadow-mint/20"
+                className="inline-block bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-95 text-black font-semibold px-8 py-4 rounded-full transition-all text-base md:text-lg hover:shadow-xl hover:shadow-mint/20"
               >
                 Book a Free Strategy Session &rarr;
               </a>
@@ -817,13 +817,13 @@ export default function Home() {
             </Reveal>
             <div>
               <Reveal>
-                <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Track Record</p>
-                <h2 className="text-2xl md:text-4xl font-bold mb-6 tracking-tight">
+                <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Track Record</p>
+                <h2 className="text-2xl md:text-4xl font-bold mb-6 tracking-tight text-white">
                   Why Companies Trust Me
                 </h2>
               </Reveal>
               <Reveal delay={0.1}>
-                <p className="text-white/40 mb-8 leading-relaxed text-sm md:text-base">
+                <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed text-sm md:text-base">
                   I&apos;ve spent 14 years building technology that works &mdash;
                   for 47+ companies across healthcare, fintech, e-commerce,
                   parking management, and theme park operations.
@@ -844,7 +844,7 @@ export default function Home() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </span>
-                      <span className="text-white/60 leading-relaxed text-sm md:text-base">{stat}</span>
+                      <span className="text-[var(--color-text-secondary)] leading-relaxed text-sm md:text-base">{stat}</span>
                     </div>
                   </StaggerItem>
                 ))}
@@ -855,18 +855,18 @@ export default function Home() {
       </section>
 
       {/* ═══ LEAD MAGNET ═══ */}
-      <section className="py-16 md:py-24 px-6 bg-[#0A0A0A] border-y border-white/5">
+      <section className="py-16 md:py-24 px-6 bg-surface border-y border-[var(--color-divider)]">
         <Reveal>
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-xl md:text-3xl font-bold mb-4 tracking-tight">
+            <h2 className="text-xl md:text-3xl font-bold mb-4 tracking-tight text-white">
               Not Ready to Talk Yet? No Problem.
             </h2>
-            <p className="text-white/40 mb-8 leading-relaxed text-sm md:text-base">
-              Get my free <strong className="text-white/70">Fractional CTO Playbook</strong> &mdash; how to
+            <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed text-sm md:text-base">
+              Get my free <strong className="text-white">Fractional CTO Playbook</strong> &mdash; how to
               get CTO-level strategy without the full-time salary.
             </p>
             <EmailCapture />
-            <p className="text-white/20 text-xs mt-4">No spam. Unsubscribe anytime.</p>
+            <p className="text-[var(--color-text-placeholder)] text-xs mt-4">No spam. Unsubscribe anytime.</p>
           </div>
         </Reveal>
       </section>
@@ -876,11 +876,11 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <Reveal>
             <div className="text-center mb-14 md:mb-16">
-              <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Recognition</p>
-              <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
+              <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Recognition</p>
+              <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight text-white">
                 Outstanding Leadership Award
               </h2>
-              <p className="text-base md:text-lg text-white/40 max-w-3xl mx-auto">
+              <p className="text-base md:text-lg text-[var(--color-text-secondary)] max-w-3xl mx-auto">
                 Honored at Dubai&apos;s Internet 2.0 Conference, February 2024,
                 for transformative impact in steering Invatu Technologies towards
                 innovation and success.
@@ -916,11 +916,11 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <Reveal>
             <div className="text-center mb-14 md:mb-16">
-              <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Portfolio</p>
-              <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
+              <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Portfolio</p>
+              <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight text-white">
                 Companies I&apos;ve Worked With
               </h2>
-              <p className="text-base md:text-lg text-white/40 max-w-3xl mx-auto">
+              <p className="text-base md:text-lg text-[var(--color-text-secondary)] max-w-3xl mx-auto">
                 From enterprise parking systems across Europe to theme park digital
                 experiences in Abu Dhabi &mdash; I&apos;ve delivered across
                 industries and continents.
@@ -950,7 +950,7 @@ export default function Home() {
                   </div>
                   <div className="p-4 md:p-5">
                     <h3 className="font-bold text-sm md:text-base text-white/90">{p.name}</h3>
-                    <p className="text-white/30 text-xs md:text-sm mt-1">{p.result}</p>
+                    <p className="text-[var(--color-text-muted)] text-xs md:text-sm mt-1">{p.result}</p>
                   </div>
                 </motion.a>
               </StaggerItem>
@@ -960,12 +960,12 @@ export default function Home() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-24 md:py-32 px-6 bg-[#0A0A0A] border-y border-white/5" id="testimonials">
+      <section className="py-24 md:py-32 px-6 bg-surface border-y border-[var(--color-divider)]" id="testimonials">
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <div className="text-center mb-14 md:mb-16">
-              <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Social Proof</p>
-              <h2 className="text-2xl md:text-4xl font-bold tracking-tight">
+              <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Social Proof</p>
+              <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-white">
                 What Clients Say
               </h2>
             </div>
@@ -981,8 +981,8 @@ export default function Home() {
                     <Image src={t.img} alt={t.name} fill sizes="80px" className="object-cover" loading="lazy" />
                   </div>
                   <h3 className="text-base md:text-lg font-bold text-white">{t.name}</h3>
-                  <span className="text-sm text-mint/80 mb-4">{t.role}</span>
-                  <p className="text-white/40 max-w-xl leading-relaxed italic text-sm md:text-base">
+                  <span className="text-sm text-[var(--color-text-muted)] mb-4">{t.role}</span>
+                  <p className="text-[var(--color-text-secondary)] max-w-xl leading-relaxed italic text-sm md:text-base">
                     &ldquo;{t.text}&rdquo;
                   </p>
                 </div>
@@ -1018,8 +1018,8 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <div className="text-center mb-14 md:mb-16">
-              <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">FAQ</p>
-              <h2 className="text-2xl md:text-4xl font-bold tracking-tight">
+              <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">FAQ</p>
+              <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-white">
                 Common Questions
               </h2>
             </div>
@@ -1033,17 +1033,17 @@ export default function Home() {
       </section>
 
       {/* ═══ FINAL CTA ═══ */}
-      <section className="py-24 md:py-32 px-6 bg-[#0A0A0A] relative overflow-hidden">
+      <section className="py-24 md:py-32 px-6 bg-surface relative overflow-hidden">
         {/* Subtle radial glow */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-[600px] h-[600px] bg-mint/5 rounded-full blur-[120px]" />
         </div>
         <Reveal>
           <div className="max-w-3xl mx-auto text-center relative z-10">
-            <h2 className="text-2xl md:text-5xl font-bold mb-6 tracking-tight">
+            <h2 className="text-2xl md:text-5xl font-bold mb-6 tracking-tight text-white">
               Ready to Stop Worrying About Engineering?
             </h2>
-            <p className="text-white/40 text-base md:text-lg mb-10 max-w-xl mx-auto">
+            <p className="text-[var(--color-text-secondary)] text-base md:text-lg mb-10 max-w-xl mx-auto">
               Book a free 30-minute strategy session. I&apos;ll audit your current
               situation and give you 3 actionable recommendations &mdash; no
               strings attached.
@@ -1054,7 +1054,7 @@ export default function Home() {
               href="https://calendly.com/mohitsengarr"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block bg-mint hover:bg-mint-dark text-black font-semibold px-10 md:px-12 py-4 md:py-5 rounded-full transition-colors text-base md:text-lg shadow-2xl shadow-mint/20 hover:shadow-mint/30"
+              className="inline-block bg-mint hover:bg-mint-hover active:bg-mint-pressed text-black font-semibold px-10 md:px-12 py-4 md:py-5 rounded-full transition-colors text-base md:text-lg shadow-2xl shadow-mint/20 hover:shadow-mint/30"
             >
               Book Your Free Strategy Session &rarr;
             </motion.a>
@@ -1063,13 +1063,13 @@ export default function Home() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="bg-[#050505] text-white py-16 md:py-20 px-6 pb-28 md:pb-20 border-t border-white/5" id="contact" role="contentinfo">
+      <footer className="bg-[#050505] text-white py-16 md:py-20 px-6 pb-28 md:pb-20 border-t border-[var(--color-divider)]" id="contact" role="contentinfo">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-10 md:gap-12 mb-12 md:mb-16">
             <Reveal>
               <div>
                 <h3 className="text-xl font-bold mb-4 tracking-tight">Mohit Sengar</h3>
-                <p className="text-white/30 leading-relaxed text-sm md:text-base">
+                <p className="text-[var(--color-text-muted)] leading-relaxed text-sm md:text-base">
                   Award-winning CTO and fractional technology leader. 14+ years
                   helping companies build engineering teams that ship.
                 </p>
@@ -1077,16 +1077,16 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.1}>
               <div>
-                <h3 className="text-xs font-semibold text-white/30 uppercase tracking-[0.15em] mb-5">
+                <h3 className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-[0.15em] mb-5">
                   Get in Touch
                 </h3>
-                <ul className="space-y-3 text-white/50">
+                <ul className="space-y-3 text-[var(--color-text-secondary)]">
                   <li>
                     <a href="mailto:mohitsingh.shiv@gmail.com" className="hover:text-mint transition-colors duration-300 py-2 inline-block">
                       mohitsingh.shiv@gmail.com
                     </a>
                   </li>
-                  <li className="text-sm text-white/30">Based in Dubai &amp; India, working globally</li>
+                  <li className="text-sm text-[var(--color-text-muted)]">Based in Dubai &amp; India, working globally</li>
                   <li>
                     <a
                       href="https://calendly.com/mohitsengarr"
@@ -1102,7 +1102,7 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.2}>
               <div>
-                <h3 className="text-xs font-semibold text-white/30 uppercase tracking-[0.15em] mb-5">
+                <h3 className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-[0.15em] mb-5">
                   Connect
                 </h3>
                 <div className="flex gap-3">
@@ -1112,20 +1112,20 @@ export default function Home() {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white/30 hover:text-mint transition-all duration-300 w-11 h-11 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-white/5"
+                      className="text-[var(--color-text-muted)] hover:text-mint transition-all duration-300 w-11 h-11 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 border border-[var(--color-border)]"
                       aria-label={`${link.name} profile`}
                     >
                       {link.icon}
                     </a>
                   ))}
                 </div>
-                <p className="text-white/20 text-sm mt-6">
+                <p className="text-[var(--color-text-placeholder)] text-sm mt-6">
                   NGO collaborations: Dream Girl Foundation, Donate an Hour
                 </p>
               </div>
             </Reveal>
           </div>
-          <div className="pt-8 border-t border-white/5 text-sm text-white/20 text-center">
+          <div className="pt-8 border-t border-[var(--color-divider)] text-sm text-[var(--color-text-placeholder)] text-center">
             &copy; {new Date().getFullYear()} Mohit Sengar &mdash; Official Site. All rights reserved.
           </div>
         </div>

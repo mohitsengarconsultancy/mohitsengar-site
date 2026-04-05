@@ -3,8 +3,47 @@
 @theme {
   --color-mint: #8DD9BF;
   --color-mint-dark: #6bc4a6;
+  --color-mint-hover: #A3E4CF;
+  --color-mint-pressed: #78C9AD;
+  --color-surface: #111111;
+  --color-surface-2: #1A1A1A;
+  --color-surface-3: #222222;
   --font-heading: "Clarkson", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ─── Color System Tokens ─── */
+:root {
+  /* Backgrounds */
+  --color-bg: #0A0A0A;
+  --color-nav-bg: rgba(10, 10, 10, 0.85);
+
+  /* Text hierarchy */
+  --color-text: #FFFFFF;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-text-placeholder: rgba(255, 255, 255, 0.35);
+
+  /* Accent — muted version for non-interactive labels */
+  --color-accent-label: rgba(141, 217, 191, 0.6);
+
+  /* Secondary buttons */
+  --color-secondary-bg: rgba(255, 255, 255, 0.12);
+  --color-secondary-hover: rgba(255, 255, 255, 0.18);
+
+  /* Semantic status */
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Borders */
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-hover: rgba(255, 255, 255, 0.2);
+  --color-divider: rgba(255, 255, 255, 0.06);
+
+  /* Focus */
+  --color-focus: #8DD9BF;
 }
 
 /* ─── Motion Tokens ─── */
@@ -35,7 +74,18 @@ html {
 body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  background: #000;
+  background: var(--color-bg);
+}
+
+/* ─── Global Focus Styles ─── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* ─── Carousel ─── */
@@ -105,7 +155,7 @@ body {
 
 /* ─── Subtle border gradient ─── */
 .border-gradient {
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-divider);
 }
 
 .border-gradient:hover {
