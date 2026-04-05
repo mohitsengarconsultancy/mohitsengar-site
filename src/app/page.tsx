@@ -433,17 +433,54 @@ function AINewsSection() {
       .catch(() => setLoading(false));
   }, []);
 
+  // Inject NewsArticle structured data for SEO
+  useEffect(() => {
+    if (!news.length) return;
+    const existingScript = document.getElementById("news-schema");
+    if (existingScript) existingScript.remove();
+
+    const newsSchema = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "AI News & Insights curated by Mohit Sengar",
+      description: "Daily curated breaking AI news by Mohit Sengar, award-winning CTO and technology leader.",
+      itemListElement: news.map((item, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "NewsArticle",
+          headline: item.title,
+          url: item.url,
+          datePublished: item.date,
+          publisher: { "@type": "Organization", name: item.source },
+          description: item.summary,
+        },
+      })),
+    };
+
+    const script = document.createElement("script");
+    script.id = "news-schema";
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify(newsSchema);
+    document.head.appendChild(script);
+
+    return () => {
+      const el = document.getElementById("news-schema");
+      if (el) el.remove();
+    };
+  }, [news]);
+
   if (loading) {
     return (
-      <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]" id="news">
+      <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]" id="news" aria-label="AI News & Insights">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14 md:mb-16">
+          <header className="text-center mb-14 md:mb-16">
             <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
             <h2 className="text-2xl md:text-4xl font-bold tracking-tight">AI News & Insights</h2>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          </header>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5" role="list" aria-busy="true">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white/[0.03] rounded-2xl border border-white/[0.06] p-6 animate-pulse">
+              <div key={i} className="bg-white/[0.03] rounded-2xl border border-white/[0.06] p-6 animate-pulse" role="listitem">
                 <div className="h-4 bg-white/10 rounded w-1/3 mb-4" />
                 <div className="h-5 bg-white/10 rounded w-full mb-2" />
                 <div className="h-5 bg-white/10 rounded w-2/3 mb-4" />
@@ -460,57 +497,73 @@ function AINewsSection() {
   if (!news.length) return null;
 
   return (
-    <section className="py-24 md:py-32 px-6 bg-[#0A0A0A] border-y border-white/5" id="news">
+    <section className="py-24 md:py-32 px-6 bg-[#0A0A0A] border-y border-white/5" id="news" aria-label="AI News & Insights">
       <div className="max-w-6xl mx-auto">
         <Reveal>
-          <div className="text-center mb-14 md:mb-16">
+          <header className="text-center mb-14 md:mb-16">
             <p className="text-mint text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
             <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
               AI News & Insights
             </h2>
             <p className="text-white/40 text-base md:text-lg max-w-2xl mx-auto">
               Curated breaking news from the world of artificial intelligence,
-              updated daily.
+              updated daily by Mohit Sengar.
             </p>
             {lastUpdated && (
-              <p className="text-white/20 text-xs mt-3">Last updated: {lastUpdated}</p>
+              <p className="text-white/20 text-xs mt-3">
+                <time dateTime={new Date().toISOString().split("T")[0]}>Last updated: {lastUpdated}</time>
+              </p>
             )}
-          </div>
+          </header>
         </Reveal>
         <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-5" stagger={0.08}>
           {news.map((item, i) => (
             <StaggerItem key={i}>
-              <motion.a
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.3, ease: EASE_OUT }}
-                className="block bg-white/[0.03] rounded-2xl border border-white/[0.06] hover:border-mint/20 transition-all duration-500 p-6 h-full group"
-              >
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-mint/70 text-xs font-medium uppercase tracking-wider">{item.source}</span>
-                  <span className="text-white/20 text-xs">&bull;</span>
-                  <span className="text-white/30 text-xs">{item.date}</span>
-                </div>
-                <h3 className="text-base md:text-lg font-bold text-white/90 group-hover:text-mint transition-colors duration-300 mb-3 leading-snug line-clamp-3">
-                  {item.title}
-                </h3>
-                {item.summary && (
-                  <p className="text-white/40 text-sm leading-relaxed line-clamp-3">
-                    {item.summary}
-                  </p>
-                )}
-                <div className="mt-4 flex items-center gap-1 text-mint/60 group-hover:text-mint text-xs font-medium transition-colors duration-300">
-                  Read more
-                  <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </motion.a>
+              <article itemScope itemType="https://schema.org/NewsArticle" className="h-full">
+                <motion.a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.3, ease: EASE_OUT }}
+                  className="block bg-white/[0.03] rounded-2xl border border-white/[0.06] hover:border-mint/20 transition-all duration-500 p-6 h-full group"
+                  itemProp="url"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-mint/70 text-xs font-medium uppercase tracking-wider" itemProp="publisher" itemScope itemType="https://schema.org/Organization">
+                      <span itemProp="name">{item.source}</span>
+                    </span>
+                    <span className="text-white/20 text-xs" aria-hidden="true">&bull;</span>
+                    <time className="text-white/30 text-xs" itemProp="datePublished" dateTime={item.date}>
+                      {item.date}
+                    </time>
+                  </div>
+                  <h3 className="text-base md:text-lg font-bold text-white/90 group-hover:text-mint transition-colors duration-300 mb-3 leading-snug line-clamp-3" itemProp="headline">
+                    {item.title}
+                  </h3>
+                  {item.summary && (
+                    <p className="text-white/40 text-sm leading-relaxed line-clamp-3" itemProp="description">
+                      {item.summary}
+                    </p>
+                  )}
+                  <div className="mt-4 flex items-center gap-1 text-mint/60 group-hover:text-mint text-xs font-medium transition-colors duration-300" aria-label={`Read full article: ${item.title}`}>
+                    Read more
+                    <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </motion.a>
+              </article>
             </StaggerItem>
           ))}
         </StaggerContainer>
+
+        {/* SEO: noscript fallback for crawlers */}
+        <noscript>
+          <div className="text-center mt-8 text-white/40 text-sm">
+            <p>This section displays the latest AI news curated by Mohit Sengar, updated daily. Enable JavaScript to view the latest articles.</p>
+          </div>
+        </noscript>
       </div>
     </section>
   );

@@ -114,6 +114,30 @@ const organizationSchema = {
   ],
 };
 
+const blogSchema = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "AI News & Insights by Mohit Sengar",
+  description:
+    "Curated breaking news from the world of artificial intelligence, updated daily by Mohit Sengar — award-winning CTO and technology leader.",
+  url: `${SITE_URL}/#news`,
+  author: {
+    "@type": "Person",
+    name: "Mohit Sengar",
+    url: SITE_URL,
+  },
+  publisher: {
+    "@type": "Person",
+    name: "Mohit Sengar",
+    url: SITE_URL,
+  },
+  inLanguage: "en-US",
+  about: {
+    "@type": "Thing",
+    name: "Artificial Intelligence",
+  },
+};
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -187,6 +211,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(blogSchema),
           }}
         />
         <script
