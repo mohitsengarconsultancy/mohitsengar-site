@@ -150,21 +150,103 @@ const ENGAGEMENT_MODELS = [
     title: "Fractional CTO",
     desc: "Ongoing strategic tech leadership for 10-20 hours/week. Architecture decisions, team hiring, vendor selection, and delivery oversight.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+    visual: (
+      <div className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3 space-y-2">
+        <div className="flex items-center justify-between text-[10px]">
+          <span className="text-mint font-semibold">Delivery Dashboard</span>
+          <span className="text-white/30">Live</span>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[{ l: "On-Time", v: "98%", c: "text-emerald-400" }, { l: "Sprints", v: "12", c: "text-mint" }, { l: "Bug Rate", v: "0.3%", c: "text-emerald-400" }].map((s) => (
+            <div key={s.l} className="bg-white/[0.04] rounded-lg p-2 text-center">
+              <div className={`text-sm font-bold ${s.c}`}>{s.v}</div>
+              <div className="text-[9px] text-white/30 mt-0.5">{s.l}</div>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 text-[9px] text-white/25">
+          <span className="w-1.5 h-1.5 bg-mint rounded-full animate-pulse" />
+          Weekly sync &bull; Architecture reviews &bull; Release approvals
+        </div>
+      </div>
+    ),
   },
   {
     title: "Technical Due Diligence",
     desc: "Pre-investment or pre-acquisition deep-dive into a company's codebase, team, and infrastructure. Delivered as a written report with risk assessment.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>,
+    visual: (
+      <div className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3 space-y-2">
+        <div className="flex items-center justify-between text-[10px]">
+          <span className="text-mint font-semibold">Due Diligence Report</span>
+          <span className="bg-mint/10 text-mint px-1.5 py-0.5 rounded text-[9px]">7-day delivery</span>
+        </div>
+        <div className="space-y-1.5">
+          {[{ l: "Code Quality", r: "Low Risk", c: "bg-emerald-400" }, { l: "Security", r: "Med Risk", c: "bg-amber-400" }, { l: "Scalability", r: "High Risk", c: "bg-red-400" }, { l: "Team & Process", r: "Low Risk", c: "bg-emerald-400" }].map((s) => (
+            <div key={s.l} className="flex items-center justify-between bg-white/[0.03] rounded-lg px-2.5 py-1.5">
+              <span className="text-[10px] text-white/50">{s.l}</span>
+              <span className={`flex items-center gap-1 text-[9px] text-white/60`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${s.c}`} />
+                {s.r}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
   },
   {
     title: "Team Building & Hiring",
     desc: "I help you define roles, vet candidates, and build an engineering culture that retains talent and ships on schedule.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>,
+    visual: (
+      <div className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3 space-y-2">
+        <div className="text-[10px] text-mint font-semibold mb-1">Hiring Pipeline</div>
+        <div className="grid grid-cols-3 gap-1.5">
+          {[{ stage: "Sourced", count: "12" }, { stage: "Interviews", count: "5" }, { stage: "Hired", count: "2" }].map((s, i) => (
+            <div key={s.stage} className="text-center">
+              <div className={`rounded-lg py-2 text-xs font-bold ${i === 2 ? "bg-mint/15 text-mint" : "bg-white/[0.04] text-white/50"}`}>{s.count}</div>
+              <div className="text-[9px] text-white/30 mt-1">{s.stage}</div>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-1.5 mt-1">
+          {["Sr. Backend — Hired ✓", "Frontend Lead — Interviewing", "DevOps — Sourcing"].map((t) => (
+            <span key={t} className="text-[8px] bg-white/[0.05] text-white/40 px-1.5 py-0.5 rounded">{t}</span>
+          ))}
+        </div>
+      </div>
+    ),
   },
   {
     title: "Architecture & Scaling Review",
     desc: "One-time engagement to audit your current system and deliver a scaling roadmap — so your architecture doesn't break at the next growth stage.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" /></svg>,
+    visual: (
+      <div className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3">
+        <div className="text-[10px] text-mint font-semibold mb-2">System Architecture</div>
+        <div className="flex items-center justify-between gap-1">
+          {[
+            { label: "Frontend", sub: "Next.js", color: "border-blue-400/30" },
+            { label: "API", sub: "Gateway", color: "border-purple-400/30" },
+            { label: "Services", sub: "Microservices", color: "border-amber-400/30" },
+            { label: "Database", sub: "Postgres", color: "border-emerald-400/30" },
+          ].map((n, i) => (
+            <div key={n.label} className="flex items-center">
+              <div className={`bg-white/[0.04] border ${n.color} rounded-lg px-2 py-1.5 text-center`}>
+                <div className="text-[9px] text-white/50 font-medium">{n.label}</div>
+                <div className="text-[8px] text-white/25">{n.sub}</div>
+              </div>
+              {i < 3 && <svg className="w-3 h-3 text-white/15 mx-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>}
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-1.5 mt-2 text-[8px]">
+          <span className="bg-red-400/10 text-red-400/60 px-1.5 py-0.5 rounded">⚠ Bottleneck</span>
+          <span className="bg-emerald-400/10 text-emerald-400/60 px-1.5 py-0.5 rounded">✓ Optimized</span>
+        </div>
+      </div>
+    ),
   },
 ];
 
@@ -188,6 +270,9 @@ const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
+  { label: "Shopify", href: "/shopify" },
+  { label: "Vibe Coding", href: "/vibe-coding" },
+  { label: "Resume", href: "/resume" },
   { label: "News", href: "#news" },
   { label: "Testimonials", href: "#testimonials" },
   { label: "FAQ", href: "#faq" },
@@ -360,41 +445,65 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
 /* ─── Email Capture ─── */
 function EmailCapture() {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (email) setSubmitted(true);
+    if (!email || status === "sending") return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "playbook", email }),
+      });
+      setStatus(res.ok ? "success" : "error");
+    } catch {
+      setStatus("error");
+    }
   }
 
-  if (submitted) {
+  if (status === "success") {
     return (
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-4">
-        <p className="text-[var(--color-success)] font-semibold text-lg">Thanks! Check your inbox.</p>
-        <p className="text-[var(--color-text-muted)] text-sm mt-1">The playbook is on its way.</p>
+        <p className="text-[var(--color-success)] font-semibold text-lg">Thanks! You&apos;re in.</p>
+        <p className="text-[var(--color-text-muted)] text-sm mt-1">The playbook lands in your inbox within a day.</p>
       </motion.div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-      <input
-        type="email"
-        inputMode="email"
-        autoComplete="email"
-        required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter your email"
-        className="flex-1 px-4 py-3 rounded-full bg-surface-2 border border-[var(--color-border)] text-white placeholder-[var(--color-text-placeholder)] focus:outline-none focus:ring-2 focus:ring-mint/50 focus:border-mint/60 min-h-[48px] transition-all duration-300"
-      />
-      <button
-        type="submit"
-        className="bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-95 text-black font-semibold px-6 py-3 rounded-full transition-all whitespace-nowrap min-h-[48px] hover:shadow-lg hover:shadow-mint/20"
-      >
-        Get the Playbook
-      </button>
-    </form>
+    <div className="max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+        <input
+          type="email"
+          name="email"
+          inputMode="email"
+          autoComplete="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          className="flex-1 px-4 py-3 rounded-full bg-surface-2 border border-[var(--color-border)] text-white placeholder-[var(--color-text-placeholder)] focus:outline-none focus:ring-2 focus:ring-mint/50 focus:border-mint/60 min-h-[48px] transition-all duration-300"
+        />
+        <button
+          type="submit"
+          disabled={status === "sending"}
+          className="bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-95 text-black font-semibold px-6 py-3 rounded-full transition-all whitespace-nowrap min-h-[48px] hover:shadow-lg hover:shadow-mint/20 disabled:opacity-60"
+        >
+          {status === "sending" ? "Sending…" : "Get the Playbook"}
+        </button>
+      </form>
+      {status === "error" && (
+        <p className="text-sm text-[var(--color-text-muted)] text-center mt-3">
+          Couldn&apos;t send right now — email{" "}
+          <a href="mailto:mohit@sengarconsultancy.org" className="text-mint hover:underline">
+            mohit@sengarconsultancy.org
+          </a>{" "}
+          and I&apos;ll send the playbook directly.
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -674,7 +783,7 @@ export default function Home() {
             transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.7 }}
             className="text-base md:text-lg text-[var(--color-text-secondary)] mb-10 max-w-xl leading-relaxed"
           >
-            14 years. 47+ companies. $0 in missed deadlines. Mohit Sengar is an award-winning
+            14 years. 40+ companies. $0 in missed deadlines. Mohit Sengar is an award-winning
             fractional CTO based in Dubai who plugs into your startup and builds the tech org
             you need &mdash; without the $400K/year salary.
           </motion.p>
@@ -712,14 +821,18 @@ export default function Home() {
 
       {/* ═══ TRUST BAR ═══ */}
       <section className="bg-[#0A0A0A] border-y border-white/5 py-10 md:py-14">
-        <StaggerContainer className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <StaggerContainer className="max-w-5xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
           {[
-            { num: "47+", label: "Clients Worldwide" },
-            { num: "100%", label: "Job Success Rate" },
-            { num: "29,000+", label: "Hours Delivered" },
-            { num: "14+", label: "Years Experience" },
+            { num: "40+", label: "Clients Worldwide", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg> },
+            { num: "100%", label: "Job Success Rate", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg> },
+            { num: "14+", label: "Years Experience", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.003 6.003 0 01-2.77.672c-.992 0-1.929-.245-2.77-.672" /></svg> },
           ].map((s) => (
             <StaggerItem key={s.label}>
+              <div className="flex justify-center mb-3">
+                <div className="w-10 h-10 bg-mint/10 rounded-xl flex items-center justify-center text-mint">
+                  {s.icon}
+                </div>
+              </div>
               <div className="text-3xl md:text-4xl font-bold text-mint tracking-tight">{s.num}</div>
               <div className="text-xs md:text-sm text-[var(--color-text-secondary)] mt-2 uppercase tracking-wider">{s.label}</div>
             </StaggerItem>
@@ -753,7 +866,7 @@ export default function Home() {
             <Reveal delay={0.3}>
               <p className="text-white font-semibold text-lg md:text-2xl text-center !leading-snug">
                 You don&apos;t need another developer. You need a technical leader
-                who&apos;s built this before &mdash; 47 times.
+                who&apos;s built this before &mdash; 40 times.
               </p>
             </Reveal>
           </div>
@@ -783,6 +896,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-lg md:text-xl font-bold mb-3 text-white">{m.title}</h3>
                 <p className="text-[var(--color-text-secondary)] leading-relaxed text-sm md:text-base">{m.desc}</p>
+                {m.visual}
               </PremiumCard>
             ))}
           </div>
@@ -827,16 +941,15 @@ export default function Home() {
               <Reveal delay={0.1}>
                 <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed text-sm md:text-base">
                   I&apos;ve spent 14 years building technology that works &mdash;
-                  for 47+ companies across healthcare, fintech, e-commerce,
+                  for 40+ companies across healthcare, fintech, e-commerce,
                   parking management, and theme park operations.
                 </p>
               </Reveal>
               <StaggerContainer className="space-y-4" stagger={0.08}>
                 {[
-                  "Collaborated with 47+ clients across diverse industries worldwide",
+                  "Collaborated with 40+ clients across diverse industries worldwide",
                   "100% job success rate — I don't take on work I can't deliver",
                   "14+ years of hands-on engineering leadership experience",
-                  "29,000+ hours of engineering leadership delivered",
                   "Outstanding Leadership Award — Internet 2.0 Conference, Dubai 2024",
                 ].map((stat, i) => (
                   <StaggerItem key={i}>
@@ -858,19 +971,50 @@ export default function Home() {
 
       {/* ═══ LEAD MAGNET ═══ */}
       <section className="py-16 md:py-24 px-6 bg-surface border-y border-[var(--color-divider)]">
-        <Reveal>
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-xl md:text-3xl font-bold mb-4 tracking-tight text-white">
-              Not Ready to Talk Yet? No Problem.
-            </h2>
-            <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed text-sm md:text-base">
-              Get my free <strong className="text-white">Fractional CTO Playbook</strong> &mdash; how to
-              get CTO-level strategy without the full-time salary.
-            </p>
-            <EmailCapture />
-            <p className="text-[var(--color-text-placeholder)] text-xs mt-4">No spam. Unsubscribe anytime.</p>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            {/* Playbook mock cover */}
+            <Reveal direction="left" className="flex-shrink-0">
+              <div className="relative">
+                <div className="w-48 md:w-56 aspect-[3/4] bg-gradient-to-br from-[#1A1A1A] to-[#111] rounded-xl border border-white/[0.08] shadow-2xl shadow-black/50 p-5 md:p-6 flex flex-col justify-between relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-mint/5 rounded-full blur-[40px]" />
+                  <div className="relative z-10">
+                    <div className="text-[9px] text-mint uppercase tracking-[0.2em] font-semibold mb-2">Free Guide</div>
+                    <h3 className="text-sm md:text-base font-bold text-white leading-tight">
+                      The Fractional CTO Playbook
+                    </h3>
+                    <div className="w-8 h-0.5 bg-mint/40 mt-3 rounded-full" />
+                  </div>
+                  <div className="relative z-10 space-y-1.5 mt-4">
+                    {["How to structure your eng org", "What to measure & report", "When to hire vs outsource"].map((b) => (
+                      <div key={b} className="flex items-start gap-1.5">
+                        <svg className="w-3 h-3 text-mint/60 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                        <span className="text-[9px] text-white/40 leading-snug">{b}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="relative z-10 mt-4 pt-3 border-t border-white/[0.06]">
+                    <div className="text-[8px] text-white/25">By Mohit Sengar</div>
+                  </div>
+                </div>
+                {/* Shadow / depth effect */}
+                <div className="absolute -bottom-2 left-2 right-2 h-4 bg-black/30 rounded-b-xl blur-sm -z-10" />
+              </div>
+            </Reveal>
+            {/* Text + form */}
+            <Reveal className="flex-1 text-center md:text-left">
+              <h2 className="text-xl md:text-3xl font-bold mb-4 tracking-tight text-white">
+                Not Ready to Talk Yet? No Problem.
+              </h2>
+              <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed text-sm md:text-base">
+                Get my free <strong className="text-white">Fractional CTO Playbook</strong> &mdash; how to
+                get CTO-level strategy without the full-time salary.
+              </p>
+              <EmailCapture />
+              <p className="text-[var(--color-text-placeholder)] text-xs mt-4">No spam. Unsubscribe anytime.</p>
+            </Reveal>
           </div>
-        </Reveal>
+        </div>
       </section>
 
       {/* ═══ AWARD ═══ */}
@@ -910,6 +1054,41 @@ export default function Home() {
               </StaggerItem>
             ))}
           </StaggerContainer>
+        </div>
+      </section>
+
+      {/* ═══ VIDEO ═══ */}
+      <section className="py-24 md:py-32 px-6 bg-surface" id="video">
+        <div className="max-w-4xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-12 md:mb-16">
+              <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">
+                Watch
+              </p>
+              <h2 className="text-2xl md:text-4xl font-bold mb-6 tracking-tight text-white">
+                Technology Leadership &amp; Innovation
+              </h2>
+              <p className="text-[var(--color-text-secondary)] text-base md:text-lg max-w-2xl mx-auto">
+                Hear directly from Mohit on engineering leadership, building
+                high-performing teams, and the approach behind 40+ successful
+                projects with a 100% delivery rate.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <div className="relative w-full rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl shadow-black/40">
+              <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/EY4CJU8LNAE?rel=0&modestbranding=1"
+                  title="Mohit Sengar — Technology Leadership & Innovation"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -1015,6 +1194,88 @@ export default function Home() {
       {/* ═══ AI NEWS ═══ */}
       <AINewsSection />
 
+      {/* ═══ FRACTIONAL vs FULL-TIME CTO ═══ */}
+      <section className="py-24 md:py-32 px-6 bg-surface">
+        <div className="max-w-4xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-14 md:mb-16">
+              <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Why Fractional?</p>
+              <h2 className="text-2xl md:text-4xl font-bold mb-6 tracking-tight text-white">
+                Full-Time CTO vs Fractional CTO
+              </h2>
+              <p className="text-[var(--color-text-secondary)] text-base md:text-lg max-w-2xl mx-auto">
+                Get the same strategic impact at a fraction of the cost &mdash; without the 6-month hiring process.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="grid md:grid-cols-2 gap-5">
+              {/* Full-Time */}
+              <div className="bg-white/[0.02] rounded-2xl border border-white/[0.06] p-6 md:p-8 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/5 rounded-full blur-[30px]" />
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-white/[0.06] rounded-xl flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white/60">Full-Time CTO</h3>
+                    <p className="text-xs text-white/30">Traditional hiring</p>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  {[
+                    { label: "Annual Cost", value: "$300K-$450K+", sub: "salary + equity + benefits" },
+                    { label: "Time to Hire", value: "3-6 months", sub: "search, interviews, onboarding" },
+                    { label: "Risk", value: "High", sub: "wrong hire = 6-12 months lost" },
+                    { label: "Flexibility", value: "Low", sub: "committed regardless of stage" },
+                  ].map((row) => (
+                    <div key={row.label} className="bg-white/[0.03] rounded-lg px-4 py-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-white/40 uppercase tracking-wider">{row.label}</span>
+                        <span className="text-sm font-semibold text-white/50">{row.value}</span>
+                      </div>
+                      <p className="text-[10px] text-white/20 mt-0.5">{row.sub}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Fractional */}
+              <div className="bg-white/[0.03] rounded-2xl border border-mint/20 p-6 md:p-8 relative overflow-hidden shadow-lg shadow-mint/5">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-mint/10 rounded-full blur-[30px]" />
+                <div className="absolute top-4 right-4 bg-mint/10 text-mint text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                  Recommended
+                </div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-mint/10 rounded-xl flex items-center justify-center">
+                    <svg className="w-5 h-5 text-mint" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Fractional CTO</h3>
+                    <p className="text-xs text-mint/60">With Mohit Sengar</p>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  {[
+                    { label: "Annual Cost", value: "70-80% less", sub: "pay only for hours you need" },
+                    { label: "Time to Start", value: "1-2 weeks", sub: "no search, immediate impact" },
+                    { label: "Risk", value: "Minimal", sub: "proven track record, 40+ clients" },
+                    { label: "Flexibility", value: "High", sub: "scale up, down, or pause anytime" },
+                  ].map((row) => (
+                    <div key={row.label} className="bg-white/[0.04] rounded-lg px-4 py-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-white/40 uppercase tracking-wider">{row.label}</span>
+                        <span className="text-sm font-semibold text-mint">{row.value}</span>
+                      </div>
+                      <p className="text-[10px] text-white/30 mt-0.5">{row.sub}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ═══ FAQ ═══ */}
       <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]" id="faq">
         <div className="max-w-3xl mx-auto">
@@ -1060,6 +1321,19 @@ export default function Home() {
             >
               Book Your Free Strategy Session &rarr;
             </motion.a>
+            {/* Trust badges */}
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-8 text-[var(--color-text-muted)]">
+              {[
+                { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>, text: "No obligation" },
+                { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, text: "30-min session" },
+                { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" /></svg>, text: "3 free recommendations" },
+              ].map((b) => (
+                <div key={b.text} className="flex items-center gap-1.5 text-xs">
+                  {b.icon}
+                  <span>{b.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </Reveal>
       </section>
@@ -1084,8 +1358,8 @@ export default function Home() {
                 </h3>
                 <ul className="space-y-3 text-[var(--color-text-secondary)]">
                   <li>
-                    <a href="mailto:mohitsingh.shiv@gmail.com" className="hover:text-mint transition-colors duration-300 py-2 inline-block">
-                      mohitsingh.shiv@gmail.com
+                    <a href="mailto:mohit@sengarconsultancy.org" className="hover:text-mint transition-colors duration-300 py-2 inline-block">
+                      mohit@sengarconsultancy.org
                     </a>
                   </li>
                   <li className="text-sm text-[var(--color-text-muted)]">Based in Dubai &amp; India, working globally</li>

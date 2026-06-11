@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title:
       "Mohit Sengar – Award-Winning CTO & Technology Leader | Official Site",
     description:
-      "Mohit Sengar is an award-winning CTO based in Dubai. Sengar specializes in AI, automation, software development, blockchain, and digital transformation. 100% job success rate across 47+ clients.",
+      "Mohit Sengar is an award-winning CTO based in Dubai. Sengar specializes in AI, automation, software development, blockchain, and digital transformation. 100% job success rate across 40+ clients.",
     url: SITE_URL,
     siteName: "Mohit Sengar",
     images: [
@@ -247,6 +247,30 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(faqSchema),
+          }}
+        />
+        {/* Hotjar Tracking */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(h,o,t,j,a,r){h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};h._hjSettings={hjid:6690297,hjsv:6};a=o.getElementsByTagName('head')[0];r=o.createElement('script');r.async=1;r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;a.appendChild(r);})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
+          }}
+        />
+        {/* Leadsy.ai vTag */}
+        <script
+          id="vtag-ai-js"
+          async
+          src="https://r2.leadsy.ai/tag.js"
+          data-pid="q1TpErQJyYOtnm4X"
+          data-version="062024"
+        />
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-JW4SYZ00EQ"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-JW4SYZ00EQ');`,
           }}
         />
       </head>
