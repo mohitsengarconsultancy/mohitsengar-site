@@ -877,6 +877,7 @@ export default function ResumePage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Person",
+            "@id": "https://www.mohitsengar.org/#person",
             name: "Mohit Singh Sengar",
             jobTitle: "Chief Technology Officer",
             email: `mailto:${CONTACT.email}`,

@@ -4,10 +4,9 @@ const SITE_URL = "https://www.mohitsengar.org";
 const PAGE_URL = `${SITE_URL}/shopify-experts`;
 
 export const metadata: Metadata = {
-  title:
-    "Top 1% Shopify Experts | Shopify Development, CRO & Growth | Sengar Agency",
+  title: "Shopify Experts — Development, CRO & Growth | Mohit Sengar",
   description:
-    "Hire the top 1% Shopify experts. We build, optimize, and scale Shopify stores for DTC brands in health, fashion, supplements & more. $501K+ managed. 100% job success. Book a free strategy call.",
+    "Top 1% Shopify team — store builds, CRO, speed, and DTC growth for 40+ brands. $501K+ managed, 100% success rate. Book a free strategy call.",
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: PAGE_URL,
@@ -47,20 +46,20 @@ export const metadata: Metadata = {
     description:
       "We are the top 1% Shopify experts trusted by 40+ brands. From store setup to CRO, speed optimization, and full DTC growth — we handle everything. $501K+ in managed client revenue. Book your free strategy call.",
     url: PAGE_URL,
-    siteName: "Sengar Agency",
+    siteName: "Mohit Sengar",
     images: [
       {
         url: `${SITE_URL}/images/hero.jpg`,
         width: 1200,
         height: 630,
-        alt: "Top 1% Shopify Experts - Sengar Agency",
+        alt: "Top 1% Shopify Experts - Mohit Sengar / Sengar Consultancy",
       },
     ],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Top 1% Shopify Experts | Sengar Agency",
+    title: "Shopify Experts — CRO & Growth | Mohit Sengar",
     description:
       "Hire the top 1% Shopify experts. $501K+ managed. 100% success rate. Store setup, CRO, speed optimization, theme dev & DTC growth.",
     images: [`${SITE_URL}/images/hero.jpg`],
@@ -70,7 +69,7 @@ export const metadata: Metadata = {
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  name: "Sengar Agency - Top 1% Shopify Experts",
+  name: "Sengar Consultancy — Top 1% Shopify Experts",
   description:
     "Elite Shopify development, CRO optimization, speed optimization, theme customization, and DTC growth services. Trusted by 40+ brands with 100% job success rate.",
   url: PAGE_URL,
@@ -80,15 +79,7 @@ const serviceSchema = {
     "@type": "Place",
     name: "Worldwide",
   },
-  provider: {
-    "@type": "Organization",
-    name: "Sengar Agency",
-    url: SITE_URL,
-    founder: {
-      "@type": "Person",
-      name: "Mohit Sengar",
-    },
-  },
+  provider: { "@id": `${SITE_URL}/#org` },
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Shopify Expert Services",
@@ -122,12 +113,6 @@ const serviceSchema = {
       },
     ],
   },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "5.0",
-    bestRating: "5",
-    ratingCount: "40",
-  },
 };
 
 const faqSchema = {
@@ -139,7 +124,7 @@ const faqSchema = {
       name: "What makes you a top 1% Shopify expert?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "We maintain a 100% job success rate across 40+ clients on Upwork, with over $501K in managed client revenue. Our team specializes exclusively in Shopify ecosystem services including theme customization, CRO, speed optimization, and full DTC growth. We are recognized Shopify experts with deep experience across health, fashion, supplements, and electronics verticals.",
+        text: "We maintain a 100% job success rate across 40+ clients, with over $501K in managed client revenue. Our team specializes exclusively in Shopify ecosystem services including theme customization, CRO, speed optimization, and full DTC growth. We are recognized Shopify experts with deep experience across health, fashion, supplements, and electronics verticals.",
       },
     },
     {
@@ -185,25 +170,6 @@ const faqSchema = {
   ],
 };
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: SITE_URL,
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Shopify Experts",
-      item: PAGE_URL,
-    },
-  ],
-};
-
 export default function ShopifyExpertsLayout({
   children,
 }: {
@@ -221,12 +187,6 @@ export default function ShopifyExpertsLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(faqSchema),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema),
         }}
       />
       {children}

@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 const SITE_URL = "https://www.mohitsengar.org";
 
 export const metadata: Metadata = {
-  title: "Resume — Mohit Sengar | CTO, Engineering Leader & AI Architect",
+  title: "Mohit Sengar — CTO Resume / CV",
   description:
-    "Full résumé of Mohit Sengar — award-winning Chief Technology Officer and engineering leader with 14+ years of experience in AI, automation, software, and blockchain. Download PDF.",
+    "Résumé of Mohit Sengar — award-winning CTO with 14+ years across AI, automation, software and blockchain. View online or download the PDF.",
   alternates: {
     canonical: `${SITE_URL}/resume`,
   },

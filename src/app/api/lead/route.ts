@@ -61,7 +61,10 @@ export async function POST(req: Request) {
   const subject =
     type === "shopify-lead"
       ? `🛍️ Shopify lead: ${lead.name || lead.email}${lead.revenue ? ` (${lead.revenue})` : ""}`
-      : `📕 Playbook subscriber: ${lead.email}`;
+      : `📕 Checklist subscriber: ${lead.email}`;
+
+  const checklistUrl =
+    "https://www.mohitsengar.org/downloads/ai-app-production-checklist.pdf";
 
   const text = [
     `Type: ${lead.type}`,
@@ -70,6 +73,8 @@ export async function POST(req: Request) {
     lead.store && `Store: ${lead.store}`,
     lead.revenue && `Revenue: ${lead.revenue}`,
     lead.message && `Message:\n${lead.message}`,
+    type === "playbook" &&
+      `\nThey were shown the instant download; checklist lives at:\n${checklistUrl}`,
     ``,
     `Received ${lead.at} via mohitsengar.org`,
   ]

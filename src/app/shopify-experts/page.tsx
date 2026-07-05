@@ -6,6 +6,8 @@ import {
   useInView,
   AnimatePresence,
 } from "framer-motion";
+import SiteFooter from "@/components/SiteFooter";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* ═══════════════════════════════════════════════════════════════
    ANIMATION TOKENS
@@ -434,7 +436,7 @@ export default function ShopifyExpertsPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/85 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="/" className="text-xl font-bold tracking-tight">
-            <span className="text-[#8DD9BF]">Sengar</span> Agency
+            <span className="text-[#8DD9BF]">Sengar</span> Consultancy
           </a>
           <div className="hidden md:flex items-center gap-8 text-sm text-white/60">
             <a href="#services" className="hover:text-white transition-colors">Services</a>
@@ -452,8 +454,10 @@ export default function ShopifyExpertsPage() {
         </div>
       </nav>
 
+      <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Shopify Experts", href: "/shopify-experts" }]} />
+
       {/* ─── HERO ─── */}
-      <section className="relative min-h-screen flex items-center pt-16">
+      <section className="relative min-h-[92vh] flex items-center pt-6">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#8DD9BF]/5 via-transparent to-transparent pointer-events-none" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[#8DD9BF]/[0.03] rounded-full blur-[120px] pointer-events-none" />
@@ -616,7 +620,7 @@ export default function ShopifyExpertsPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">
-              Full-Stack Shopify Services
+              What Shopify Services Do We Offer?
             </h2>
           </Reveal>
           <Reveal delay={0.15}>
@@ -765,7 +769,7 @@ export default function ShopifyExpertsPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-16">
-              From Call to Revenue in 4 Steps
+              How Does Working With Us Actually Work?
             </h2>
           </Reveal>
 
@@ -874,7 +878,7 @@ export default function ShopifyExpertsPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">
-              Choose Your Growth Path
+              How Much Does a Shopify Expert Cost?
             </h2>
           </Reveal>
           <Reveal delay={0.15}>
@@ -1273,38 +1277,7 @@ export default function ShopifyExpertsPage() {
         </div>
       </section>
 
-      {/* ─── FOOTER ─── */}
-      <footer className="border-t border-white/5 py-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <p className="text-xl font-bold">
-                <span className="text-[#8DD9BF]">Sengar</span> Agency
-              </p>
-              <p className="text-sm text-white/30 mt-1">
-                Top 1% Shopify Experts &bull; Dubai &bull; Worldwide
-              </p>
-            </div>
-            <div className="flex items-center gap-6 text-sm text-white/40">
-              <a href="/" className="hover:text-white transition-colors">
-                Home
-              </a>
-              <a href="#services" className="hover:text-white transition-colors">
-                Services
-              </a>
-              <a href="#pricing" className="hover:text-white transition-colors">
-                Pricing
-              </a>
-              <a href="#book-call" className="hover:text-white transition-colors">
-                Contact
-              </a>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-white/5 text-center text-xs text-white/20">
-            &copy; {new Date().getFullYear()} Sengar Agency. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
