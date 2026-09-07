@@ -32,7 +32,14 @@ export async function generateMetadata({
       url,
       siteName: "Mohit Sengar",
       publishedTime: post.date,
-      images: [{ url: `${SITE_URL}/images/hero.jpg`, width: 1200, height: 630, alt: post.title }],
+      images: [
+        {
+          url: `${SITE_URL}${post.heroImage || "/images/hero.jpg"}`,
+          width: 1200,
+          height: 630,
+          alt: post.heroImageAlt || post.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -61,7 +68,7 @@ export default async function BlogPost({
     datePublished: post.date,
     dateModified: post.date,
     url,
-    image: `${SITE_URL}/images/hero.jpg`,
+    image: `${SITE_URL}${post.heroImage || "/images/hero.jpg"}`,
     author: PERSON_REF,
     publisher: PERSON_REF,
     mainEntityOfPage: url,
@@ -140,6 +147,17 @@ export default async function BlogPost({
             — fractional CTO, 14+ years, 40+ shipped engagements.
           </p>
         </header>
+
+        {post.heroImage && (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={post.heroImage}
+            alt={post.heroImageAlt || post.title}
+            width={1600}
+            height={893}
+            className="w-full h-auto rounded-2xl border border-white/10 mb-10"
+          />
+        )}
 
         <div className="space-y-10">
           {post.sections.map((s) => (

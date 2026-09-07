@@ -31,6 +31,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${SITE_URL}/blog/top-software-testing-problems-solutions-2026`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: `${SITE_URL}/blog/lovable-app-production-ready-checklist`,
       lastModified,
       changeFrequency: "monthly",
