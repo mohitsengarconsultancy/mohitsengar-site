@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const SERVICES = [
   { label: "Fractional CTO", href: "/#services" },
+  { label: "QA & Quality Engineering", href: "/qa" },
   { label: "Shopify Experts", href: "/shopify-experts" },
   { label: "Vibe Coding — Lovable to Production", href: "/vibe-coding" },
 ];

@@ -270,6 +270,7 @@ const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
+  { label: "QA", href: "/qa" },
   { label: "Shopify", href: "/shopify-experts" },
   { label: "Vibe Coding", href: "/vibe-coding" },
   { label: "Blog", href: "/blog" },
@@ -1380,6 +1381,9 @@ export default function HomeClient({
                   Pages
                 </h3>
                 <ul className="space-y-3 text-[var(--color-text-secondary)]">
+                  <li>
+                    <a href="/qa" className="hover:text-mint transition-colors duration-300 py-1 inline-block">QA &amp; Quality Engineering</a>
+                  </li>
                   <li>
                     <a href="/shopify-experts" className="hover:text-mint transition-colors duration-300 py-1 inline-block">Shopify Experts</a>
                   </li>

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const NOTIFY_TO = "mohit@sengarconsultancy.org";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type LeadType = "playbook" | "shopify-lead";
+type LeadType = "playbook" | "shopify-lead" | "qa-lead";
 
 interface LeadPayload {
   type: LeadType;
@@ -11,6 +11,8 @@ interface LeadPayload {
   name?: string;
   store?: string;
   revenue?: string;
+  company?: string;
+  stage?: string;
   message?: string;
   /** Honeypot — real users never fill this. */
   website?: string;
@@ -33,7 +35,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  const type: LeadType = body.type === "shopify-lead" ? "shopify-lead" : "playbook";
+  const type: LeadType =
+    body.type === "shopify-lead"
+      ? "shopify-lead"
+      : body.type === "qa-lead"
+      ? "qa-lead"
+      : "playbook";
   const email = clamp(body.email, 254);
   if (!EMAIL_RE.test(email)) {
     return NextResponse.json({ ok: false, reason: "invalid_email" }, { status: 400 });
@@ -45,6 +52,8 @@ export async function POST(req: Request) {
     name: clamp(body.name, 200),
     store: clamp(body.store, 300),
     revenue: clamp(body.revenue, 50),
+    company: clamp(body.company, 300),
+    stage: clamp(body.stage, 80),
     message: clamp(body.message, 5000),
     at: new Date().toISOString(),
   };
@@ -61,6 +70,8 @@ export async function POST(req: Request) {
   const subject =
     type === "shopify-lead"
       ? `🛍️ Shopify lead: ${lead.name || lead.email}${lead.revenue ? ` (${lead.revenue})` : ""}`
+      : type === "qa-lead"
+      ? `🧪 QA lead: ${lead.name || lead.email}${lead.stage ? ` (${lead.stage})` : ""}`
       : `📕 Checklist subscriber: ${lead.email}`;
 
   const checklistUrl =
@@ -72,6 +83,8 @@ export async function POST(req: Request) {
     lead.name && `Name: ${lead.name}`,
     lead.store && `Store: ${lead.store}`,
     lead.revenue && `Revenue: ${lead.revenue}`,
+    lead.company && `Company: ${lead.company}`,
+    lead.stage && `Stage: ${lead.stage}`,
     lead.message && `Message:\n${lead.message}`,
     type === "playbook" &&
       `\nThey were shown the instant download; checklist lives at:\n${checklistUrl}`,
