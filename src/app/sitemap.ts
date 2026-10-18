@@ -19,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${SITE_URL}/fractional-cto`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: `${SITE_URL}/qa`,
       lastModified,
       changeFrequency: "monthly",

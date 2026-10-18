@@ -191,7 +191,7 @@ const SOCIAL_LINKS = [
 ];
 
 const SERVICE_LINKS = [
-  { label: "Fractional CTO", desc: "Ongoing tech leadership", href: "#services" },
+  { label: "Fractional CTO", desc: "Ongoing tech leadership", href: "/fractional-cto" },
   { label: "QA & Quality Engineering", desc: "Testing that ships", href: "/qa" },
   { label: "Shopify Experts", desc: "Store growth & builds", href: "/shopify-experts" },
   { label: "Vibe Coding", desc: "Lovable to production", href: "/vibe-coding" },
@@ -956,6 +956,12 @@ export default function HomeClient({
               >
                 Book a Free Strategy Session &rarr;
               </a>
+              <p className="mt-5 text-sm text-[var(--color-text-muted)]">
+                Want the details first?{" "}
+                <a href="/fractional-cto" className="text-mint hover:underline">
+                  See how my fractional CTO services work, and what they cost
+                </a>
+              </p>
             </div>
           </Reveal>
         </div>
@@ -1412,6 +1418,9 @@ export default function HomeClient({
                   Pages
                 </h3>
                 <ul className="space-y-3 text-[var(--color-text-secondary)]">
+                  <li>
+                    <a href="/fractional-cto" className="hover:text-mint transition-colors duration-300 py-1 inline-block">Fractional CTO</a>
+                  </li>
                   <li>
                     <a href="/qa" className="hover:text-mint transition-colors duration-300 py-1 inline-block">QA &amp; Quality Engineering</a>
                   </li>
