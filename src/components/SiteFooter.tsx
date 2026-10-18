@@ -78,7 +78,7 @@ export default function SiteFooter() {
           </div>
         </div>
         <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/30">
-          <span>© {new Date().getFullYear()} Mohit Sengar — Sengar Consultancy. All rights reserved.</span>
+          <span>{`© ${new Date().getFullYear()} Mohit Sengar — Sengar Consultancy. All rights reserved.`}</span>
           <span>Dubai, UAE · Working globally</span>
         </div>
       </div>
