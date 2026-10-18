@@ -301,6 +301,8 @@ function useCarousel(length: number, interval = 4000) {
 function ServicesMenu() {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  // Hover opens the menu; the click that usually follows must not close it again.
+  const openedByHover = useRef(false);
 
   useEffect(() => {
     if (!open) return;
@@ -320,12 +322,25 @@ function ServicesMenu() {
     <div
       ref={wrapRef}
       className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={() => {
+        openedByHover.current = true;
+        setOpen(true);
+      }}
+      onMouseLeave={() => {
+        openedByHover.current = false;
+        setOpen(false);
+      }}
     >
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          if (openedByHover.current) {
+            openedByHover.current = false;
+            setOpen(true);
+            return;
+          }
+          setOpen((o) => !o);
+        }}
         aria-expanded={open}
         aria-haspopup="true"
         className="flex items-center gap-1 text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors duration-300 py-2"
