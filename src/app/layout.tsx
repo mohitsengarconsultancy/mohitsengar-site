@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { MotionRoot, ScrollProgress } from "@/components/motion";
 
 const SITE_URL = "https://www.mohitsengar.org";
 
@@ -152,7 +153,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <MotionRoot>
+          <ScrollProgress />
+          {children}
+        </MotionRoot>
+      </body>
     </html>
   );
 }

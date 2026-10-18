@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState, useEffect, useCallback, useRef, FormEvent, ReactNode } from "react";
 import { motion, useInView, useScroll, useTransform, useMotionValue, AnimatePresence } from "framer-motion";
+import { CountUp } from "@/components/motion";
+import { DeliveryDashboardViz, DueDiligenceViz, HiringPipelineViz, ArchitectureViz, CostCompareBar } from "@/components/ServiceVisuals";
 
 /* ═══════════════════════════════════════════════════════════════
    ANIMATION SYSTEM — Nubien-inspired premium motion tokens
@@ -150,103 +152,25 @@ const ENGAGEMENT_MODELS = [
     title: "Fractional CTO",
     desc: "Ongoing strategic tech leadership for 10-20 hours/week. Architecture decisions, team hiring, vendor selection, and delivery oversight.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
-    visual: (
-      <div className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3 space-y-2">
-        <div className="flex items-center justify-between text-[10px]">
-          <span className="text-mint font-semibold">Delivery Dashboard</span>
-          <span className="text-white/30">Live</span>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          {[{ l: "On-Time", v: "98%", c: "text-emerald-400" }, { l: "Sprints", v: "12", c: "text-mint" }, { l: "Bug Rate", v: "0.3%", c: "text-emerald-400" }].map((s) => (
-            <div key={s.l} className="bg-white/[0.04] rounded-lg p-2 text-center">
-              <div className={`text-sm font-bold ${s.c}`}>{s.v}</div>
-              <div className="text-[9px] text-white/30 mt-0.5">{s.l}</div>
-            </div>
-          ))}
-        </div>
-        <div className="flex items-center gap-2 text-[9px] text-white/25">
-          <span className="w-1.5 h-1.5 bg-mint rounded-full animate-pulse" />
-          Weekly sync &bull; Architecture reviews &bull; Release approvals
-        </div>
-      </div>
-    ),
+    visual: <DeliveryDashboardViz />,
   },
   {
     title: "Technical Due Diligence",
     desc: "Pre-investment or pre-acquisition deep-dive into a company's codebase, team, and infrastructure. Delivered as a written report with risk assessment.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>,
-    visual: (
-      <div className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3 space-y-2">
-        <div className="flex items-center justify-between text-[10px]">
-          <span className="text-mint font-semibold">Due Diligence Report</span>
-          <span className="bg-mint/10 text-mint px-1.5 py-0.5 rounded text-[9px]">7-day delivery</span>
-        </div>
-        <div className="space-y-1.5">
-          {[{ l: "Code Quality", r: "Low Risk", c: "bg-emerald-400" }, { l: "Security", r: "Med Risk", c: "bg-amber-400" }, { l: "Scalability", r: "High Risk", c: "bg-red-400" }, { l: "Team & Process", r: "Low Risk", c: "bg-emerald-400" }].map((s) => (
-            <div key={s.l} className="flex items-center justify-between bg-white/[0.03] rounded-lg px-2.5 py-1.5">
-              <span className="text-[10px] text-white/50">{s.l}</span>
-              <span className={`flex items-center gap-1 text-[9px] text-white/60`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${s.c}`} />
-                {s.r}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    ),
+    visual: <DueDiligenceViz />,
   },
   {
     title: "Team Building & Hiring",
     desc: "I help you define roles, vet candidates, and build an engineering culture that retains talent and ships on schedule.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>,
-    visual: (
-      <div className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3 space-y-2">
-        <div className="text-[10px] text-mint font-semibold mb-1">Hiring Pipeline</div>
-        <div className="grid grid-cols-3 gap-1.5">
-          {[{ stage: "Sourced", count: "12" }, { stage: "Interviews", count: "5" }, { stage: "Hired", count: "2" }].map((s, i) => (
-            <div key={s.stage} className="text-center">
-              <div className={`rounded-lg py-2 text-xs font-bold ${i === 2 ? "bg-mint/15 text-mint" : "bg-white/[0.04] text-white/50"}`}>{s.count}</div>
-              <div className="text-[9px] text-white/30 mt-1">{s.stage}</div>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-1.5 mt-1">
-          {["Sr. Backend — Hired ✓", "Frontend Lead — Interviewing", "DevOps — Sourcing"].map((t) => (
-            <span key={t} className="text-[8px] bg-white/[0.05] text-white/40 px-1.5 py-0.5 rounded">{t}</span>
-          ))}
-        </div>
-      </div>
-    ),
+    visual: <HiringPipelineViz />,
   },
   {
     title: "Architecture & Scaling Review",
     desc: "One-time engagement to audit your current system and deliver a scaling roadmap — so your architecture doesn't break at the next growth stage.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" /></svg>,
-    visual: (
-      <div className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3">
-        <div className="text-[10px] text-mint font-semibold mb-2">System Architecture</div>
-        <div className="flex items-center justify-between gap-1">
-          {[
-            { label: "Frontend", sub: "Next.js", color: "border-blue-400/30" },
-            { label: "API", sub: "Gateway", color: "border-purple-400/30" },
-            { label: "Services", sub: "Microservices", color: "border-amber-400/30" },
-            { label: "Database", sub: "Postgres", color: "border-emerald-400/30" },
-          ].map((n, i) => (
-            <div key={n.label} className="flex items-center">
-              <div className={`bg-white/[0.04] border ${n.color} rounded-lg px-2 py-1.5 text-center`}>
-                <div className="text-[9px] text-white/50 font-medium">{n.label}</div>
-                <div className="text-[8px] text-white/25">{n.sub}</div>
-              </div>
-              {i < 3 && <svg className="w-3 h-3 text-white/15 mx-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>}
-            </div>
-          ))}
-        </div>
-        <div className="flex items-center gap-1.5 mt-2 text-[8px]">
-          <span className="bg-red-400/10 text-red-400/60 px-1.5 py-0.5 rounded">⚠ Bottleneck</span>
-          <span className="bg-emerald-400/10 text-emerald-400/60 px-1.5 py-0.5 rounded">✓ Optimized</span>
-        </div>
-      </div>
-    ),
+    visual: <ArchitectureViz />,
   },
 ];
 
@@ -955,7 +879,7 @@ export default function HomeClient({
                   {s.icon}
                 </div>
               </div>
-              <div className="text-3xl md:text-4xl font-bold text-mint tracking-tight">{s.num}</div>
+              <div className="text-3xl md:text-4xl font-bold text-mint tracking-tight"><CountUp value={s.num} /></div>
               <div className="text-xs md:text-sm text-[var(--color-text-secondary)] mt-2 uppercase tracking-wider">{s.label}</div>
             </StaggerItem>
           ))}
@@ -1230,35 +1154,41 @@ export default function HomeClient({
               </p>
             </div>
           </Reveal>
-          <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5" stagger={0.08}>
-            {PROJECTS.map((p, i) => (
-              <StaggerItem key={i}>
-                <motion.a
-                  href={p.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -6 }}
-                  transition={{ duration: 0.3, ease: EASE_OUT }}
-                  className="block bg-white/[0.03] rounded-xl overflow-hidden border border-white/[0.06] hover:border-mint/20 transition-colors duration-500 group"
-                >
-                  <div className="relative aspect-[3/2] bg-white/[0.02] flex items-center justify-center">
-                    <Image
-                      src={p.img}
-                      alt={p.name}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 200px"
-                      className="object-contain p-6 md:p-10 group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="p-4 md:p-5">
-                    <h3 className="font-bold text-sm md:text-base text-white/90">{p.name}</h3>
-                    <p className="text-[var(--color-text-muted)] text-xs md:text-sm mt-1">{p.result}</p>
-                  </div>
-                </motion.a>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          <Reveal delay={0.1}>
+            {/* Client marquee — pauses on hover; second copy is decorative */}
+            <div className="marquee-viewport relative overflow-hidden -mx-6 md:mx-0 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+              <div className="flex w-max animate-marquee py-2">
+                {[0, 1].map((copy) =>
+                  PROJECTS.map((p) => (
+                    <a
+                      key={`${copy}-${p.name}`}
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-hidden={copy === 1 ? true : undefined}
+                      tabIndex={copy === 1 ? -1 : undefined}
+                      className="block w-56 md:w-64 mr-4 md:mr-5 flex-shrink-0 bg-white/[0.03] rounded-xl overflow-hidden border border-white/[0.06] hover:border-mint/20 hover:-translate-y-1.5 transition-all duration-500 group"
+                    >
+                      <div className="relative aspect-[3/2] bg-white/[0.02] flex items-center justify-center">
+                        <Image
+                          src={p.img}
+                          alt={copy === 1 ? "" : p.name}
+                          fill
+                          sizes="256px"
+                          className="object-contain p-6 md:p-10 group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="p-4 md:p-5">
+                        <h3 className="font-bold text-sm md:text-base text-white/90">{p.name}</h3>
+                        <p className="text-[var(--color-text-muted)] text-xs md:text-sm mt-1">{p.result}</p>
+                      </div>
+                    </a>
+                  ))
+                )}
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -1329,6 +1259,9 @@ export default function HomeClient({
                 Get the same strategic impact at a fraction of the cost &mdash; without the 6-month hiring process.
               </p>
             </div>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <CostCompareBar />
           </Reveal>
           <Reveal delay={0.1}>
             <div className="grid md:grid-cols-2 gap-5">

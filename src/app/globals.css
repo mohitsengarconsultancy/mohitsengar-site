@@ -177,3 +177,9 @@ textarea:focus-visible {
   top: 50%;
   transform: translateY(-50%);
 }
+
+/* Reduced motion: stop the marquee and let it scroll by hand instead */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee { animation: none; }
+  .marquee-viewport { overflow-x: auto; }
+}

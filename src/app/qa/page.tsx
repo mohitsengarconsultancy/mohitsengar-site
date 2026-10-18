@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, FormEvent, ReactNode } from "react";
+import { useState, useRef, useEffect, FormEvent, ReactNode } from "react";
 import {
   motion,
   useInView,
@@ -428,6 +428,65 @@ function FAQItem({
   );
 }
 
+/* ─── Problem card: shows the problem first, then resolves to the solution ─── */
+function ProblemCard({ p }: { p: (typeof PROBLEMS)[number] }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.5 });
+  const [solved, setSolved] = useState(false);
+
+  useEffect(() => {
+    if (!inView) return;
+    const id = setTimeout(() => setSolved(true), 700);
+    return () => clearTimeout(id);
+  }, [inView]);
+
+  return (
+    <div
+      ref={ref}
+      className={`bg-[#1A1A1A] border rounded-2xl p-7 transition-colors duration-700 h-full ${
+        solved ? "border-[#8DD9BF]/20" : inView ? "border-red-400/25" : "border-white/5"
+      }`}
+    >
+      <div className="flex items-start gap-4 mb-5">
+        <span
+          className={`text-3xl font-bold leading-none flex-shrink-0 transition-colors duration-700 ${
+            solved ? "text-[#8DD9BF]/40" : "text-red-400/40"
+          }`}
+        >
+          {p.n}
+        </span>
+        <h3 className="text-lg font-semibold leading-snug pt-1">{p.title}</h3>
+      </div>
+      <div className="space-y-3 text-sm">
+        <div className="flex gap-2">
+          <span className="text-red-400/70 font-semibold flex-shrink-0 w-16">Problem</span>
+          <span className={`transition-colors duration-700 ${solved ? "text-white/40" : "text-white/70"}`}>
+            {p.problem}
+          </span>
+        </div>
+        <motion.div
+          className="flex gap-2"
+          initial={{ opacity: 0, x: -10 }}
+          animate={solved ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+          transition={{ duration: 0.5, ease: EASE_OUT }}
+        >
+          <span className="text-[#8DD9BF] font-semibold flex-shrink-0 w-16">Solution</span>
+          <span className="text-white/70">{p.solution}</span>
+        </motion.div>
+        <motion.div
+          className="flex gap-2 pt-1 border-t border-white/5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: solved ? 1 : 0 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+        >
+          <span className="text-white/30 font-semibold flex-shrink-0 w-16 pt-2">Tools</span>
+          <span className="text-[#8DD9BF]/50 text-xs pt-2">{p.tools}</span>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════════
    PAGE
    ═══════════════════════════════════════════════════════════════ */
@@ -707,36 +766,7 @@ export default function QaPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {PROBLEMS.map((p, i) => (
               <Reveal key={p.n} delay={(i % 2) * STAGGER.fast}>
-                <div className="bg-[#1A1A1A] border border-white/5 rounded-2xl p-7 hover:border-[#8DD9BF]/20 transition-colors h-full">
-                  <div className="flex items-start gap-4 mb-5">
-                    <span className="text-3xl font-bold text-[#8DD9BF]/25 leading-none flex-shrink-0">
-                      {p.n}
-                    </span>
-                    <h3 className="text-lg font-semibold leading-snug pt-1">
-                      {p.title}
-                    </h3>
-                  </div>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex gap-2">
-                      <span className="text-red-400/70 font-semibold flex-shrink-0 w-16">
-                        Problem
-                      </span>
-                      <span className="text-white/50">{p.problem}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <span className="text-[#8DD9BF] font-semibold flex-shrink-0 w-16">
-                        Solution
-                      </span>
-                      <span className="text-white/60">{p.solution}</span>
-                    </div>
-                    <div className="flex gap-2 pt-1 border-t border-white/5">
-                      <span className="text-white/30 font-semibold flex-shrink-0 w-16 pt-2">
-                        Tools
-                      </span>
-                      <span className="text-[#8DD9BF]/50 text-xs pt-2">{p.tools}</span>
-                    </div>
-                  </div>
-                </div>
+                <ProblemCard p={p} />
               </Reveal>
             ))}
           </div>
