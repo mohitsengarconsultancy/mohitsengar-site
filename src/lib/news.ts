@@ -42,7 +42,7 @@ function cleanSummary(text: string, title: string): string {
   const titleKey = norm(title).slice(0, 40);
   const prose = (text || "")
     .split(/\n+/)
-    .map((line) => line.replace(/\s+/g, " ").trim())
+    .map((line) => line.replace(/\s+/g, " ").trim().replace(/^[-*>•]\s+/, ""))
     .filter((line) => {
       if (line.length < 60) return false; // bylines, dates, source names
       if (/^#/.test(line)) return false; // markdown headings
