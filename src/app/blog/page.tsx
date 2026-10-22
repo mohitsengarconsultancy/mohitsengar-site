@@ -3,6 +3,7 @@ import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { POSTS } from "./posts";
+import { CALENDLY_URL } from "@/lib/contact";
 
 const SITE_URL = "https://www.mohitsengar.org";
 
@@ -33,7 +34,7 @@ export default function BlogIndex() {
             Mohit <span className="text-[#8DD9BF]">Sengar</span>
           </Link>
           <a
-            href="https://calendly.com/mohitsengarr"
+            href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-[#8DD9BF] text-black px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#A3E4CF] transition-colors"
@@ -54,6 +55,17 @@ export default function BlogIndex() {
           </h1>
           <p className="text-white/50 mt-4 max-w-2xl">
             Field notes from taking Lovable, Bolt and Base44 builds to production — written for founders, not engineers.
+          </p>
+          <p className="text-white/40 mt-3 max-w-2xl text-sm">
+            Need hands-on help? See how I work as a{" "}
+            <Link href="/fractional-cto" className="text-[#8DD9BF] hover:underline">
+              fractional CTO
+            </Link>
+            , or use the{" "}
+            <Link href="/investor-tech-checklist" className="text-[#8DD9BF] hover:underline">
+              investor tech checklist
+            </Link>{" "}
+            before your next raise.
           </p>
         </header>
 

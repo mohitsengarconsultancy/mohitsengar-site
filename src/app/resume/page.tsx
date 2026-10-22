@@ -1,6 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 import Image from "next/image";
 import Link from "next/link";
+import { CALENDLY_URL } from "@/lib/contact";
+import { QUOTES } from "@/lib/testimonials";
+import { PERSON_ID, PERSON_NAME, PERSON_SAME_AS, SITE_URL } from "@/lib/person";
 
 /* ───────── DATA ───────── */
 
@@ -9,7 +12,7 @@ const CONTACT = {
   phone: "+971 50 405 9627",
   nationality: "Indian",
   linkedin: "in/mohitsengarr",
-  github: "mohitsengarr",
+  github: "mohitsengarconsultancy",
   instagram: "mohitsengarr",
   facebook: "mohitsengarr",
   location: "Dubai, UAE",
@@ -33,62 +36,56 @@ const ACHIEVEMENTS = [
   },
 ];
 
+/* Verbatim quotes (src/lib/testimonials.ts), the same text used on every page. */
 const RECOMMENDATIONS = [
   {
     name: "Nathan Jaskot",
     role: "Founder",
     company: "Everconnect Data Systems, Inc",
     linkedin: "https://www.linkedin.com/in/nathanjaskot/",
-    quote:
-      "Working with Mohit has been great! He is a technical expert in all things development. I can consistently rely on him to provide great advice, technical expertise and well-developed solutions. Highly recommended!",
+    quote: QUOTES.nathan,
   },
   {
     name: "Max Aronsson",
     role: "CTO",
     company: "Nomor AB",
     linkedin: "https://www.linkedin.com/in/max-aronsson",
-    quote:
-      "Competent and trustworthy full-stack developer. Mohit is communicative and a great team player — always available and open to new ideas. He thrived in a fast-changing environment and solved complex problems during many years of collaboration.",
+    quote: QUOTES.max,
   },
   {
     name: "Nadia Ouzoubair",
     role: "Founder",
     company: "Cyolo",
     linkedin: "https://www.linkedin.com/in/nadia-ouzoubair-your-partner/",
-    quote:
-      "Your contributions have helped us bring our idea to life and positioned our application as a game-changer in the legal-tech domain. Your dedication, expertise and professionalism have left an indelible mark on the project.",
+    quote: QUOTES.nadia,
   },
   {
     name: "Emma Lucas",
     role: "Director of Operations",
     company: "Canteenhub",
     linkedin: "https://www.linkedin.com/in/emma-lucas-a7179125/",
-    quote:
-      "I highly recommend Mohit for his exceptional support, timely actions, and platform development skills. A skilled and reliable developer who consistently delivers quality results.",
+    quote: QUOTES.emma,
   },
   {
     name: "Erlend Bårli-Olsen",
     role: "Product Manager",
     company: "APCOA Parkings GmbH",
     linkedin: "https://www.linkedin.com/in/esport",
-    quote:
-      "My absolute pleasure to endorse Mohit — an invaluable asset and the pivotal force behind our success at APCOA Parkings GmbH. Consistent technical acumen, outstanding work ethic, and unwavering dedication to our projects.",
+    quote: QUOTES.erlend,
   },
   {
     name: "Talal Alhabib",
     role: "Founder & CEO",
-    company: "Sooqista Studios",
+    company: "Sooqista Studios · Internet 2.0 fireside-chat co-panellist",
     linkedin: "https://www.linkedin.com/in/talalalhabib",
-    quote:
-      "I had the pleasure of engaging with Mohit in a fireside chat on Extended Reality (XR) at the Internet 2.0 conference. His command over XR technology and its applications across various sectors is truly impressive.",
+    quote: QUOTES.talal,
   },
   {
     name: "Sourabh Kapoor",
     role: "CEO",
     company: "Costimizer.ai",
     linkedin: "https://www.linkedin.com/in/sourabh-kapoor-71834111/",
-    quote:
-      "Mohit is a true Tech Expert with a heart of gold! His ability to inspire and motivate his teams is truly remarkable.",
+    quote: QUOTES.sourabh,
   },
 ];
 
@@ -166,7 +163,7 @@ const WORK_EXPERIENCE = [
     location: "Dubai, UAE — Remote-first",
     body: [
       "Fractional CTO and senior engineering partner for founders and growth-stage startups. Specialise in turning AI-generated prototypes (Lovable, Bolt, Base44, Replit) into production-ready systems — security hardening, Supabase / API integrations, payments, observability, and clean handover.",
-      "Lead a curated team of senior engineers, AI specialists, and designers across UAE, India, EU and the Americas. Fixed-scope engagements with written SoWs and a 100% project-completion track record.",
+      "Lead a curated team of senior engineers, AI specialists, and designers across UAE, India, EU and the Americas. Fixed-scope engagements with written SoWs.",
     ],
   },
   {
@@ -187,7 +184,7 @@ const WORK_EXPERIENCE = [
     location: "Dubai, UAE",
     body: [
       "Led engineering for 40+ enterprise and startup clients across healthcare, fintech, e-commerce, parking, theme-park operations, and legal-tech. Honored with the Outstanding Leadership Award at Internet 2.0 Conference Dubai 2024.",
-      "Built and ran multi-region distributed engineering teams across UAE, India, Eastern Europe and the Americas. Delivered $501K+ in client revenue with a 100% project-success rate.",
+      "Built and ran multi-region distributed engineering teams across UAE, India, Eastern Europe and the Americas. Delivered $501K+ in client revenue.",
     ],
     clients: [
       "APCOA Holdings GmbH",
@@ -353,7 +350,6 @@ const RECENT_HIGHLIGHTS = [
     year: "2025",
     bullets: [
       "Next.js 16 / React 19 / Tailwind 4 production build with structured-data SEO across all routes.",
-      "Live AI-news section sourced via an Exa-API edge function and Vercel cron.",
       "Conversion funnel with Hotjar, Leadsy vTag, and GA4 instrumentation; sub-2s LCP on mobile.",
     ],
   },
@@ -387,9 +383,9 @@ const SPEAKING = [
     desc: "Recipient of the “You Are the Star” award for outstanding individual contribution across a global digital-transformation agency.",
   },
   {
-    event: "Verified Delivery Track Record",
-    role: "40+ engagements · 100% completion",
-    desc: "100% project-success rate across 40+ client engagements spanning healthcare, fintech, e-commerce, parking, and legal-tech. $501K+ in managed client revenue across multiple geographies.",
+    event: "Delivery Track Record",
+    role: "40+ client engagements",
+    desc: "40+ client engagements spanning healthcare, fintech, e-commerce, parking, and legal-tech. $501K+ in managed client revenue across multiple geographies.",
   },
 ];
 
@@ -588,15 +584,19 @@ export default function ResumePage() {
             {Icon.arrowLeft}
             <span>Back to mohitsengar.org</span>
           </Link>
-          <a
-            href="/Mohit-Sengar-CV.pdf"
-            download="Mohit-Sengar-CV.pdf"
-            className="inline-flex items-center gap-2 bg-[#1E9FFF] hover:bg-[#1976D2] text-white text-[13px] font-semibold px-4 py-2 rounded-md transition-colors shadow-sm"
-          >
-            {Icon.download}
-            <span className="hidden sm:inline">Download PDF</span>
-            <span className="sm:hidden">PDF</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border border-[#1E9FFF] text-[#1E9FFF] hover:bg-[#1E9FFF]/10 text-[13px] font-semibold px-4 py-2 rounded-md transition-colors"
+            >
+              Book a call
+            </a>
+            {/* CV PDF download hidden: public/Mohit-Sengar-CV.pdf is out of date
+                (12 years, job-seeker wording, unfinished Unlimits dates, personal
+                email). Regenerate it from this page before linking it again. */}
+          </div>
         </div>
       </div>
 
@@ -667,7 +667,7 @@ export default function ResumePage() {
               <ContactChip icon={Icon.phone} text={CONTACT.phone} href={`tel:${CONTACT.phone.replace(/\s+/g, "")}`} />
               <ContactChip icon={Icon.globe} text={CONTACT.nationality} />
               <ContactChip icon={Icon.linkedin} text={CONTACT.linkedin} href="https://www.linkedin.com/in/mohitsengarr/" />
-              <ContactChip icon={Icon.github} text={CONTACT.github} href="https://github.com/mohitsengarr" />
+              <ContactChip icon={Icon.github} text={CONTACT.github} href={`https://github.com/${CONTACT.github}`} />
               <ContactChip icon={Icon.instagram} text={CONTACT.instagram} href="https://www.instagram.com/mohitsengarr/" />
               <ContactChip icon={Icon.facebook} text={CONTACT.facebook} href="https://www.facebook.com/mohitsengarr" />
               <ContactChip icon={Icon.pin} text={CONTACT.location} />
@@ -678,11 +678,11 @@ export default function ResumePage() {
           <SectionHeader icon={Icon.doc} title="Summary" />
           <div className="space-y-3 text-[13.5px] text-[#374151] leading-relaxed">
             <p>
-              Award winner at the <strong>Internet 2.0 Conference, Dubai 2024</strong>. Seasoned technology
-              leader driving innovation across AI, automation, software development, and blockchain.
-              Currently an independent Fractional CTO and engineering partner; previously CTO at Unlimits
-              and CTO at Invatu Technologies. Focused on turning AI-generated prototypes into production-grade
-              systems and leading high-performing distributed teams.
+              Seasoned technology leader driving innovation across AI, automation, software development,
+              and blockchain. Currently an independent Fractional CTO and engineering partner; previously
+              CTO at Unlimits and CTO at Invatu Technologies. Focused on turning AI-generated prototypes
+              into production-grade systems and leading high-performing distributed teams. Recipient of the
+              Outstanding Leadership Award at the <strong>Internet 2.0 Conference, Dubai, February 2024</strong>.
             </p>
             <div>
               <strong className="text-[#1F2937]">Current focus areas</strong>
@@ -850,51 +850,63 @@ export default function ResumePage() {
             ))}
           </div>
 
-          {/* Bottom download CTA */}
+          {/* Bottom booking CTA */}
           <div className="mt-12 pt-8 border-t border-[#E5E7EB] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <p className="text-[14px] font-semibold text-[#1F2937]">Want the offline copy?</p>
+              <p className="text-[14px] font-semibold text-[#1F2937]">Need a CTO for your product?</p>
               <p className="text-[12.5px] text-[#6B7280] mt-0.5">
-                Includes everything on this page in a print-ready PDF.
+                Book a free 30-minute fit call, or read how the{" "}
+                <Link href="/fractional-cto" className="text-[#1E9FFF] hover:underline">
+                  fractional CTO
+                </Link>{" "}
+                engagement works.
               </p>
             </div>
             <a
-              href="/Mohit-Sengar-CV.pdf"
-              download="Mohit-Sengar-CV.pdf"
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#1E9FFF] hover:bg-[#1976D2] text-white text-[14px] font-semibold px-5 py-2.5 rounded-md transition-colors shadow-sm"
             >
-              {Icon.download}
-              Download PDF (848 KB)
+              Book a call
             </a>
           </div>
+
         </section>
       </article>
 
-      {/* JSON-LD */}
+      {/* JSON-LD: a ProfilePage about the site-wide Person node. The Person keeps the
+          root node's @id, url and sameAs, and only adds resume facts. */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Person",
-            "@id": "https://www.mohitsengar.org/#person",
-            name: "Mohit Singh Sengar",
-            jobTitle: "Chief Technology Officer",
-            email: `mailto:${CONTACT.email}`,
-            telephone: CONTACT.phone,
-            address: { "@type": "PostalAddress", addressLocality: "Dubai", addressCountry: "AE" },
-            url: "https://www.mohitsengar.org/resume",
-            sameAs: [
-              "https://www.linkedin.com/in/mohitsengarr/",
-              "https://github.com/mohitsengarr",
-              "https://www.instagram.com/mohitsengarr/",
-              "https://www.facebook.com/mohitsengarr",
+            "@graph": [
+              {
+                "@type": "ProfilePage",
+                "@id": `${SITE_URL}/resume#profile`,
+                url: `${SITE_URL}/resume`,
+                name: "Mohit Sengar — Resume",
+                mainEntity: { "@id": PERSON_ID },
+              },
+              {
+                "@type": "Person",
+                "@id": PERSON_ID,
+                name: PERSON_NAME,
+                url: SITE_URL,
+                sameAs: PERSON_SAME_AS,
+                jobTitle: "Fractional CTO",
+                email: `mailto:${CONTACT.email}`,
+                telephone: CONTACT.phone,
+                address: { "@type": "PostalAddress", addressLocality: "Dubai", addressCountry: "AE" },
+                worksFor: { "@id": `${SITE_URL}/#org` },
+                alumniOf: [
+                  { "@type": "CollegeOrUniversity", name: "Abdul Kalam Technical University" },
+                ],
+                award: "Outstanding Leadership Award, Internet 2.0 Conference, Dubai, February 2024",
+              },
             ],
-            worksFor: { "@type": "Organization", name: "Independent — Fractional CTO" },
-            alumniOf: [
-              { "@type": "CollegeOrUniversity", name: "Abdul Kalam Technical University" },
-            ],
-            award: "Outstanding Leadership Award — Internet 2.0 Conference, Dubai 2024",
           }),
         }}
       />

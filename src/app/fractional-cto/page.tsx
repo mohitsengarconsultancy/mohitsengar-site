@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, ReactNode } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useState, useRef, useId, ReactNode } from "react";
+import { motion, useInView } from "framer-motion";
 import SiteFooter from "@/components/SiteFooter";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { CountUp } from "@/components/motion";
@@ -13,6 +13,9 @@ import {
   ArchitectureViz,
   CostCompareBar,
 } from "@/components/ServiceVisuals";
+import WhatsAppLink from "@/components/WhatsAppLink";
+import { CALENDLY_URL } from "@/lib/contact";
+import { QUOTES } from "@/lib/testimonials";
 import { FCTO_FAQS } from "./faqs";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -20,7 +23,6 @@ import { FCTO_FAQS } from "./faqs";
    ═══════════════════════════════════════════════════════════════ */
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const STAGGER = { fast: 0.08, normal: 0.12 };
-const CALENDLY = "https://calendly.com/mohitsengarr";
 
 function Reveal({
   children,
@@ -56,11 +58,12 @@ function SectionLabel({ children }: { children: ReactNode }) {
    DATA
    ═══════════════════════════════════════════════════════════════ */
 
-const STATS = [
+/** `animate: false` renders the value as-is (CountUp would tick "1-2" through "0-2"). */
+const STATS: { value: string; label: string; animate?: boolean }[] = [
   { value: "40+", label: "Companies Served" },
-  { value: "100%", label: "Job Success Rate" },
   { value: "14+", label: "Years Engineering" },
   { value: "7+", label: "Years as a CTO" },
+  { value: "1-2", label: "Weeks to Start", animate: false },
 ];
 
 const SIGNALS = [
@@ -75,7 +78,7 @@ const SIGNALS = [
 const ENGAGEMENTS = [
   {
     title: "Ongoing Tech Leadership",
-    desc: "10-20 hours a week inside your leadership team: architecture decisions, sprint and release oversight, vendor management and weekly steering.",
+    desc: "Two or three days a week inside your leadership team: architecture decisions, sprint and release oversight, vendor management and weekly steering.",
     visual: <DeliveryDashboardViz />,
   },
   {
@@ -90,33 +93,107 @@ const ENGAGEMENTS = [
   },
   {
     title: "Technical Due Diligence",
-    desc: "Pre-investment or pre-acquisition review of code, team and infrastructure, delivered as a written risk report in about a week.",
+    desc: "Pre-investment or pre-acquisition review of code, team and infrastructure, delivered as a written risk report in 1-3 weeks.",
     visual: <DueDiligenceViz />,
   },
 ];
 
 const COMPARE_ROWS = [
-  { label: "Annual cost", ft: "$300K-$450K+", fr: "70-80% less" },
+  {
+    label: "Cost",
+    ft: "AED 100K-130K/month loaded (UAE); $300K-$450K+/year (US)",
+    fr: "About half (loaded cost)",
+  },
   { label: "Time to start", ft: "3-6 months", fr: "1-2 weeks" },
-  { label: "Commitment", ft: "Full-time, plus equity", fr: "10-20 hrs/week, scale up or down" },
-  { label: "Wrong-hire risk", ft: "6-12 months lost", fr: "Ends with notice" },
-  { label: "Experience", ft: "Varies by hire", fr: "14+ years, 40+ companies" },
+  { label: "Commitment", ft: "Full-time, plus equity", fr: "2 or 3 days a week, billed monthly" },
+  { label: "Wrong-hire risk", ft: "6-12 months lost", fr: "One month's notice after a 3-month minimum" },
+  { label: "Experience", ft: "Varies by hire", fr: "14+ years, 7+ as a CTO, 40+ companies" },
 ];
 
-const PRICING = [
+type PriceCard = {
+  name: string;
+  tagline: string;
+  /** Shown small before the price, e.g. "From". */
+  from?: boolean;
+  aed: string;
+  unit?: string;
+  usd: string;
+  meta: string;
+  features: string[];
+  href?: string;
+  linkLabel?: string;
+  highlighted?: boolean;
+};
+
+/** Fixed-fee entry offers. AED is primary; USD (and GBP) secondary. */
+const START_HERE: PriceCard[] = [
+  {
+    name: "Launch Check",
+    tagline: "For AI-built MVPs: Lovable, Bolt, Cursor, Base44, Replit, v0 and similar.",
+    aed: "AED 9,500",
+    usd: "$2,500 · £2,000",
+    meta: "Fixed fee · 5 working days",
+    features: [
+      "Security: exposed API keys, Supabase RLS, auth",
+      "Tests and load",
+      "Payments and webhooks",
+      "Keep / fix / rebuild verdict in a written report",
+    ],
+    href: "/launch-check",
+    linkLabel: "Launch Check details",
+  },
+  {
+    name: "Production & Investor Readiness Review",
+    tagline: "For products heading into a raise or real growth.",
+    aed: "AED 27,500",
+    usd: "$7,500",
+    meta: "Fixed fee · 2 weeks",
+    features: [
+      "Architecture, code, team and delivery process",
+      "Risks, in plain language",
+      "A written report you can forward to investors",
+      "Presented to you live",
+    ],
+    href: "/readiness-review",
+    linkLabel: "Readiness Review details",
+  },
+  {
+    name: "Buy-side Technical Due Diligence",
+    tagline: "For investors assessing a company's technology before they commit.",
+    from: true,
+    aed: "AED 35,000",
+    usd: "From $9,500",
+    meta: "Fixed scope · 1-3 weeks",
+    features: [
+      "Code, architecture, team and infrastructure",
+      "Scope and timeline fixed up front",
+      "Written risk report",
+    ],
+  },
+];
+
+/** Monthly retainers. */
+const ONGOING: PriceCard[] = [
   {
     name: "Advisory",
-    range: "from ~$5K",
-    period: "per month",
-    desc: "A few strategy calls a month plus async review. Suits teams whose systems are stable and who need a senior second opinion.",
-    features: ["Monthly strategy calls", "Async architecture & PR review", "Hiring and vendor second opinions"],
-    highlighted: false,
+    tagline: "For teams whose systems are stable and who want a senior second opinion.",
+    aed: "AED 18,000",
+    unit: "/month",
+    usd: "$5,000 per month",
+    meta: "Up to ~12 hours a month",
+    features: [
+      "Monthly steering session",
+      "Async access between sessions",
+      "Architecture, hiring and vendor second opinions",
+    ],
   },
   {
     name: "Fractional CTO",
-    range: "$12K-$28K",
-    period: "per month",
-    desc: "The full CTO role for 10-20 hours a week: decisions, delivery, hiring and investor-facing technical planning.",
+    tagline: "The CTO role, two days a week: decisions, delivery, hiring and the investor story.",
+    aed: "AED 45,000",
+    unit: "/month",
+    usd: "$14,000 per month",
+    meta: "2 days a week",
     features: [
       "Weekly steering call + written updates",
       "Architecture & release ownership",
@@ -127,17 +204,38 @@ const PRICING = [
     highlighted: true,
   },
   {
-    name: "Project-Scoped",
-    range: "from $15K",
-    period: "fixed scope",
-    desc: "One defined outcome: a due-diligence report, an architecture review, a rebuild plan or an AI initiative.",
-    features: ["Fixed scope and timeline", "Written deliverable", "Handover walkthrough"],
-    highlighted: false,
+    name: "Embedded CTO",
+    tagline: "More time in the room, for a rebuild, a raise or a team that is growing fast.",
+    aed: "AED 75,000",
+    unit: "/month",
+    usd: "$22,000-$28,000 per month",
+    meta: "3 days a week",
+    features: [
+      "Everything in Fractional CTO",
+      "Three days a week with your team",
+      "Hands-on in design reviews, releases and incidents",
+    ],
   },
 ];
 
+const PROJECTS = [
+  {
+    name: "Rescue to Production",
+    price: "From AED 55,000",
+    usd: "from $15,000",
+    desc: "Fixed scope, billed by milestone: production-ready in an agreed number of weeks.",
+  },
+  {
+    name: "Hire your full-time CTO",
+    price: "About one month's retainer",
+    usd: "",
+    desc: "Job description, sourcing, interview loop and handover to your permanent CTO.",
+  },
+];
+
+/** Fractional and Embedded CTO retainers (Advisory has a monthly steering session instead). */
 const INCLUDED = [
-  "A written scope: hours, responsibilities, deliverables and exit terms.",
+  "A written scope: days per week, responsibilities, deliverables and exit terms.",
   "A weekly steering call plus written updates you can forward to investors.",
   "Everything lives in your accounts: repos, cloud, docs. No lock-in.",
   "Hiring support for your permanent team, from job description to final interview.",
@@ -145,17 +243,17 @@ const INCLUDED = [
 ];
 
 const STEPS = [
-  { step: "01", title: "Free 30-min call", desc: "Your situation, your stack, your goals. You leave with three concrete recommendations either way." },
-  { step: "02", title: "Written scope", desc: "Hours, responsibilities, deliverables and how it ends. Agreed before any work starts." },
+  { step: "01", title: "Free 30-min call", desc: "Your situation, your stack, your goals. You get an honest read on what you need, whether or not we work together." },
+  { step: "02", title: "Written scope", desc: "Days per week, responsibilities, deliverables and how it ends. Agreed before any work starts." },
   { step: "03", title: "Plug in", desc: "Within 1-2 weeks: access to your repos and tools, a weekly steering rhythm, and the first decisions made." },
   { step: "04", title: "Hand over", desc: "When the stage calls for a full-time CTO, help hiring them and a clean handover of systems and team." },
 ];
 
 const CAREER = [
-  { role: "Fractional CTO & Engineering Partner", org: "Independent", dates: "2026 — Present" },
-  { role: "Chief Technology Officer", org: "Unlimits", dates: "2025 — 2026" },
-  { role: "Chief Technology Officer", org: "Invatu Technologies", dates: "2018 — 2025" },
-  { role: "Associate Technology", org: "Publicis Sapient", dates: "2015 — 2018" },
+  { role: "Fractional CTO & Engineering Partner", org: "Independent", dates: "Mar 2026 — Present" },
+  { role: "Chief Technology Officer", org: "Unlimits", dates: "Mar 2025 — Mar 2026" },
+  { role: "Chief Technology Officer", org: "Invatu Technologies", dates: "Sep 2018 — Mar 2025" },
+  { role: "Associate Technology", org: "Publicis Sapient", dates: "Mar 2015 — Jan 2018" },
 ];
 
 const CLIENT_LOGOS = [
@@ -166,18 +264,19 @@ const CLIENT_LOGOS = [
   { img: "/images/project-atlas.jpg", name: "Atlas HXM" },
 ];
 
+/* Verbatim quotes, shared with the homepage and /resume (src/lib/testimonials.ts). */
 const TESTIMONIALS = [
   {
     img: "/images/testimonial-erlend.jpeg",
     name: "Erlend Bårli-Olsen",
     role: "APCOA Parkings GmbH",
-    text: "My absolute pleasure to endorse Mohit — an invaluable asset and the pivotal force behind our success at APCOA Parkings GmbH. He has consistently demonstrated exceptional technical acumen and unwavering dedication to our projects.",
+    text: QUOTES.erlend,
   },
   {
     img: "/images/testimonial-max.jpeg",
     name: "Max Aronsson",
     role: "Long-term Collaborator",
-    text: "Competent and trustworthy fullstack developer. Mohit is communicative and a great team player. Always available and open to new ideas — he thrived in a fast changing environment. Solved complex problems during many years of collaboration.",
+    text: QUOTES.max,
   },
 ];
 
@@ -185,8 +284,10 @@ const TESTIMONIALS = [
    COMPONENTS
    ═══════════════════════════════════════════════════════════════ */
 
+/** The answer is always in the DOM (collapsed to height 0), so it is in the server HTML. */
 function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false);
+  const panelId = useId();
   return (
     <Reveal delay={index * STAGGER.fast}>
       <div className="border border-white/10 rounded-2xl overflow-hidden hover:border-mint/20 transition-colors">
@@ -194,6 +295,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
           onClick={() => setOpen(!open)}
           className="w-full flex items-center justify-between p-6 text-left cursor-pointer"
           aria-expanded={open}
+          aria-controls={panelId}
         >
           <span className="text-lg font-medium text-white pr-4">{q}</span>
           <motion.span
@@ -205,18 +307,16 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
             +
           </motion.span>
         </button>
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: EASE_OUT }}
-            >
-              <p className="px-6 pb-6 text-white/60 leading-relaxed">{a}</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <motion.div
+          id={panelId}
+          initial={false}
+          animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: EASE_OUT }}
+          className="overflow-hidden"
+          aria-hidden={!open}
+        >
+          <p className="px-6 pb-6 text-white/60 leading-relaxed">{a}</p>
+        </motion.div>
       </div>
     </Reveal>
   );
@@ -225,7 +325,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
 function CtaButton({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <a
-      href={CALENDLY}
+      href={CALENDLY_URL}
       target="_blank"
       rel="noopener noreferrer"
       className={`inline-flex items-center justify-center bg-mint text-black px-8 py-4 rounded-full text-base font-semibold hover:bg-mint-hover transition-all hover:scale-[1.02] active:scale-[0.98] ${className}`}
@@ -243,6 +343,54 @@ function Check() {
     <svg className="w-5 h-5 text-mint flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
     </svg>
+  );
+}
+
+function PriceCardView({ p }: { p: PriceCard }) {
+  return (
+    <div
+      className={`relative bg-[#1A1A1A] rounded-2xl p-8 h-full flex flex-col ${
+        p.highlighted ? "border-2 border-mint shadow-[0_0_40px_rgba(141,217,191,0.1)]" : "border border-white/5"
+      }`}
+    >
+      {p.highlighted && (
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-mint text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap">
+          Most Common
+        </div>
+      )}
+      <p className="text-xs uppercase tracking-wider text-white/50 mb-2">{p.meta}</p>
+      <h4 className="text-xl font-semibold mb-3">{p.name}</h4>
+      <div className="flex flex-wrap items-baseline gap-x-2">
+        {p.from && <span className="text-sm text-white/50">From</span>}
+        <span className="text-3xl font-bold text-mint whitespace-nowrap">{p.aed}</span>
+        {p.unit && <span className="text-sm text-white/50">{p.unit}</span>}
+      </div>
+      <p className="text-sm text-white/50 mt-1">{p.usd}</p>
+      <p className="text-white/50 mt-4 mb-6 text-sm leading-relaxed">{p.tagline}</p>
+      <ul className="space-y-3 mb-8 flex-1">
+        {p.features.map((f) => (
+          <li key={f} className="flex items-start gap-3 text-sm text-white/60">
+            <Check />
+            {f}
+          </li>
+        ))}
+      </ul>
+      {p.href && (
+        <a href={p.href} className="block text-sm text-mint font-medium hover:underline mb-5">
+          {p.linkLabel}&nbsp;&rarr;
+        </a>
+      )}
+      <a
+        href={CALENDLY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`block text-center py-4 rounded-full font-semibold transition-all ${
+          p.highlighted ? "bg-mint text-black hover:bg-mint-hover" : "bg-white/10 text-white hover:bg-white/15"
+        }`}
+      >
+        Discuss on a Free Call
+      </a>
+    </div>
   );
 }
 
@@ -266,7 +414,7 @@ export default function FractionalCtoPage() {
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
           <a
-            href={CALENDLY}
+            href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-mint text-black px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-mint-hover transition-colors"
@@ -286,27 +434,29 @@ export default function FractionalCtoPage() {
         <div className="relative max-w-7xl mx-auto px-6 py-20 md:py-28 w-full">
           <div className="grid lg:grid-cols-[1.4fr_1fr] gap-12 items-center">
             <div>
-              <Reveal>
+              <div className="hero-rise">
                 <div className="inline-flex items-center gap-2 bg-mint/10 border border-mint/20 rounded-full px-4 py-1.5 mb-8">
                   <span className="w-2 h-2 rounded-full bg-mint animate-pulse" />
                   <span className="text-sm text-mint font-medium">Fractional CTO · Dubai &amp; Remote</span>
                 </div>
-              </Reveal>
-              <Reveal delay={0.1}>
+              </div>
+              <div className="hero-rise" style={{ animationDelay: "0.1s" }}>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-6">
-                  Fractional CTO Services for Startups That{" "}
+                  Fractional CTO in Dubai &amp; the UAE, for Startups That{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-mint to-mint-dark">Need to Ship</span>
                 </h1>
-              </Reveal>
-              <Reveal delay={0.2}>
+              </div>
+              <div className="hero-rise" style={{ animationDelay: "0.2s" }}>
                 <p className="text-lg md:text-xl text-white/60 max-w-2xl mb-10 leading-relaxed">
-                  Senior technology leadership 10-20 hours a week: architecture, hiring,
-                  delivery and an investor-ready technical plan, from a CTO who has done it
-                  for 40+ companies. At 70-80% less than a full-time hire, starting in 1-2 weeks.
+                  I&apos;m Mohit Sengar, a Dubai-based CTO with 7 years in the seat. I take
+                  AI-built and agency-built products to production and make them investor-ready,
+                  then stay on as your part-time CTO, 2-3 days a week, until you&apos;re ready to
+                  hire a full-time one. You work with me directly, at about half the loaded cost
+                  of a full-time hire, starting in 1-2 weeks.
                 </p>
-              </Reveal>
-              <Reveal delay={0.3}>
-                <div className="flex flex-col sm:flex-row gap-4 mb-14">
+              </div>
+              <div className="hero-rise" style={{ animationDelay: "0.3s" }}>
+                <div className="flex flex-col sm:flex-row gap-4 mb-5">
                   <CtaButton>Book a Free Strategy Call</CtaButton>
                   <a
                     href="#compare"
@@ -315,26 +465,36 @@ export default function FractionalCtoPage() {
                     Compare vs Full-Time
                   </a>
                 </div>
-              </Reveal>
-              <Reveal delay={0.4}>
+                <p className="text-sm text-white/50 mb-14">
+                  Not ready for a retainer?{" "}
+                  <a href="/launch-check" className="text-mint font-medium hover:underline">
+                    Start with a 5-day Launch Check &rarr;
+                  </a>
+                </p>
+              </div>
+              <div className="hero-rise" style={{ animationDelay: "0.4s" }}>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
                   {STATS.map((s, i) => (
                     <div key={s.label} className="text-center md:text-left">
                       <div className="text-3xl md:text-4xl font-bold text-mint">
-                        <CountUp value={s.value} delay={0.3 + i * 0.1} />
+                        {s.animate === false ? (
+                          <span className="tabular-nums">{s.value}</span>
+                        ) : (
+                          <CountUp value={s.value} delay={0.3 + i * 0.1} />
+                        )}
                       </div>
-                      <div className="text-sm text-white/40 mt-1">{s.label}</div>
+                      <div className="text-sm text-white/50 mt-1">{s.label}</div>
                     </div>
                   ))}
                 </div>
-              </Reveal>
+              </div>
             </div>
 
-            <Reveal delay={0.25} className="hidden lg:block">
+            <div className="hero-rise hidden lg:block" style={{ animationDelay: "0.25s" }}>
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10">
                 <Image
                   src="/images/stats-photo.jpeg"
-                  alt="Mohit Sengar, award-winning fractional CTO"
+                  alt="Mohit Sengar, fractional CTO based in Dubai"
                   fill
                   sizes="(max-width: 1024px) 0px, 40vw"
                   className="object-cover object-top"
@@ -343,10 +503,10 @@ export default function FractionalCtoPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <p className="text-xs uppercase tracking-widest text-mint mb-1">Outstanding Leadership Award</p>
-                  <p className="text-sm text-white/70">Internet 2.0 Conference, Dubai 2024</p>
+                  <p className="text-sm text-white/70">Internet 2.0 Conference, Dubai, February 2024</p>
                 </div>
               </div>
-            </Reveal>
+            </div>
           </div>
         </div>
       </section>
@@ -354,7 +514,7 @@ export default function FractionalCtoPage() {
       {/* ─── CLIENT STRIP ─── */}
       <section className="border-y border-white/5 py-8 bg-[#111]">
         <div className="max-w-6xl mx-auto px-6">
-          <p className="text-center text-xs uppercase tracking-widest text-white/30 mb-6">Trusted by teams at</p>
+          <p className="text-center text-xs uppercase tracking-widest text-white/50 mb-6">Trusted by teams at</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {CLIENT_LOGOS.map((c) => (
               <div key={c.name} className="bg-white/[0.03] border border-white/[0.06] rounded-xl overflow-hidden">
@@ -415,7 +575,7 @@ export default function FractionalCtoPage() {
           </Reveal>
           <div className="grid md:grid-cols-2 gap-6">
             {ENGAGEMENTS.map((e, i) => (
-              <Reveal key={e.title} delay={(i % 2) * STAGGER.normal}>
+              <Reveal key={e.title} delay={(i % 2) * STAGGER.normal} className="min-w-0">
                 <div className="bg-[#1A1A1A] border border-white/5 rounded-2xl p-7 md:p-8 h-full hover:border-mint/20 transition-colors">
                   <h3 className="text-xl font-semibold mb-3">{e.title}</h3>
                   <p className="text-white/50 leading-relaxed">{e.desc}</p>
@@ -450,7 +610,7 @@ export default function FractionalCtoPage() {
               <table className="w-full text-sm min-w-[520px]">
                 <thead>
                   <tr className="bg-white/[0.03] text-left">
-                    <th className="px-5 py-4 font-medium text-white/40 uppercase tracking-wider text-xs" scope="col"><span className="sr-only">Factor</span></th>
+                    <th className="px-5 py-4 font-medium text-white/50 uppercase tracking-wider text-xs" scope="col"><span className="sr-only">Factor</span></th>
                     <th className="px-5 py-4 font-semibold text-white/60" scope="col">Full-Time CTO</th>
                     <th className="px-5 py-4 font-semibold text-mint" scope="col">Fractional CTO</th>
                   </tr>
@@ -458,7 +618,7 @@ export default function FractionalCtoPage() {
                 <tbody>
                   {COMPARE_ROWS.map((r) => (
                     <tr key={r.label} className="border-t border-white/[0.06]">
-                      <th className="px-5 py-4 text-left font-medium text-white/40 uppercase tracking-wider text-xs" scope="row">{r.label}</th>
+                      <th className="px-5 py-4 text-left font-medium text-white/50 uppercase tracking-wider text-xs" scope="row">{r.label}</th>
                       <td className="px-5 py-4 text-white/50">{r.ft}</td>
                       <td className="px-5 py-4 text-white font-medium">{r.fr}</td>
                     </tr>
@@ -481,59 +641,81 @@ export default function FractionalCtoPage() {
           </Reveal>
           <Reveal delay={0.15}>
             <p className="text-white/50 text-center max-w-2xl mx-auto mb-16">
-              Typical 2026 ranges for senior fractional CTOs. Your exact scope and quote are
-              set on the free first call, with no surprises later.{" "}
+              My published prices: AED for clients in the UAE and GCC, USD for remote clients.
+              Start with a fixed-fee review or go straight to a retainer; the scope is agreed in
+              writing before any work starts.{" "}
               <a href="/blog/fractional-cto-cost-guide-2026" className="text-mint hover:underline">
                 Read the full cost guide
               </a>
               .
             </p>
           </Reveal>
+
+          {/* Start here: fixed-fee entry offers */}
+          <Reveal>
+            <div className="mb-8">
+              <h3 className="text-sm uppercase tracking-widest text-mint/70 font-semibold">Start here</h3>
+              <p className="text-white/50 text-sm mt-1">
+                A fixed-fee look at where your product stands, before any retainer.
+              </p>
+            </div>
+          </Reveal>
           <div className="grid lg:grid-cols-3 gap-8 items-stretch">
-            {PRICING.map((p, i) => (
+            {START_HERE.map((p, i) => (
               <Reveal key={p.name} delay={i * STAGGER.normal}>
-                <div
-                  className={`relative bg-[#1A1A1A] rounded-2xl p-8 h-full flex flex-col ${
-                    p.highlighted ? "border-2 border-mint shadow-[0_0_40px_rgba(141,217,191,0.1)]" : "border border-white/5"
-                  }`}
-                >
-                  {p.highlighted && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-mint text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                      Most Common
-                    </div>
-                  )}
-                  <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-mint">{p.range}</span>
-                    <span className="text-sm text-white/40">{p.period}</span>
-                  </div>
-                  <p className="text-white/50 mt-3 mb-6 text-sm leading-relaxed">{p.desc}</p>
-                  <ul className="space-y-3 mb-8 flex-1">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex items-start gap-3 text-sm text-white/60">
-                        <Check />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href={CALENDLY}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`block text-center py-4 rounded-full font-semibold transition-all ${
-                      p.highlighted ? "bg-mint text-black hover:bg-mint-hover" : "bg-white/10 text-white hover:bg-white/15"
-                    }`}
-                  >
-                    Discuss on a Free Call
-                  </a>
-                </div>
+                <PriceCardView p={p} />
               </Reveal>
             ))}
           </div>
 
+          {/* Ongoing leadership: monthly retainers */}
+          <Reveal>
+            <div className="mt-20 mb-8">
+              <h3 className="text-sm uppercase tracking-widest text-mint/70 font-semibold">Ongoing leadership</h3>
+              <p className="text-white/50 text-sm mt-1">
+                Monthly retainers, set by days per week so you know exactly what you are buying.
+              </p>
+            </div>
+          </Reveal>
+          <div className="grid lg:grid-cols-3 gap-8 items-stretch">
+            {ONGOING.map((p, i) => (
+              <Reveal key={p.name} delay={i * STAGGER.normal}>
+                <PriceCardView p={p} />
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Projects & handover */}
           <Reveal delay={0.1}>
             <div className="mt-14 bg-[#1A1A1A] border border-white/5 rounded-2xl p-8 md:p-10">
-              <h3 className="text-xl font-semibold mb-6">Every engagement includes</h3>
+              <h3 className="text-sm uppercase tracking-widest text-mint/70 font-semibold mb-6">Projects &amp; handover</h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                {PROJECTS.map((p) => (
+                  <div key={p.name}>
+                    <h4 className="text-lg font-semibold text-white">{p.name}</h4>
+                    <p className="mt-1">
+                      <span className="text-mint font-semibold">{p.price}</span>
+                      {p.usd && <span className="text-sm text-white/50"> · {p.usd}</span>}
+                    </p>
+                    <p className="text-sm text-white/50 leading-relaxed mt-2">{p.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p className="mt-8 text-sm text-white/50 leading-relaxed max-w-3xl mx-auto text-center">
+              Retainers are billed monthly in advance, with a 3-month minimum and then one
+              month&apos;s notice. The Launch Check or Readiness Review fee is credited in full
+              against a retainer signed within 30 days.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div className="mt-14 bg-[#1A1A1A] border border-white/5 rounded-2xl p-8 md:p-10">
+              <h3 className="text-xl font-semibold mb-2">Every Fractional and Embedded CTO retainer includes</h3>
+              <p className="text-sm text-white/50 mb-6">Advisory has a monthly steering session and async access instead.</p>
               <ul className="grid md:grid-cols-2 gap-x-10 gap-y-4">
                 {INCLUDED.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-white/60 leading-relaxed">
@@ -590,11 +772,23 @@ export default function FractionalCtoPage() {
               </Reveal>
               <Reveal delay={0.15}>
                 <p className="text-white/55 leading-relaxed mb-8">
-                  I&apos;m Mohit Sengar. I&apos;ve spent 14+ years building technology for
-                  40+ companies across healthcare, fintech, e-commerce, parking and theme-park
-                  operations, including more than seven years as a full-time CTO. In 2024 I
-                  received the Outstanding Leadership Award at Dubai&apos;s Internet 2.0
-                  Conference for leading Invatu Technologies.
+                  I&apos;m Mohit Sengar, a Dubai-based CTO. I&apos;ve spent 14+ years building
+                  software for 40+ companies across healthcare, fintech, e-commerce, parking and
+                  theme-park operations, including 7+ years as a CTO at Invatu Technologies and
+                  Unlimits. I work in person with teams in Dubai and Abu Dhabi, and remotely with
+                  clients in the US, UK and Europe.
+                </p>
+                <p className="text-white/55 leading-relaxed mb-6">
+                  QA and quality engineering is{" "}
+                  <a href="/qa" className="text-mint hover:underline">
+                    my delivery bench
+                  </a>
+                  : the testing capability behind the CTO work.
+                </p>
+                <p className="text-sm text-white/50 leading-relaxed mb-8">
+                  <span className="text-white/60 font-medium">Credential:</span> Outstanding
+                  Leadership Award, Internet 2.0 Conference, Dubai, February 2024, for steering
+                  Invatu Technologies.
                 </p>
               </Reveal>
               <Reveal delay={0.2}>
@@ -602,9 +796,9 @@ export default function FractionalCtoPage() {
                   {CAREER.map((c) => (
                     <li key={c.org} className="pl-6 relative">
                       <span className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-mint" aria-hidden="true" />
-                      <p className="text-xs text-white/35 mb-0.5">{c.dates}</p>
+                      <p className="text-xs text-white/50 mb-0.5">{c.dates}</p>
                       <p className="font-semibold text-white">{c.role}</p>
-                      <p className="text-sm text-white/45">{c.org}</p>
+                      <p className="text-sm text-white/50">{c.org}</p>
                     </li>
                   ))}
                 </ol>
@@ -625,7 +819,7 @@ export default function FractionalCtoPage() {
                       </div>
                       <div>
                         <p className="font-semibold text-white">{t.name}</p>
-                        <p className="text-sm text-white/40">{t.role}</p>
+                        <p className="text-sm text-white/50">{t.role}</p>
                       </div>
                     </figcaption>
                   </figure>
@@ -649,8 +843,7 @@ export default function FractionalCtoPage() {
                 cheaper.
               </p>
               <p className="text-white/80 font-medium">
-                You&apos;ll hear that on the first call. My 100% job success rate depends on
-                taking only the work I can deliver.
+                I only take work I can deliver, and you&apos;ll hear it on the first call.
               </p>
             </div>
           </Reveal>
@@ -687,13 +880,19 @@ export default function FractionalCtoPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-lg text-white/50 max-w-2xl mx-auto mb-10">
-              Tell me where the product, team and roadmap stand. You&apos;ll leave with three
-              concrete recommendations, whether or not we work together.
+              Tell me where the product, team and roadmap stand. You&apos;ll get an honest read
+              on what you need, whether or not we work together.
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <CtaButton className="px-10 py-5 text-lg">Book Your Free Strategy Call</CtaButton>
-            <p className="text-xs text-white/30 mt-5">No obligation · 30 minutes · 3 free recommendations</p>
+            <div className="flex flex-col items-center">
+              <CtaButton className="px-10 py-5 text-lg">Book Your Free Strategy Call</CtaButton>
+              <WhatsAppLink
+                className="mt-5 text-sm text-mint font-medium hover:underline"
+                label="Or message me on WhatsApp"
+              />
+            </div>
+            <p className="text-xs text-white/50 mt-5">No obligation · 30 minutes · An honest read on what you need</p>
           </Reveal>
         </div>
       </section>

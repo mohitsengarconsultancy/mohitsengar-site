@@ -5,7 +5,7 @@ const SITE_URL = "https://www.mohitsengar.org";
 export const metadata: Metadata = {
   title: "Mohit Sengar — CTO Resume / CV",
   description:
-    "Résumé of Mohit Sengar — award-winning CTO with 14+ years across AI, automation, software and blockchain. View online or download the PDF.",
+    "Résumé of Mohit Sengar, a Dubai-based fractional CTO with 7+ years in the seat and 14+ years building software across AI, automation and blockchain.",
   alternates: {
     canonical: `${SITE_URL}/resume`,
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     type: "profile",
     title: "Mohit Sengar — Resume / CV",
     description:
-      "Chief Technology Officer · 14+ years engineering leadership · AI, automation, blockchain. Award-winning. Based in Dubai.",
+      "Chief Technology Officer · 7+ years as a CTO · 14+ years building software · AI, automation, blockchain. Based in Dubai.",
     url: `${SITE_URL}/resume`,
     siteName: "Mohit Sengar",
     images: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Mohit Sengar — Resume / CV",
     description:
-      "Chief Technology Officer · 14+ years · AI, automation, blockchain. Download the full PDF.",
+      "Chief Technology Officer · 7+ years as a CTO · 14+ years building software · AI, automation, blockchain.",
     images: [`${SITE_URL}/images/hero.jpg`],
   },
 };

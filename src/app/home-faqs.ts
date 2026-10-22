@@ -1,0 +1,9 @@
+/** Shared by HomeClient (visible FAQ) and page.tsx (FAQPage schema) so they never drift. */
+export const HOME_FAQS = [
+  { q: "What does the first engagement look like?", a: "We start with a free 30-minute call where I learn about your business, tech stack, and goals. If there's a fit, I'll propose a fixed-fee review (a Launch Check or a Production & Investor Readiness Review) or a retainer, with clear scope and timeline. No pressure, no obligation." },
+  { q: "What is a fractional CTO?", a: "A fractional CTO is an experienced technology executive who works with you part-time, for companies that need technology leadership but don't yet need a full-time CTO. I bring 14+ years of building software, 7+ of them as a CTO, to technology strategy, team building, architecture decisions and delivery, typically 2-3 days a week." },
+  { q: "How much does it cost to work with you?", a: "The Launch Check for AI-built MVPs is AED 9,500 ($2,500). The Production & Investor Readiness Review is AED 27,500 ($7,500). The Fractional CTO retainer is AED 45,000 ($14,000) a month for 2 days a week, with a 3-month minimum. The full review fee is credited against a retainer signed within 30 days." },
+  { q: "What if it's not a good fit?", a: "No hard feelings. The initial call is free, and I only propose next steps if I genuinely believe I can help. I've turned down work that wasn't the right match." },
+  { q: "Can you work with my existing team?", a: "Absolutely. Most of my engagements involve integrating with existing developers. I don't replace your team — I make them more effective through better architecture, clearer processes, and strategic technical direction." },
+  { q: "How quickly can you start?", a: "Typically within 1-2 weeks. For urgent needs, I can prioritize availability. Let's discuss your timeline on the free fit call." },
+];

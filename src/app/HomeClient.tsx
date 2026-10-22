@@ -1,10 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useCallback, useRef, FormEvent, ReactNode } from "react";
-import { motion, useInView, useScroll, useTransform, useMotionValue, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useCallback, useRef, useId, FormEvent, ReactNode } from "react";
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { CountUp } from "@/components/motion";
 import { DeliveryDashboardViz, DueDiligenceViz, HiringPipelineViz, ArchitectureViz, CostCompareBar } from "@/components/ServiceVisuals";
+import WhatsAppLink from "@/components/WhatsAppLink";
+import { CALENDLY_URL, CONTACT_EMAIL, WHATSAPP_URL } from "@/lib/contact";
+import { QUOTES } from "@/lib/testimonials";
+import { trackLead } from "@/lib/analytics";
+import { HOME_FAQS } from "./home-faqs";
 
 /* ═══════════════════════════════════════════════════════════════
    ANIMATION SYSTEM — Nubien-inspired premium motion tokens
@@ -127,22 +132,22 @@ function StaggerItem({
 /* ═══════════════════════════════════════════════════════════════
    DATA
    ═══════════════════════════════════════════════════════════════ */
+/* Logos and names only: no per-client descriptions or outcomes are published. */
 const PROJECTS = [
-  { img: "/images/project-apcoa.jpg", url: "https://www.apcoa.com/", name: "APCOA Parking", result: "Enterprise parking management platform across Europe" },
-  { img: "/images/project-ferrari.jpg", url: "https://www.ferrariworldabudhabi.com/", name: "Ferrari World Abu Dhabi", result: "Theme park operations & digital experience platform" },
-  { img: "/images/project-social27.jpg", url: "https://www.social27.com/", name: "Social27", result: "AI-powered virtual event & networking platform" },
-  { img: "/images/project-vourity.png", url: "https://vourity.com/", name: "Vourity", result: "Payment-integrated parking solutions for Scandinavia" },
-  { img: "/images/project-5.png", url: "https://www.mohitsengar.org/", name: "Custom Platform", result: "Bespoke enterprise application development" },
-  { img: "/images/project-atlas.jpg", url: "https://www.atlashxm.com/", name: "Atlas HXM", result: "HR & human experience management platform" },
+  { img: "/images/project-apcoa.jpg", url: "https://www.apcoa.com/", name: "APCOA Parking" },
+  { img: "/images/project-ferrari.jpg", url: "https://www.ferrariworldabudhabi.com/", name: "Ferrari World Abu Dhabi" },
+  { img: "/images/project-social27.jpg", url: "https://www.social27.com/", name: "Social27" },
+  { img: "/images/project-vourity.png", url: "https://vourity.com/", name: "Vourity" },
+  { img: "/images/project-atlas.jpg", url: "https://www.atlashxm.com/", name: "Atlas HXM" },
 ];
 
+/* Verbatim quotes, shared with /resume and the service pages (src/lib/testimonials.ts). */
 const TESTIMONIALS = [
-  { img: "/images/testimonial-talal.jpg", name: "Talal Alhabib", role: "XR Conference Speaker", text: "I had the pleasure of engaging with Mohit in a fireside chat on Extended Reality (XR) at the Internet 2.0 conference. His command over XR technology and its applications across various sectors is truly impressive." },
-  { img: "/images/testimonial-nathan.jpeg", name: "Nathan Jaskot", role: "Client", text: "Working with Mohit has been great! He is a technical expert in all things development! I can consistently rely on him to provide great advice, technical expertise and well developed solutions. Highly recommended." },
-  { img: "/images/testimonial-erlend.jpeg", name: "Erlend B\u00e5rli-Olsen", role: "APCOA Parkings GmbH", text: "My absolute pleasure to endorse Mohit — an invaluable asset and the pivotal force behind our success at APCOA Parkings GmbH. He has consistently demonstrated exceptional technical acumen and unwavering dedication to our projects." },
-  { img: "/images/testimonial-emma.jpeg", name: "Emma Lucas", role: "Client", text: "I highly recommend Mohit for his exceptional support, timely actions, and platform development skills. His expertise and dedication have been invaluable to our project's success. A skilled and reliable developer." },
-  { img: "/images/testimonial-max.jpeg", name: "Max Aronsson", role: "Long-term Collaborator", text: "Competent and trustworthy fullstack developer. Mohit is communicative and a great team player. Always available and open to new ideas — he thrived in a fast changing environment. Solved complex problems during many years of collaboration." },
-  { img: "/images/testimonial-nadia.jpeg", name: "Nadia O.", role: "Legal Tech Founder", text: "Your contributions have helped us bring our idea to life and positioned our application as a game-changer in the legal tech domain. Your efforts as a full-stack software engineer are exceptional." },
+  { img: "/images/testimonial-nathan.jpeg", name: "Nathan Jaskot", role: "Client", text: QUOTES.nathan },
+  { img: "/images/testimonial-erlend.jpeg", name: "Erlend B\u00e5rli-Olsen", role: "APCOA Parkings GmbH", text: QUOTES.erlend },
+  { img: "/images/testimonial-emma.jpeg", name: "Emma Lucas", role: "Client", text: QUOTES.emma },
+  { img: "/images/testimonial-max.jpeg", name: "Max Aronsson", role: "Long-term Collaborator", text: QUOTES.max },
+  { img: "/images/testimonial-nadia.jpeg", name: "Nadia O.", role: "Legal Tech Founder", text: QUOTES.nadia },
 ];
 
 const GALLERY_IMAGES = ["/images/gallery1.jpeg", "/images/gallery2.jpeg", "/images/gallery3.jpeg", "/images/gallery4.jpeg"];
@@ -150,7 +155,7 @@ const GALLERY_IMAGES = ["/images/gallery1.jpeg", "/images/gallery2.jpeg", "/imag
 const ENGAGEMENT_MODELS = [
   {
     title: "Fractional CTO",
-    desc: "Ongoing strategic tech leadership for 10-20 hours/week. Architecture decisions, team hiring, vendor selection, and delivery oversight.",
+    desc: "Ongoing tech leadership, 2-3 days a week, until you're ready to hire a full-time CTO. Architecture decisions, team hiring, vendor selection, and delivery oversight.",
     icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
     visual: <DeliveryDashboardViz />,
   },
@@ -174,28 +179,45 @@ const ENGAGEMENT_MODELS = [
   },
 ];
 
-const FAQS = [
-  { q: "What does the first engagement look like?", a: "We start with a free 30-minute call where I learn about your business, tech stack, and goals. If there's a fit, I'll propose an engagement model — fractional, project-based, or advisory — with clear scope and timeline. No pressure, no obligation." },
-  { q: "What is a fractional CTO?", a: "A fractional CTO is an experienced technology executive who provides part-time CTO services to companies that need strategic technology leadership but may not require or afford a full-time CTO. I bring 14+ years of enterprise experience to help with technology strategy, team building, architecture decisions, and digital transformation — typically 10-20 hours per week." },
-  { q: "How much does it cost to work with you?", a: "It depends on the engagement model. Fractional CTO retainers, project-based architecture reviews, and one-time due diligence assessments are all priced differently. I'm transparent about pricing from the first call — no surprises." },
-  { q: "What if it's not a good fit?", a: "No hard feelings. The initial call is free, and I only propose next steps if I genuinely believe I can help. I've turned down work that wasn't the right match — my 100% success rate depends on it." },
-  { q: "Can you work with my existing team?", a: "Absolutely. Most of my engagements involve integrating with existing developers. I don't replace your team — I make them more effective through better architecture, clearer processes, and strategic technical direction." },
-  { q: "How quickly can you start?", a: "Typically within 1-2 weeks. For urgent needs, I can prioritize availability. Let's discuss your timeline on the strategy call." },
-];
+/* Shared with the FAQPage schema in page.tsx. */
+const FAQS = HOME_FAQS;
 
 const SOCIAL_LINKS = [
   { name: "LinkedIn", url: "https://www.linkedin.com/in/mohitsengarr/", icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg> },
   { name: "Instagram", url: "https://www.instagram.com/mohitsengarr/", icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" /></svg> },
   { name: "YouTube", url: "https://www.youtube.com/@mohitsengarr", icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg> },
-  { name: "GitHub", url: "https://github.com/mohitsengarr", icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg> },
+  { name: "GitHub", url: "https://github.com/mohitsengarconsultancy", icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg> },
 ];
 
 const SERVICE_LINKS = [
-  { label: "Fractional CTO", desc: "Ongoing tech leadership", href: "/fractional-cto" },
-  { label: "QA & Quality Engineering", desc: "Testing that ships", href: "/qa" },
-  { label: "Shopify Experts", desc: "Store growth & builds", href: "/shopify-experts" },
+  { label: "Fractional CTO", desc: "Part-time CTO, 2-3 days a week", href: "/fractional-cto" },
+  { label: "Launch Check", desc: "5-day check for AI-built MVPs", href: "/launch-check" },
+  { label: "Readiness Review", desc: "Production & investor readiness", href: "/readiness-review" },
+  { label: "QA & Quality Engineering", desc: "My delivery bench", href: "/qa" },
   { label: "Vibe Coding", desc: "Lovable to production", href: "/vibe-coding" },
 ];
+
+const FIXED_FEE_REVIEWS = [
+  {
+    label: "Launch Check",
+    href: "/launch-check",
+    price: "AED 9,500 / $2,500",
+    line: "5 working days on your Lovable, Bolt, Cursor or Base44 MVP: security, tests, load and payments, with a written keep / fix / rebuild verdict.",
+  },
+  {
+    label: "Production & Investor Readiness Review",
+    href: "/readiness-review",
+    price: "AED 27,500 / $7,500",
+    line: "2 weeks across architecture, code, team, delivery and risks, in a written report you can forward to investors, presented live.",
+  },
+];
+
+export interface RecentPost {
+  slug: string;
+  title: string;
+  description: string;
+  readMinutes: number;
+}
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
@@ -333,7 +355,7 @@ function Header() {
             </a>
           ))}
           <a
-            href="https://calendly.com/mohitsengarr"
+            href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-mint hover:bg-mint-hover active:bg-mint-pressed text-black font-semibold px-5 py-2.5 rounded-full text-sm transition-all duration-300 active:scale-95 hover:shadow-lg hover:shadow-mint/20"
@@ -424,9 +446,12 @@ function BackToTop() {
   );
 }
 
-/* ─── FAQ Accordion ─── */
+/* ─── FAQ Accordion ───
+   The answer is always rendered (collapsed to height 0) so it is in the
+   server HTML for crawlers and matches the FAQPage schema. */
 function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false);
+  const panelId = useId();
   return (
     <Reveal delay={index * 0.06}>
       <div className="border-b border-[var(--color-border)]">
@@ -434,6 +459,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
           onClick={() => setOpen(!open)}
           className="w-full flex justify-between items-center py-6 px-2 text-left min-h-[56px] group"
           aria-expanded={open}
+          aria-controls={panelId}
         >
           <span className="text-base md:text-lg font-medium pr-4 text-white group-hover:text-mint transition-colors duration-300">{q}</span>
           <motion.svg
@@ -444,23 +470,21 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
+            aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </motion.svg>
         </button>
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: EASE_OUT }}
-              className="overflow-hidden"
-            >
-              <p className="px-2 pb-6 text-[var(--color-text-secondary)] leading-relaxed">{a}</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <motion.div
+          id={panelId}
+          initial={false}
+          animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.4, ease: EASE_OUT }}
+          className="overflow-hidden"
+          aria-hidden={!open}
+        >
+          <p className="px-2 pb-6 text-[var(--color-text-secondary)] leading-relaxed">{a}</p>
+        </motion.div>
       </div>
     </Reveal>
   );
@@ -481,8 +505,10 @@ function EmailCapture() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "playbook", email }),
       });
+      trackLead("playbook", "playbook-form", res.ok, res.status);
       setStatus(res.ok ? "success" : "error");
     } catch {
+      trackLead("playbook", "playbook-form", false);
       setStatus("error");
     }
   }
@@ -505,7 +531,7 @@ function EmailCapture() {
 
   return (
     <div className="max-w-md mx-auto">
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+      <form id="playbook-form" onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
         <input
           type="email"
           name="email"
@@ -528,194 +554,17 @@ function EmailCapture() {
       {status === "error" && (
         <p className="text-sm text-[var(--color-text-muted)] text-center mt-3">
           Couldn&apos;t send right now — email{" "}
-          <a href="mailto:mohit@sengarconsultancy.org" className="text-mint hover:underline">
-            mohit@sengarconsultancy.org
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-mint hover:underline">
+            {CONTACT_EMAIL}
           </a>{" "}
-          and I&apos;ll send the checklist directly.
+          and I&apos;ll send the checklist directly, or{" "}
+          <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="text-mint hover:underline">
+            book a free 30-minute call
+          </a>
+          .
         </p>
       )}
     </div>
-  );
-}
-
-/* ─── AI News Section ─── */
-interface NewsItem {
-  title: string;
-  url: string;
-  date: string;
-  source: string;
-  summary: string;
-}
-
-function AINewsSection({
-  initialNews = [],
-  newsUpdatedAt = "",
-}: {
-  initialNews?: NewsItem[];
-  newsUpdatedAt?: string;
-}) {
-  const [news, setNews] = useState<NewsItem[]>(initialNews);
-  const [loading, setLoading] = useState(initialNews.length === 0);
-  const [lastUpdated, setLastUpdated] = useState(newsUpdatedAt);
-
-  useEffect(() => {
-    // Server already provided news — nothing to fetch.
-    if (initialNews.length > 0) return;
-    fetch("/api/news")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.news) {
-          setNews(data.news);
-          setLastUpdated(
-            data.lastUpdated
-              ? new Date(data.lastUpdated).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              : ""
-          );
-        }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [initialNews.length]);
-
-  // Inject NewsArticle structured data for SEO
-  useEffect(() => {
-    if (!news.length) return;
-    const existingScript = document.getElementById("news-schema");
-    if (existingScript) existingScript.remove();
-
-    const newsSchema = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: "AI News & Insights curated by Mohit Sengar",
-      description: "Daily curated breaking AI news by Mohit Sengar, award-winning CTO and technology leader.",
-      itemListElement: news.map((item, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        item: {
-          "@type": "NewsArticle",
-          headline: item.title,
-          url: item.url,
-          datePublished: item.date,
-          publisher: { "@type": "Organization", name: item.source },
-          description: item.summary,
-        },
-      })),
-    };
-
-    const script = document.createElement("script");
-    script.id = "news-schema";
-    script.type = "application/ld+json";
-    script.textContent = JSON.stringify(newsSchema);
-    document.head.appendChild(script);
-
-    return () => {
-      const el = document.getElementById("news-schema");
-      if (el) el.remove();
-    };
-  }, [news]);
-
-  if (loading) {
-    return (
-      <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]" id="news" aria-label="AI News & Insights">
-        <div className="max-w-6xl mx-auto">
-          <header className="text-center mb-14 md:mb-16">
-            <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
-            <h2 className="text-2xl md:text-4xl font-bold tracking-tight">AI News & Insights</h2>
-          </header>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5" role="list" aria-busy="true">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white/[0.03] rounded-2xl border border-white/[0.06] p-6 animate-pulse" role="listitem">
-                <div className="h-4 bg-white/10 rounded w-1/3 mb-4" />
-                <div className="h-5 bg-white/10 rounded w-full mb-2" />
-                <div className="h-5 bg-white/10 rounded w-2/3 mb-4" />
-                <div className="h-3 bg-white/5 rounded w-full mb-2" />
-                <div className="h-3 bg-white/5 rounded w-4/5" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (!news.length) return null;
-
-  return (
-    <section className="py-24 md:py-32 px-6 bg-[#0A0A0A] border-y border-white/5" id="news" aria-label="AI News & Insights">
-      <div className="max-w-6xl mx-auto">
-        <Reveal>
-          <header className="text-center mb-14 md:mb-16">
-            <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">Latest in AI</p>
-            <h2 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
-              AI News & Insights
-            </h2>
-            <p className="text-[var(--color-text-secondary)] text-base md:text-lg max-w-2xl mx-auto">
-              Curated breaking news from the world of artificial intelligence,
-              updated daily by Mohit Sengar.
-            </p>
-            {lastUpdated && (
-              <p className="text-white/20 text-xs mt-3">
-                <time dateTime={new Date().toISOString().split("T")[0]}>Last updated: {lastUpdated}</time>
-              </p>
-            )}
-          </header>
-        </Reveal>
-        <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-5" stagger={0.08}>
-          {news.map((item, i) => (
-            <StaggerItem key={i}>
-              <article itemScope itemType="https://schema.org/NewsArticle" className="h-full">
-                <motion.a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.3, ease: EASE_OUT }}
-                  className="block bg-white/[0.03] rounded-2xl border border-white/[0.06] hover:border-mint/20 transition-all duration-500 p-6 h-full group"
-                  itemProp="url"
-                >
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-[var(--color-accent-label)] text-xs font-medium uppercase tracking-wider" itemProp="publisher" itemScope itemType="https://schema.org/Organization">
-                      <span itemProp="name">{item.source}</span>
-                    </span>
-                    <span className="text-[var(--color-text-placeholder)] text-xs" aria-hidden="true">&bull;</span>
-                    <time className="text-[var(--color-text-muted)] text-xs" itemProp="datePublished" dateTime={item.date}>
-                      {item.date}
-                    </time>
-                  </div>
-                  <h3 className="text-base md:text-lg font-bold text-white group-hover:text-mint transition-colors duration-300 mb-3 leading-snug line-clamp-3" itemProp="headline">
-                    {item.title}
-                  </h3>
-                  {item.summary && (
-                    <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed line-clamp-3" itemProp="description">
-                      {item.summary}
-                    </p>
-                  )}
-                  <div className="mt-4 flex items-center gap-1 text-[var(--color-accent-label)] group-hover:text-mint text-xs font-medium transition-colors duration-300" aria-label={`Read full article: ${item.title}`}>
-                    Read more
-                    <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </motion.a>
-              </article>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-
-        {/* SEO: noscript fallback for crawlers */}
-        <noscript>
-          <div className="text-center mt-8 text-white/40 text-sm">
-            <p>This section displays the latest AI news curated by Mohit Sengar, updated daily. Enable JavaScript to view the latest articles.</p>
-          </div>
-        </noscript>
-      </div>
-    </section>
   );
 }
 
@@ -734,7 +583,7 @@ function PremiumCard({ children, className = "", delay = 0 }: { children: ReactN
   }
 
   return (
-    <Reveal delay={delay}>
+    <Reveal delay={delay} className="min-w-0">
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -749,15 +598,9 @@ function PremiumCard({ children, className = "", delay = 0 }: { children: ReactN
 
 /* ═══════════════════════════════════════════════════════════════
    PAGE (client shell — rendered by the server component in page.tsx,
-   which passes server-fetched news so crawlers see real content)
+   which passes the recent blog posts so their titles stay in sync)
    ═══════════════════════════════════════════════════════════════ */
-export default function HomeClient({
-  initialNews = [],
-  newsUpdatedAt = "",
-}: {
-  initialNews?: NewsItem[];
-  newsUpdatedAt?: string;
-}) {
+export default function HomeClient({ recentPosts = [] }: { recentPosts?: RecentPost[] }) {
   const testimonialCarousel = useCarousel(TESTIMONIALS.length, 5000);
 
   /* Parallax for hero image */
@@ -770,14 +613,14 @@ export default function HomeClient({
   const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
 
   return (
-    <main className="bg-[#0A0A0A] text-white" role="main">
+    <main className="bg-[#0A0A0A] text-white overflow-x-clip" role="main">
       <Header />
       <BackToTop />
 
       {/* ═══ Floating Mobile CTA ═══ */}
       <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[#0A0A0A]/95 backdrop-blur-xl px-4 py-3 border-t border-white/5">
         <a
-          href="https://calendly.com/mohitsengarr"
+          href={CALENDLY_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="block w-full bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-[0.98] text-black font-semibold py-3.5 rounded-full transition-all text-center text-base"
@@ -820,7 +663,7 @@ export default function HomeClient({
             transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.5 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1] mb-8 max-w-3xl tracking-tight text-white"
           >
-            I Help Founders Build Engineering Teams That Actually Ship
+            I Take AI-Built and Agency-Built Products to Production
           </motion.h1>
 
           <motion.p
@@ -829,16 +672,17 @@ export default function HomeClient({
             transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.7 }}
             className="text-base md:text-lg text-[var(--color-text-secondary)] mb-10 max-w-xl leading-relaxed"
           >
-            14 years. 40+ companies. 100% job success rate. Mohit Sengar is an award-winning
-            fractional CTO based in Dubai who plugs into your startup and builds the tech org
-            you need &mdash; without the $400K/year salary.
+            14 years. 40+ companies. 7+ years as a CTO. I&apos;m Mohit Sengar, a Dubai-based
+            fractional CTO. I get your product production-ready and investor-ready, then stay on
+            as your part-time CTO until you&apos;re ready to hire a full-time one. You work with
+            me directly.
           </motion.p>
 
           <motion.a
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.9 }}
-            href="https://calendly.com/mohitsengarr"
+            href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:inline-block bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-95 text-black font-semibold px-8 py-4 rounded-full transition-all text-base hover:shadow-xl hover:shadow-mint/20"
@@ -869,9 +713,9 @@ export default function HomeClient({
       <section className="bg-[#0A0A0A] border-y border-white/5 py-10 md:py-14">
         <StaggerContainer className="max-w-5xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
           {[
-            { num: "40+", label: "Clients Worldwide", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg> },
-            { num: "100%", label: "Job Success Rate", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg> },
             { num: "14+", label: "Years Experience", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.003 6.003 0 01-2.77.672c-.992 0-1.929-.245-2.77-.672" /></svg> },
+            { num: "40+", label: "Clients Worldwide", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg> },
+            { num: "7+", label: "Years as a CTO", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" /></svg> },
           ].map((s) => (
             <StaggerItem key={s.label}>
               <div className="flex justify-center mb-3">
@@ -895,10 +739,10 @@ export default function HomeClient({
           <div className="text-base md:text-lg text-[var(--color-text-secondary)] leading-relaxed space-y-8 text-left">
             <Reveal delay={0.1}>
               <p>
-                You&apos;ve got a product vision but your engineering team keeps
-                missing deadlines. You&apos;ve hired developers &mdash; some
-                great, some not &mdash; but nobody&apos;s connecting the dots
-                between business goals and technical execution.
+                Your product was built fast &mdash; with Lovable or Bolt, an
+                agency, or a few freelancers. Now real users, payments and
+                investor questions are arriving, and nobody&apos;s connecting
+                the dots between business goals and technical execution.
               </p>
             </Reveal>
             <Reveal delay={0.2}>
@@ -912,7 +756,7 @@ export default function HomeClient({
             <Reveal delay={0.3}>
               <p className="text-white font-semibold text-lg md:text-2xl text-center !leading-snug">
                 You don&apos;t need another developer. You need a technical leader
-                who&apos;s built this before &mdash; 40 times.
+                who has sat in the CTO seat before.
               </p>
             </Reveal>
           </div>
@@ -946,10 +790,42 @@ export default function HomeClient({
               </PremiumCard>
             ))}
           </div>
-          <Reveal delay={0.4}>
+          {/* Fixed-fee entry points */}
+          <Reveal delay={0.2}>
+            <div className="mt-12 md:mt-16 rounded-2xl border border-mint/20 bg-white/[0.03] p-6 md:p-8" id="fixed-fee">
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 md:gap-6 mb-6">
+                <div>
+                  <p className="text-[var(--color-accent-label)] text-xs uppercase tracking-[0.2em] mb-2">Fixed fee</p>
+                  <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight">Start with a fixed-fee review</h3>
+                </div>
+                <p className="text-xs md:text-sm text-[var(--color-text-muted)] md:text-right md:max-w-xs">
+                  The full fee is credited against a retainer signed within 30 days.
+                </p>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                {FIXED_FEE_REVIEWS.map((r) => (
+                  <a
+                    key={r.href}
+                    href={r.href}
+                    className="block rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-mint/30 p-5 transition-colors duration-300 group"
+                  >
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 mb-2">
+                      <span className="text-base md:text-lg font-semibold text-white group-hover:text-mint transition-colors duration-300">{r.label}</span>
+                      <span className="text-sm font-semibold text-mint whitespace-nowrap">{r.price}</span>
+                    </div>
+                    <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{r.line}</p>
+                    <span className="mt-3 inline-flex items-center gap-1 text-xs text-[var(--color-accent-label)] group-hover:text-mint transition-colors duration-300">
+                      See what&apos;s included &rarr;
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+          <Reveal delay={0.3}>
             <div className="text-center mt-12 md:mt-16">
               <a
-                href="https://calendly.com/mohitsengarr"
+                href={CALENDLY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-mint hover:bg-mint-hover active:bg-mint-pressed active:scale-95 text-black font-semibold px-8 py-4 rounded-full transition-all text-base md:text-lg hover:shadow-xl hover:shadow-mint/20"
@@ -960,6 +836,10 @@ export default function HomeClient({
                 Want the details first?{" "}
                 <a href="/fractional-cto" className="text-mint hover:underline">
                   See how my fractional CTO services work, and what they cost
+                </a>
+                , or read{" "}
+                <a href="/blog/fractional-cto-cost-guide-2026" className="text-mint hover:underline">
+                  How Much Does a Fractional CTO Cost in 2026?
                 </a>
               </p>
             </div>
@@ -975,7 +855,7 @@ export default function HomeClient({
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
                 <Image
                   src="/images/stats-photo.jpeg"
-                  alt="Mohit Sengar - Award-winning CTO"
+                  alt="Mohit Sengar, fractional CTO based in Dubai"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover object-top"
@@ -1000,9 +880,9 @@ export default function HomeClient({
               <StaggerContainer className="space-y-4" stagger={0.08}>
                 {[
                   "Collaborated with 40+ clients across diverse industries worldwide",
-                  "100% job success rate — I don't take on work I can't deliver",
-                  "14+ years of hands-on engineering leadership experience",
-                  "Outstanding Leadership Award — Internet 2.0 Conference, Dubai 2024",
+                  "Chief Technology Officer at Invatu Technologies (2018–2025) and Unlimits (2025–2026)",
+                  "14+ years building software, 7+ of them as a CTO",
+                  "Outstanding Leadership Award — Internet 2.0 Conference, Dubai, February 2024",
                 ].map((stat, i) => (
                   <StaggerItem key={i}>
                     <div className="flex gap-3 md:gap-4 items-start">
@@ -1079,9 +959,8 @@ export default function HomeClient({
                 Outstanding Leadership Award
               </h2>
               <p className="text-base md:text-lg text-[var(--color-text-secondary)] max-w-3xl mx-auto">
-                Honored at Dubai&apos;s Internet 2.0 Conference, February 2024,
-                for transformative impact in steering Invatu Technologies towards
-                innovation and success.
+                Presented at the Internet 2.0 Conference in Dubai, February 2024,
+                for steering Invatu Technologies as its CTO.
               </p>
             </div>
           </Reveal>
@@ -1122,8 +1001,8 @@ export default function HomeClient({
               </h2>
               <p className="text-[var(--color-text-secondary)] text-base md:text-lg max-w-2xl mx-auto">
                 Hear directly from Mohit on engineering leadership, building
-                high-performing teams, and the approach behind 40+ successful
-                projects with a 100% delivery rate.
+                high-performing teams, and what he has learned working with
+                40+ companies.
               </p>
             </div>
           </Reveal>
@@ -1187,7 +1066,6 @@ export default function HomeClient({
                       </div>
                       <div className="p-4 md:p-5">
                         <h3 className="font-bold text-sm md:text-base text-white/90">{p.name}</h3>
-                        <p className="text-[var(--color-text-muted)] text-xs md:text-sm mt-1">{p.result}</p>
                       </div>
                     </a>
                   ))
@@ -1249,9 +1127,6 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* ═══ AI NEWS ═══ */}
-      <AINewsSection initialNews={initialNews} newsUpdatedAt={newsUpdatedAt} />
-
       {/* ═══ FRACTIONAL vs FULL-TIME CTO ═══ */}
       <section className="py-24 md:py-32 px-6 bg-surface">
         <div className="max-w-4xl mx-auto">
@@ -1262,7 +1137,7 @@ export default function HomeClient({
                 Full-Time CTO vs Fractional CTO
               </h2>
               <p className="text-[var(--color-text-secondary)] text-base md:text-lg max-w-2xl mx-auto">
-                Get the same strategic impact at a fraction of the cost &mdash; without the 6-month hiring process.
+                Senior technology leadership for about half the loaded cost of a full-time hire &mdash; without the 3-6 month search.
               </p>
             </div>
           </Reveal>
@@ -1317,10 +1192,10 @@ export default function HomeClient({
                 </div>
                 <div className="space-y-4">
                   {[
-                    { label: "Annual Cost", value: "70-80% less", sub: "pay only for hours you need" },
-                    { label: "Time to Start", value: "1-2 weeks", sub: "no search, immediate impact" },
-                    { label: "Risk", value: "Minimal", sub: "proven track record, 40+ clients" },
-                    { label: "Flexibility", value: "High", sub: "scale up, down, or pause anytime" },
+                    { label: "Annual Cost", value: "About half", sub: "of the loaded cost of a full-time hire" },
+                    { label: "Time to Start", value: "1-2 weeks", sub: "no search or notice period" },
+                    { label: "Risk", value: "Lower", sub: "start with a fixed-fee review" },
+                    { label: "Flexibility", value: "High", sub: "2 or 3 days a week; one month's notice after 3 months" },
                   ].map((row) => (
                     <div key={row.label} className="bg-white/[0.04] rounded-lg px-4 py-3">
                       <div className="flex items-center justify-between">
@@ -1336,6 +1211,52 @@ export default function HomeClient({
           </Reveal>
         </div>
       </section>
+
+      {/* ═══ RECENT WRITING ═══ */}
+      {recentPosts.length > 0 && (
+        <section className="py-24 md:py-32 px-6 bg-[#0A0A0A] border-b border-white/5" id="writing" aria-labelledby="writing-heading">
+          <div className="max-w-6xl mx-auto">
+            <Reveal>
+              <div className="text-center mb-14 md:mb-16">
+                <p className="text-[var(--color-accent-label)] text-sm uppercase tracking-[0.2em] mb-4">From the Blog</p>
+                <h2 id="writing-heading" className="text-2xl md:text-4xl font-bold tracking-tight text-white">
+                  Recent Writing
+                </h2>
+              </div>
+            </Reveal>
+            <StaggerContainer className="grid md:grid-cols-3 gap-5" stagger={STAGGER.fast}>
+              {recentPosts.map((post) => (
+                <StaggerItem key={post.slug} className="h-full">
+                  <motion.a
+                    href={`/blog/${post.slug}`}
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.3, ease: EASE_OUT }}
+                    className="flex flex-col bg-white/[0.03] rounded-2xl border border-white/[0.06] hover:border-mint/20 transition-colors duration-500 p-6 h-full group"
+                  >
+                    <h3 className="text-base md:text-lg font-bold text-white group-hover:text-mint transition-colors duration-300 mb-3 leading-snug">
+                      {post.title}
+                    </h3>
+                    <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed line-clamp-3 flex-1">{post.description}</p>
+                    <span className="mt-4 flex items-center gap-1 text-[var(--color-accent-label)] group-hover:text-mint text-xs font-medium transition-colors duration-300">
+                      {post.readMinutes} min read
+                      <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </motion.a>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+            <Reveal delay={0.1}>
+              <p className="text-center mt-10 text-sm">
+                <a href="/blog" className="text-mint hover:underline">
+                  All posts &rarr;
+                </a>
+              </p>
+            </Reveal>
+          </div>
+        </section>
+      )}
 
       {/* ═══ FAQ ═══ */}
       <section className="py-24 md:py-32 px-6 bg-[#0A0A0A]" id="faq">
@@ -1368,14 +1289,14 @@ export default function HomeClient({
               Ready to Stop Worrying About Engineering?
             </h2>
             <p className="text-[var(--color-text-secondary)] text-base md:text-lg mb-10 max-w-xl mx-auto">
-              Book a free 30-minute strategy session. I&apos;ll audit your current
-              situation and give you 3 actionable recommendations &mdash; no
-              strings attached.
+              Book a free 30-minute strategy session. Tell me where the product,
+              team and roadmap stand, and you&apos;ll get an honest read on what
+              you need &mdash; no strings attached.
             </p>
             <motion.a
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              href="https://calendly.com/mohitsengarr"
+              href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-mint hover:bg-mint-hover active:bg-mint-pressed text-black font-semibold px-10 md:px-12 py-4 md:py-5 rounded-full transition-colors text-base md:text-lg shadow-2xl shadow-mint/20 hover:shadow-mint/30"
@@ -1387,7 +1308,7 @@ export default function HomeClient({
               {[
                 { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>, text: "No obligation" },
                 { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, text: "30-min session" },
-                { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" /></svg>, text: "3 free recommendations" },
+                { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" /></svg>, text: "An honest read" },
               ].map((b) => (
                 <div key={b.text} className="flex items-center gap-1.5 text-xs">
                   {b.icon}
@@ -1407,8 +1328,9 @@ export default function HomeClient({
               <div>
                 <h3 className="text-xl font-bold mb-4 tracking-tight">Mohit Sengar</h3>
                 <p className="text-[var(--color-text-muted)] leading-relaxed text-sm md:text-base">
-                  Award-winning CTO and fractional technology leader. 14+ years
-                  helping companies build engineering teams that ship.
+                  Dubai-based fractional CTO. 14+ years building software, 7+ years
+                  as a CTO. I take AI-built and agency-built products to production,
+                  then stay on as your part-time CTO.
                 </p>
               </div>
             </Reveal>
@@ -1420,6 +1342,15 @@ export default function HomeClient({
                 <ul className="space-y-3 text-[var(--color-text-secondary)]">
                   <li>
                     <a href="/fractional-cto" className="hover:text-mint transition-colors duration-300 py-1 inline-block">Fractional CTO</a>
+                  </li>
+                  <li>
+                    <a href="/launch-check" className="hover:text-mint transition-colors duration-300 py-1 inline-block">Launch Check</a>
+                  </li>
+                  <li>
+                    <a href="/readiness-review" className="hover:text-mint transition-colors duration-300 py-1 inline-block">Readiness Review</a>
+                  </li>
+                  <li>
+                    <a href="/investor-tech-checklist" className="hover:text-mint transition-colors duration-300 py-1 inline-block">Investor Tech Checklist</a>
                   </li>
                   <li>
                     <a href="/qa" className="hover:text-mint transition-colors duration-300 py-1 inline-block">QA &amp; Quality Engineering</a>
@@ -1446,14 +1377,14 @@ export default function HomeClient({
                 </h3>
                 <ul className="space-y-3 text-[var(--color-text-secondary)]">
                   <li>
-                    <a href="mailto:mohit@sengarconsultancy.org" className="hover:text-mint transition-colors duration-300 py-2 inline-block">
-                      mohit@sengarconsultancy.org
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-mint transition-colors duration-300 py-2 inline-block">
+                      {CONTACT_EMAIL}
                     </a>
                   </li>
-                  <li className="text-sm text-[var(--color-text-muted)]">Based in Dubai &amp; India, working globally</li>
+                  <li className="text-sm text-[var(--color-text-muted)]">Based in Dubai, working globally</li>
                   <li>
                     <a
-                      href="https://calendly.com/mohitsengarr"
+                      href={CALENDLY_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:text-mint transition-colors duration-300 py-2 inline-block"
@@ -1461,6 +1392,11 @@ export default function HomeClient({
                       Schedule a Call &rarr;
                     </a>
                   </li>
+                  {WHATSAPP_URL && (
+                    <li>
+                      <WhatsAppLink className="hover:text-mint transition-colors duration-300 py-2 inline-block" />
+                    </li>
+                  )}
                 </ul>
               </div>
             </Reveal>

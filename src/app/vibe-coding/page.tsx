@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useRef, ReactNode } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useState, useRef, useId, ReactNode } from "react";
+import { motion, useInView } from "framer-motion";
 import SiteFooter from "@/components/SiteFooter";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { CALENDLY_URL, CONTACT_EMAIL } from "@/lib/contact";
+import { QUOTES } from "@/lib/testimonials";
+import { VIBE_FAQS } from "./faqs";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
-const CALENDLY = "https://calendly.com/mohitsengarr";
 
 /* ─── Reveal ─── */
 function Reveal({
@@ -36,9 +38,9 @@ function Reveal({
 /* ─── Data ─── */
 
 const TRUST_BAR = [
-  "14+ years CTO / senior engineering · Dubai",
-  "Recognised at Internet 2.0 Conference, Dubai 2024",
-  "40+ shipped engagements · 100% completion",
+  "7+ years as a CTO · 14+ years building software · Dubai",
+  "40+ companies worked with",
+  "Outstanding Leadership Award, Internet 2.0 Conference, Dubai, Feb 2024",
   "Verifiable on LinkedIn",
 ];
 
@@ -51,79 +53,65 @@ const PAIN_POINTS = [
   "You don't know if the database is backed up, if it scales past 50 users, or what “production” even means.",
 ];
 
-const SERVICES = [
+/* Approved price ladder only: AED first, USD/GBP second. */
+const SERVICES: {
+  title: string;
+  price: string;
+  timeline: string;
+  href?: string;
+  oneliner: string;
+  idealFor: string;
+  deliverables: string[];
+}[] = [
   {
-    title: "Lovable / Bolt / Base44 Prototype Audit",
-    price: "from $4,500",
-    timeline: "5–10 days",
+    title: "Launch Check for AI-built MVPs",
+    price: "AED 9,500 · $2,500 · £2,000",
+    timeline: "5 working days",
+    href: "/launch-check",
     oneliner:
-      "A technical review of what your AI tool actually built — before you launch, raise, or hire engineers.",
+      "A fixed-scope check of what Lovable, Bolt, Cursor, Base44, Replit or v0 actually built — before you launch, raise, or hire engineers. You get a clear keep / fix / rebuild verdict.",
     idealFor:
       "Founders with a working prototype who can't tell if it's safe, scalable, or hand-offable.",
     deliverables: [
-      "Architecture diagram of what's actually running",
-      "Auth · RLS · secrets · webhook audit",
-      "Edge-case and failure-mode list with priorities",
-      "Remediation roadmap with effort estimates",
+      "Security: exposed API keys, Supabase RLS, auth",
+      "Test coverage and a load check",
+      "Payments and webhooks checked end to end",
+      "Written report with a keep / fix / rebuild verdict",
     ],
   },
   {
-    title: "Lovable → Production App Build",
-    price: "$20K – $90K",
-    timeline: "4–10 weeks",
+    title: "Rescue to Production",
+    price: "From AED 55,000 · from $15,000",
+    timeline: "Fixed scope · billed by milestone",
     oneliner:
-      "Your validated MVP shipped as a real product — same UI, real infrastructure, the security and edge cases your users will actually hit.",
+      "Your prototype made production-ready in an agreed number of weeks: same UI, real infrastructure, and the security and edge cases your users will actually hit. When the AI builder is the ceiling, the same project can move you onto a stack your team can maintain.",
     idealFor:
-      "Founders with paying users (or about to) who need the prototype to stop being a prototype.",
+      "Founders with paying users (or about to have them) whose build is half-working, half-broken, or simply still a prototype.",
     deliverables: [
+      "Triage first: what's exploitable, broken, or silently failing",
+      "Critical fixes: leaked secrets, missing RLS, open endpoints, broken auth",
       "Hardened Supabase / Postgres backend — RLS, indexes, backups",
-      "Production auth + Stripe wired correctly (idempotency, webhooks, refunds)",
+      "Production auth and Stripe wired correctly (idempotency, webhooks, refunds)",
+      "Integrations with retries, idempotency and error handling",
       "Observability: error tracking, structured logs, uptime alerts",
       "CI/CD, staging environment, written runbook — code in your repo",
+      "Honest decision doc: rescue, rebuild or migrate, with reasoning",
     ],
   },
   {
-    title: "Lovable → WordPress / Elementor Migration",
-    price: "from $9,000",
-    timeline: "2–5 weeks",
+    title: "Fractional CTO",
+    price: "AED 45,000 · $14,000 per month",
+    timeline: "2 days a week · 3-month minimum",
+    href: "/fractional-cto",
     oneliner:
-      "Move your AI-generated site onto WordPress + Elementor — the platform your team can edit without calling a developer.",
+      "After launch, I stay on as your part-time CTO until you're ready to hire a full-time one: architecture, delivery, hiring and the investor-facing technical story.",
     idealFor:
-      "Founders whose Lovable site became a black box and who need editability, SEO control, and a real CMS.",
+      "Founders who need someone to own the technology after the rescue, without a full-time hire yet.",
     deliverables: [
-      "1:1 visual rebuild on Elementor or a custom block theme",
-      "Content migration with SEO redirects — no traffic loss",
-      "Forms, payments, integrations re-wired (Stripe, Mailchimp, n8n)",
-      "Core Web Vitals pass + editor training for your team",
-    ],
-  },
-  {
-    title: "Backend & API Integration",
-    price: "from $6,500",
-    timeline: "3–8 weeks",
-    oneliner:
-      "The connective tissue your AI app is probably faking — Supabase, Stripe, Twilio, Resend, Claude API, n8n, webhooks, queues.",
-    idealFor:
-      "Founders whose product needs to actually do something — send the SMS, charge the card, call the LLM, fire the workflow.",
-    deliverables: [
-      "Production integrations with retries, idempotency, error handling",
-      "Supabase schema review + RLS hardening",
-      "Webhook signing, verification, replay protection",
-      "LLM cost tracking, rate limiting, prompt-injection guardrails",
-    ],
-  },
-  {
-    title: "AI App Rescue + Security Hardening",
-    price: "from $7,500",
-    timeline: "2–4 weeks",
-    oneliner:
-      "When your build is half-working, half-broken, and you can't tell which half. Triage, stabilise, ship.",
-    idealFor: "Founders mid-launch with a leaking app and no engineer to call.",
-    deliverables: [
-      "Same-week triage: what's exploitable, broken, or silently failing",
-      "Critical fixes: leaked secrets, missing RLS, open endpoints, broken auth",
-      "Database and data-integrity review + backups",
-      "Honest decision doc: rescue vs. rebuild, with reasoning",
+      "Weekly steering call plus written updates",
+      "Architecture and release ownership",
+      "Hiring support for your engineering team",
+      "Vendor and agency management",
     ],
   },
 ];
@@ -141,22 +129,22 @@ const PLATFORMS = [
 
 const CASE_STUDIES = [
   {
-    tag: "AI Product Build",
-    title: "Generative-AI storytelling engine → production",
-    body: "An illustrated-narrative engine over Sanskrit/Hindi source texts: Supabase pgvector knowledge base across a multi-million-token corpus, character face bank on FLUX for cross-frame consistency, and a multi-layer language-detection pipeline. Shipped as a production system, not a demo.",
+    tag: "Own product",
+    title: "Generative-AI storytelling engine (my own product)",
+    body: "An illustrated-narrative engine over Sanskrit/Hindi source texts that I build and run myself: a Supabase pgvector knowledge base across a multi-million-token corpus, a character face bank on FLUX for cross-frame consistency, and a multi-layer language-detection pipeline.",
     stack: "Supabase · pgvector · Together AI FLUX · Next.js",
   },
   {
-    tag: "App Rescue",
-    title: "SaaS reporting platform — observability overhaul",
-    body: "A live SaaS with invisible failures: designed and implemented the full logging, error-handling and observability strategy — structured logs, retention, alerting, incident runbooks — plus a testing plan spanning unit, integration and end-to-end suites.",
+    tag: "Own project",
+    title: "SaaS reporting platform — logging & observability (my own project)",
+    body: "For a SaaS reporting platform of my own, I designed the logging, error-handling and observability strategy — structured logs, retention, alerting, incident runbooks — plus a testing plan spanning unit, integration and end-to-end suites.",
     stack: "Node.js · Postgres · structured logging · CI test suites",
   },
   {
-    tag: "MVP → Funded Product",
-    title: "Legal-tech application, idea to launch",
-    body: "Full-stack build for a legal-tech founder — from concept to a product her team calls “a game-changer in the legal tech domain.” Architecture, backend, frontend, and handover her future engineers could run with.",
-    stack: "Full-stack · client-verifiable testimonial below",
+    tag: "Client · MVP build",
+    title: "Legal-tech application, idea to working product",
+    body: "Full-stack build for a legal-tech founder: architecture, backend and frontend. In her words, the work “positioned our application as a game-changer in the legal tech domain.”",
+    stack: "Full-stack · founder's testimonial below",
   },
 ];
 
@@ -164,98 +152,49 @@ const COMPARISON = [
   { them: "Prompt the AI tool until errors stop", me: "Read the generated code line-by-line, fix the architecture" },
   { them: "Ship “it works on my machine”", me: "Ship with RLS, observability, backups, written runbook" },
   { them: "Keep the project in their accounts", me: "Your repo, your cloud accounts, your domain — always" },
-  { them: "“Trust me, it's secure”", me: "Pen-test the auth, audit the RLS, document the threat model" },
+  { them: "“Trust me, it's secure”", me: "Test the auth as a second user, audit the RLS, document the threat model" },
   { them: "Hourly with no end in sight", me: "Fixed scope, fixed price, honest scoping before we start" },
 ];
 
 const PROCESS = [
   {
     step: "01",
-    title: "30-min Build Review (free)",
-    body: "We screen-share. You walk me through what you built. I tell you honestly what's production-blocking, what's fine, and whether I'm the right person to fix it — with a written summary within 48 hours either way.",
+    title: "Free 30-minute fit call",
+    body: "We screen-share. You walk me through what you built. I tell you honestly what looks production-blocking and whether I'm the right person to fix it. If you need the answer in writing, that's the Launch Check.",
   },
   {
     step: "02",
     title: "Written scope, fixed price",
-    body: "Within 3 business days: exactly what I'll do, exactly what you'll get, exactly what it costs. No “we'll figure it out as we go.”",
+    body: "Before any project starts: exactly what I'll do, exactly what you'll get, exactly what it costs. No “we'll figure it out as we go.”",
   },
   {
     step: "03",
     title: "Build / migrate / harden",
-    body: "Daily written updates in plain English. Weekly demo call. Source code in your repo from day one — never in mine.",
+    body: "Written updates in plain English at every milestone. Source code in your repo from day one — never in mine.",
   },
   {
     step: "04",
     title: "Production handover",
-    body: "Written runbook, recorded walkthrough, 30-day post-launch support. If your next engineer can't run it, I haven't finished.",
+    body: "Written runbook and a recorded walkthrough. If your next engineer can't run it, I haven't finished.",
   },
 ];
 
+/* Verbatim quotes, shared with the homepage and /resume (src/lib/testimonials.ts). */
 const TESTIMONIALS = [
-  {
-    quote:
-      "My absolute pleasure to endorse Mohit — an invaluable asset and the pivotal force behind our success at APCOA Parkings GmbH. Consistent technical acumen and unwavering dedication.",
-    name: "Erlend Bårli-Olsen",
-    role: "APCOA Parkings GmbH",
-  },
-  {
-    quote:
-      "Your contributions helped us bring our idea to life and positioned our application as a game-changer in the legal-tech domain. Exceptional full-stack engineer.",
-    name: "Nadia O.",
-    role: "Legal-tech founder",
-  },
-  {
-    quote:
-      "Competent and trustworthy full-stack developer. Communicative, a great team player, and solved complex problems across many years of collaboration.",
-    name: "Max Aronsson",
-    role: "Long-term collaborator, Sweden",
-  },
-  {
-    quote:
-      "Working with Mohit has been great. A technical expert in all things development — I rely on him for advice, expertise, and well-developed solutions.",
-    name: "Nathan Jaskot",
-    role: "Founder, Everconnect Data Systems",
-  },
+  { quote: QUOTES.erlend, name: "Erlend Bårli-Olsen", role: "APCOA Parkings GmbH" },
+  { quote: QUOTES.nadia, name: "Nadia O.", role: "Legal-tech founder" },
+  { quote: QUOTES.max, name: "Max Aronsson", role: "Long-term collaborator, Sweden" },
+  { quote: QUOTES.nathan, name: "Nathan Jaskot", role: "Founder, Everconnect Data Systems" },
 ];
 
-const FAQS = [
-  {
-    q: "I built my app in Lovable. Do I have to migrate off it to work with you?",
-    a: "About half my Lovable engagements stay on Lovable — we harden the Supabase backend, fix the auth, wire real Stripe/Twilio, and add what Lovable couldn't generate. The other half migrate because they hit a structural ceiling: custom backend logic, complex permissions, performance at scale. I'll tell you which is right for you on the Build Review call.",
-  },
-  {
-    q: "What does this cost?",
-    a: "Prototype Audit from $4,500 (5–10 days). AI App Rescue from $7,500 (2–4 weeks). WordPress/Elementor migration from $9,000. Lovable → Production build $20K–$90K depending on scope. Backend/integrations from $6,500. Every engagement is fixed price — you get a written scope before you commit a dollar.",
-  },
-  {
-    q: "How fast can you start?",
-    a: "Audits and rescues usually within a week. Larger builds 2–3 weeks out. If your launch is on fire, say so on the call — I keep a slot for emergencies most months.",
-  },
-  {
-    q: "I'm not technical. Will I understand what you're doing?",
-    a: "Yes. Daily updates in plain English — “we fixed the bug where new signups could see each other's accounts” — and short recorded walkthroughs when something matters. You don't need to read code; you need to know what's done, what's next, and what's at risk.",
-  },
-  {
-    q: "Do you keep my code, my Supabase account, my Stripe account?",
-    a: "Never. Your repo, your accounts, your domain. I'm a guest in your infrastructure — when the engagement ends you can hire anyone and nothing breaks because I'm gone.",
-  },
-  {
-    q: "Why is this different from the last freelancer who burned me?",
-    a: "I scope before I start, quote fixed price, and don't take work I can't deliver. My completion rate is 100% across 40+ engagements — and it stays there because I say “no, that's not a fit” when it isn't. The free Build Review is partly so I can decide that honestly.",
-  },
-  {
-    q: "Can you work alongside my existing engineer or agency?",
-    a: "Often, yes — especially on audits and integrations. I review what they built, write a remediation list, and either fix it myself or hand it back against a clear spec. Many engagements end with me handing a clean codebase to the client's permanent team.",
-  },
-  {
-    q: "Are you in my timezone?",
-    a: "I'm based in Dubai (GMT+4) and work daily with founders in the US, UK, EU, and APAC — there's always a 3-hour live overlap with every major timezone, and async-first updates mean you're rarely waiting on me.",
-  },
-];
+const FAQS = VIBE_FAQS;
 
-/* ─── FAQ Item ─── */
+/* ─── FAQ Item ───
+   The answer is always in the DOM (collapsed to height 0), so it is in the
+   server HTML and matches the FAQPage schema. */
 function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false);
+  const panelId = useId();
   return (
     <Reveal delay={index * 0.05}>
       <div className="border border-white/10 rounded-2xl overflow-hidden hover:border-violet-400/30 transition-colors">
@@ -263,6 +202,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
           onClick={() => setOpen(!open)}
           className="w-full flex items-center justify-between p-6 text-left cursor-pointer"
           aria-expanded={open}
+          aria-controls={panelId}
         >
           <span className="text-base md:text-lg font-medium text-white pr-4">{q}</span>
           <motion.span
@@ -274,18 +214,16 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
             +
           </motion.span>
         </button>
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: EASE_OUT }}
-            >
-              <p className="px-6 pb-6 text-white/60 leading-relaxed text-sm md:text-base">{a}</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <motion.div
+          id={panelId}
+          initial={false}
+          animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: EASE_OUT }}
+          className="overflow-hidden"
+          aria-hidden={!open}
+        >
+          <p className="px-6 pb-6 text-white/60 leading-relaxed text-sm md:text-base">{a}</p>
+        </motion.div>
       </div>
     </Reveal>
   );
@@ -308,12 +246,12 @@ export default function VibeCodingPage() {
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
           <a
-            href={CALENDLY}
+            href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-violet-500 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-violet-400 transition-colors"
           >
-            Book a Build Review
+            Book a Fit Call
           </a>
         </div>
       </nav>
@@ -327,20 +265,20 @@ export default function VibeCodingPage() {
           <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-violet-400/5 rounded-full blur-[150px]" />
         </div>
         <div className="relative max-w-5xl mx-auto px-6 py-20">
-          <Reveal>
+          <div className="hero-rise">
             <p className="text-violet-400 text-sm font-semibold uppercase tracking-[0.2em] mb-6">
               Lovable · Bolt · Base44 · Replit → Production
             </p>
-          </Reveal>
-          <Reveal delay={0.1}>
+          </div>
+          <div className="hero-rise" style={{ animationDelay: "0.1s" }}>
             <h1 className="text-4xl md:text-6xl font-bold leading-[1.1] tracking-tight mb-6">
               You built it with AI in a weekend.{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-violet-200">
                 Now it needs to survive Monday.
               </span>
             </h1>
-          </Reveal>
-          <Reveal delay={0.2}>
+          </div>
+          <div className="hero-rise" style={{ animationDelay: "0.2s" }}>
             {/* Answer-first block: what this service is, in two sentences */}
             <p className="text-base md:text-lg text-white/60 max-w-2xl leading-relaxed mb-4">
               I&apos;m a CTO-led engineering partner for founders whose Lovable, Bolt, Base44 or Replit
@@ -348,29 +286,34 @@ export default function VibeCodingPage() {
               harden what matters — auth, RLS, payments, edge cases — and either ship it to production
               or migrate it onto a stack your team can actually maintain.
             </p>
-          </Reveal>
-          <Reveal delay={0.3}>
+          </div>
+          <div className="hero-rise" style={{ animationDelay: "0.3s" }}>
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <a
-                href={CALENDLY}
+                href={CALENDLY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-violet-500 hover:bg-violet-400 text-white font-semibold px-8 py-4 rounded-full transition-all text-center"
               >
-                Book a 30-Min Build Review →
+                Book a Free 30-Min Fit Call →
               </a>
               <a
-                href="/blog/lovable-app-production-ready-checklist"
+                href="/launch-check"
                 className="border border-white/15 hover:border-violet-400/50 text-white/80 hover:text-white font-semibold px-8 py-4 rounded-full transition-all text-center"
               >
-                Get the Production Checklist
+                See the Launch Check
               </a>
             </div>
-            <p className="text-xs text-white/30 mt-4">
-              Free, screen-share, no pitch. Written assessment within 48 hours — whether or not we work together.
+            <p className="text-xs text-white/50 mt-4">
+              The fit call is free, on screen-share, with no pitch. Need the answer in writing? The
+              Launch Check gives you a written keep / fix / rebuild verdict in 5 working days.{" "}
+              <a href="/blog/lovable-app-production-ready-checklist" className="text-violet-300 hover:underline">
+                Or start with the free production checklist
+              </a>
+              .
             </p>
-          </Reveal>
-          <Reveal delay={0.4}>
+          </div>
+          <div className="hero-rise" style={{ animationDelay: "0.4s" }}>
             <ul className="flex flex-wrap gap-x-6 gap-y-2 mt-10 text-xs text-white/40">
               {TRUST_BAR.map((t) => (
                 <li key={t} className="flex items-center gap-2">
@@ -379,7 +322,7 @@ export default function VibeCodingPage() {
                 </li>
               ))}
             </ul>
-          </Reveal>
+          </div>
         </div>
       </section>
 
@@ -434,7 +377,15 @@ export default function VibeCodingPage() {
                     </div>
                     <div className="flex-shrink-0 text-left md:text-right">
                       <div className="text-violet-300 font-bold text-lg">{s.price}</div>
-                      <div className="text-white/35 text-xs mt-1">{s.timeline}</div>
+                      <div className="text-white/50 text-xs mt-1">{s.timeline}</div>
+                      {s.href && (
+                        <a
+                          href={s.href}
+                          className="inline-block text-violet-300 hover:text-violet-200 text-xs font-semibold mt-2 hover:underline"
+                        >
+                          What&apos;s included →
+                        </a>
+                      )}
                     </div>
                   </div>
                   <p className="text-xs uppercase tracking-wider text-white/35 mb-2">Ideal for</p>
@@ -454,7 +405,7 @@ export default function VibeCodingPage() {
           </div>
           <Reveal delay={0.2}>
             <p className="text-center text-white/40 text-sm mt-10">
-              Every engagement is fixed price with a written scope before you commit a dollar.
+              Every project is fixed price with a written scope before you commit a dollar.
             </p>
           </Reveal>
         </div>
@@ -536,8 +487,8 @@ export default function VibeCodingPage() {
           </div>
           <Reveal delay={0.15}>
             <p className="text-center text-white/60 mt-10 max-w-2xl mx-auto leading-relaxed">
-              14 years as a CTO and senior engineer across healthcare, fintech, e-commerce, parking
-              systems (APCOA), and legal-tech. The AI tools are new. The engineering discipline isn&apos;t.
+              14+ years building software, 7+ of them as a CTO, across healthcare, fintech,
+              e-commerce, parking systems (APCOA), and legal-tech. The AI tools are new. The engineering discipline isn&apos;t.
             </p>
           </Reveal>
         </div>
@@ -618,27 +569,27 @@ export default function VibeCodingPage() {
               <span className="text-violet-300">Let&apos;s find out if it ships.</span>
             </h2>
             <p className="text-white/55 max-w-xl mx-auto mb-10 leading-relaxed">
-              Book a 30-minute Build Review. I&apos;ll look at what you built, tell you what&apos;s
-              production-blocking, and send a written summary. Free. No pitch. You leave with a plan
-              whether or not we work together.
+              Book a free 30-minute fit call. I&apos;ll look at what you built and give you an honest
+              read on what&apos;s production-blocking. If you want it in writing, the Launch Check is
+              the next step: a written keep / fix / rebuild verdict in 5 working days.
             </p>
             <a
-              href={CALENDLY}
+              href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-violet-500 hover:bg-violet-400 text-white font-semibold px-10 py-5 rounded-full transition-all text-lg shadow-2xl shadow-violet-500/20"
             >
-              Book the Build Review →
+              Book a Free Fit Call →
             </a>
-            <ul className="flex flex-wrap justify-center gap-x-8 gap-y-2 mt-8 text-xs text-white/35">
+            <ul className="flex flex-wrap justify-center gap-x-8 gap-y-2 mt-8 text-xs text-white/50">
               <li>30 min, screen-share, on your calendar</li>
-              <li>Written assessment within 48 hours</li>
+              <li>Written verdict: the Launch Check, AED 9,500 / $2,500</li>
               <li>No sales follow-up unless you ask</li>
             </ul>
             <p className="text-sm text-white/40 mt-8">
               Prefer email?{" "}
-              <a href="mailto:mohit@sengarconsultancy.org" className="text-violet-300 hover:underline">
-                mohit@sengarconsultancy.org
+              <a href={`mailto:${CONTACT_EMAIL}`} className="text-violet-300 hover:underline">
+                {CONTACT_EMAIL}
               </a>
             </p>
           </Reveal>

@@ -178,8 +178,21 @@ textarea:focus-visible {
   transform: translateY(-50%);
 }
 
+/* ─── Hero entrance ───
+   Transform only, never opacity: hero text and CTAs are visible in the server
+   HTML at first paint (no JS or in-view check needed), which keeps LCP fast. */
+@keyframes hero-rise {
+  from { transform: translateY(14px); }
+  to { transform: none; }
+}
+
+.hero-rise {
+  animation: hero-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Reduced motion: stop the marquee and let it scroll by hand instead */
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee { animation: none; }
   .marquee-viewport { overflow-x: auto; }
+  .hero-rise { animation: none; }
 }

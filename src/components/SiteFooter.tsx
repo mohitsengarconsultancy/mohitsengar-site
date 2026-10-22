@@ -1,7 +1,11 @@
 import Link from "next/link";
+import WhatsAppLink from "@/components/WhatsAppLink";
+import { CALENDLY_URL, CONTACT_EMAIL, WHATSAPP_URL } from "@/lib/contact";
 
 const SERVICES = [
   { label: "Fractional CTO", href: "/fractional-cto" },
+  { label: "Launch Check", href: "/launch-check" },
+  { label: "Readiness Review", href: "/readiness-review" },
   { label: "QA & Quality Engineering", href: "/qa" },
   { label: "Shopify Experts", href: "/shopify-experts" },
   { label: "Vibe Coding — Lovable to Production", href: "/vibe-coding" },
@@ -9,9 +13,10 @@ const SERVICES = [
 
 const RESOURCES = [
   { label: "Blog", href: "/blog" },
+  { label: "Fractional CTO cost guide", href: "/blog/fractional-cto-cost-guide-2026" },
+  { label: "Investor Tech Checklist", href: "/investor-tech-checklist" },
   { label: "AI App Production Checklist", href: "/blog/lovable-app-production-ready-checklist" },
   { label: "Resume / CV", href: "/resume" },
-  { label: "AI News", href: "/#news" },
 ];
 
 const COMPANY = [
@@ -31,8 +36,9 @@ export default function SiteFooter() {
               Mohit Sengar
             </Link>
             <p className="text-white/40 text-sm leading-relaxed mt-3">
-              Award-winning fractional CTO. 14+ years turning prototypes into
-              production and teams into shipping machines.
+              Dubai-based CTO with 7+ years in the seat. I take AI-built and
+              agency-built products to production, make them investor-ready,
+              and stay on as your part-time CTO until you hire a full-time one.
             </p>
           </div>
           <div>
@@ -70,8 +76,23 @@ export default function SiteFooter() {
                 </li>
               ))}
               <li>
-                <a href="mailto:mohit@sengarconsultancy.org" className="text-sm text-white/60 hover:text-[#8DD9BF] transition-colors break-all">
-                  mohit@sengarconsultancy.org
+                <a
+                  href={CALENDLY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-[#8DD9BF] hover:text-white transition-colors"
+                >
+                  Book a call
+                </a>
+              </li>
+              {WHATSAPP_URL && (
+                <li>
+                  <WhatsAppLink className="text-sm text-white/60 hover:text-[#8DD9BF] transition-colors" />
+                </li>
+              )}
+              <li>
+                <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm text-white/60 hover:text-[#8DD9BF] transition-colors break-all">
+                  {CONTACT_EMAIL}
                 </a>
               </li>
             </ul>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { QA_FAQS } from "./faqs";
 
 const SITE_URL = "https://www.mohitsengar.org";
 const PAGE_URL = `${SITE_URL}/qa`;
@@ -6,7 +7,7 @@ const PAGE_URL = `${SITE_URL}/qa`;
 export const metadata: Metadata = {
   title: "QA & Quality Engineering Services | Mohit Sengar",
   description:
-    "Modern QA and quality engineering — test automation, AI/LLM testing, performance, security in CI/CD, and observability. Solve the top 10 testing problems of 2026. Book a free QA audit.",
+    "QA and quality engineering, the delivery bench behind my CTO work: test automation, AI/LLM testing, performance, CI/CD security, observability. Free fit call.",
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: PAGE_URL,
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "QA & Quality Engineering | Mohit Sengar",
     description:
-      "Test automation, AI/LLM testing, performance, security-in-CI, and observability. Solve the top 10 testing problems of 2026. Book a free QA audit.",
+      "Test automation, AI/LLM testing, performance, security-in-CI, and observability. Solve the top 10 testing problems of 2026. Book a free fit call.",
     images: [`${SITE_URL}/images/qa/testing-problems-2026.jpg`],
   },
 };
@@ -71,7 +72,7 @@ const serviceSchema = {
   "@type": "ProfessionalService",
   name: "Sengar Consultancy — QA & Quality Engineering",
   description:
-    "CTO-led QA and quality engineering: test automation, AI/LLM system testing, performance and load testing, continuous security (DevSecOps), microservice contract testing, and observability-driven testing.",
+    "CTO-led QA and quality engineering, the delivery bench behind Mohit Sengar's fractional CTO practice: test automation, AI/LLM system testing, performance and load testing, continuous security (DevSecOps), microservice contract testing, and observability-driven testing.",
   url: PAGE_URL,
   image: `${SITE_URL}/images/qa/testing-problems-2026.jpg`,
   priceRange: "$$-$$$",
@@ -79,100 +80,74 @@ const serviceSchema = {
   provider: { "@id": `${SITE_URL}/#org` },
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "QA & Quality Engineering Services",
+    name: "Ways to buy quality engineering",
     itemListElement: [
       {
         "@type": "Offer",
+        url: `${SITE_URL}/launch-check`,
+        priceSpecification: [
+          { "@type": "PriceSpecification", price: 9500, priceCurrency: "AED" },
+          { "@type": "PriceSpecification", price: 2500, priceCurrency: "USD" },
+          { "@type": "PriceSpecification", price: 2000, priceCurrency: "GBP" },
+        ],
         itemOffered: {
           "@type": "Service",
-          name: "QA Health Audit",
+          name: "Launch Check",
           description:
-            "A deep review of test coverage, flakiness, CI/CD pipeline, security posture, and performance, with a prioritized remediation roadmap.",
+            "5 working days on an AI-built MVP: tests, load, security (exposed keys, Supabase RLS, auth), payments and webhooks, with a written keep / fix / rebuild verdict.",
         },
       },
       {
         "@type": "Offer",
+        url: `${SITE_URL}/readiness-review`,
+        priceSpecification: [
+          { "@type": "PriceSpecification", price: 27500, priceCurrency: "AED" },
+          { "@type": "PriceSpecification", price: 7500, priceCurrency: "USD" },
+        ],
         itemOffered: {
           "@type": "Service",
-          name: "Test Automation Sprint",
+          name: "Production & Investor Readiness Review",
           description:
-            "A 60-day sprint to build resilient, self-healing test automation, wire it into CI/CD, and eliminate flaky tests.",
+            "2 weeks: architecture, code quality and testing, security, team and delivery process, in an investor-forwardable report presented live.",
         },
       },
       {
         "@type": "Offer",
+        url: `${SITE_URL}/fractional-cto`,
+        priceSpecification: [
+          {
+            "@type": "UnitPriceSpecification",
+            price: 45000,
+            priceCurrency: "AED",
+            referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitCode: "MON" },
+          },
+          {
+            "@type": "UnitPriceSpecification",
+            price: 14000,
+            priceCurrency: "USD",
+            referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitCode: "MON" },
+          },
+        ],
         itemOffered: {
           "@type": "Service",
-          name: "Quality Engineering Retainer",
+          name: "Fractional CTO",
           description:
-            "Ongoing quality engineering — automation, AI/LLM testing, security-in-CI, performance, and observability with release-confidence reporting.",
+            "2 days a week as a part-time CTO, with ongoing quality engineering (automation, CI/CD quality gates, security and performance) as part of the role.",
         },
       },
     ],
   },
 };
 
+/* Built from the same array the page renders, so schema and visible FAQ match. */
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What does a QA and quality engineering engagement include?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Modern quality engineering across the whole delivery lifecycle: resilient test automation, AI/LLM system testing, performance and load testing shifted left, continuous security (SAST, DAST, SCA) in CI/CD, microservice contract testing and service virtualization, and observability-driven testing that feeds real production behaviour back into your test suite.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How do you fix flaky tests?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Most flakiness comes from selector fragility against dynamic DOM structures. We rebuild suites on AI-driven, self-healing frameworks (Playwright, testRigor, Katalon) that use multiple locators and context to find elements even when the original selector changes, so false failures stop eroding trust in automation.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Can you test AI and LLM features?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. Because a large language model can return different responses to similar inputs, we evaluate qualities rather than a single expected output — hallucinations, bias, toxicity, truthfulness, relevance and prompt-injection resistance — using an LLM-as-a-Judge approach with tools like DeepEval, Langfuse and Promptfoo.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How much does QA cost?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Three engagement models: a one-time QA Health Audit from $997, a 60-day Test Automation Sprint from $4,997, and an ongoing Quality Engineering Retainer from $6,997/month. Each is scoped to your stack and risk profile with clear deliverables. Book a free QA audit call for a custom quote.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What testing tools do you use?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "We are tool-agnostic and pick what fits your stack: Playwright, testRigor and Katalon for automation; DeepEval, Langfuse and Promptfoo for AI/LLM evaluation; Grafana k6, Locust and OpenTelemetry for performance; Snyk, SonarQube and OWASP ZAP for security; PactFlow, WireMock and Tricentis for integration; and Datadog, Dynatrace and Honeycomb for observability.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How quickly can you start?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "QA audits and rescues usually start within a week. For a launch on fire — a broken pipeline, a security scare, or a release deadline — we offer priority onboarding. Book a free QA audit to discuss your timeline.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Do you work with our existing team and CI/CD?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. We plug into your existing engineers, repositories and pipelines rather than replacing them — reviewing what you have, writing a remediation plan, and either implementing it ourselves or handing your team a clear spec. Most engagements end with a durable QA capability owned by your permanent team.",
-      },
-    },
-  ],
+  mainEntity: QA_FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
 };
 
 export default function QaLayout({

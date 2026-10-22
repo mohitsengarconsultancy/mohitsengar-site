@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { MotionRoot, ScrollProgress } from "@/components/motion";
+import LeadEvents from "@/components/LeadEvents";
+import { PERSON_SAME_AS } from "@/lib/person";
 
 const SITE_URL = "https://www.mohitsengar.org";
 
+const HOME_TITLE = "Mohit Sengar — Startup & Scale-up CTO | Sengar Consultancy";
+const HOME_DESCRIPTION =
+  "Dubai-based CTO with 7+ years in the seat. I take AI-built and agency-built products to production, make them investor-ready, and stay on as your part-time CTO.";
+
 export const metadata: Metadata = {
-  title: "Fractional CTO in Dubai — Mohit Sengar",
-  description:
-    "Award-winning fractional CTO for founders worldwide — AI apps, e-commerce, rescue engineering. 40+ clients, 100% success rate. Book a free strategy call.",
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: SITE_URL,
@@ -21,26 +26,24 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: "Fractional CTO in Dubai — Mohit Sengar",
-    description:
-      "Award-winning fractional CTO for founders worldwide — AI apps, e-commerce, rescue engineering. 40+ clients, 100% success rate.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     url: SITE_URL,
-    siteName: "Mohit Sengar",
+    siteName: "Mohit Sengar — Sengar Consultancy",
     images: [
       {
         url: `${SITE_URL}/images/hero.jpg`,
         width: 1200,
         height: 630,
-        alt: "Mohit Sengar - CTO & Technology Leader",
+        alt: "Mohit Sengar, Dubai-based CTO",
       },
     ],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fractional CTO in Dubai — Mohit Sengar",
-    description:
-      "Award-winning fractional CTO — AI apps, e-commerce, rescue engineering. 40+ clients, 100% success rate.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     images: [`${SITE_URL}/images/hero.jpg`],
   },
 };
@@ -58,7 +61,7 @@ const personSchema = {
   alternateName: ["Mohit Sengar", "Sengar"],
   jobTitle: "Fractional CTO",
   description:
-    "Mohit Sengar is an award-winning fractional CTO and engineering leader based in Dubai with 14+ years of experience across AI, automation, software development, and blockchain.",
+    "Mohit Sengar is a Dubai-based fractional CTO with 7+ years as a CTO and 14+ years building software for 40+ companies. He takes AI-built and agency-built products to production, makes them investor-ready, and stays on as a part-time CTO until the company is ready to hire a full-time one.",
   url: SITE_URL,
   image: `${SITE_URL}/images/hero.jpg`,
   address: {
@@ -85,14 +88,8 @@ const personSchema = {
     "Healthcare Technology",
     "Fintech",
   ],
-  award: "Outstanding Leadership Award - Internet 2.0 Conference Dubai 2024",
-  sameAs: [
-    "https://www.linkedin.com/in/mohitsengarr/",
-    "https://www.instagram.com/mohitsengarr/",
-    "https://www.youtube.com/@mohitsengarr",
-    "https://github.com/mohitsengarr",
-    "https://twitter.com/mohitsengarr",
-  ],
+  award: "Outstanding Leadership Award, Internet 2.0 Conference, Dubai, February 2024",
+  sameAs: PERSON_SAME_AS,
 };
 
 const organizationSchema = {
@@ -104,7 +101,7 @@ const organizationSchema = {
   email: "mohit@sengarconsultancy.org",
   founder: { "@id": `${SITE_URL}/#person` },
   description:
-    "Independent engineering consultancy led by Mohit Sengar — fractional CTO services, AI application rescue, Shopify development, and senior engineering teams.",
+    "Independent technology consultancy led by Mohit Sengar: fractional CTO services, production and investor-readiness reviews, AI-built app rescue, QA and quality engineering, and Shopify development.",
   areaServed: ["AE", "US", "GB", "EU", "IN"],
 };
 
@@ -156,6 +153,7 @@ export default function RootLayout({
       <body>
         <MotionRoot>
           <ScrollProgress />
+          <LeadEvents />
           {children}
         </MotionRoot>
       </body>

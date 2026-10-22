@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect, FormEvent, ReactNode } from "react";
-import {
-  motion,
-  useInView,
-  AnimatePresence,
-} from "framer-motion";
+import { useState, useRef, useEffect, useId, FormEvent, ReactNode } from "react";
+import { motion, useInView } from "framer-motion";
 import SiteFooter from "@/components/SiteFooter";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { CALENDLY_URL, CONTACT_EMAIL } from "@/lib/contact";
+import { trackLead } from "@/lib/analytics";
+import { QA_FAQS } from "./faqs";
 
 /* ═══════════════════════════════════════════════════════════════
    ANIMATION TOKENS
@@ -70,8 +69,8 @@ function Reveal({
    ═══════════════════════════════════════════════════════════════ */
 
 const STATS = [
-  { value: "40+", label: "Engagements Shipped" },
-  { value: "100%", label: "Completion Record" },
+  { value: "40+", label: "Companies Worked With" },
+  { value: "7+", label: "Years as a CTO" },
   { value: "14+", label: "Years Engineering" },
   { value: "10+", label: "QE Disciplines" },
 ];
@@ -194,30 +193,31 @@ const PROBLEMS = [
   },
 ];
 
+/* Illustrative examples of what the work involves. Not client results. */
 const OUTCOMES = [
   {
-    client: "Fintech SaaS Team",
+    client: "Example: fintech SaaS team",
     industry: "Regulated · High-stakes releases",
     tag: "Shift-Left Security",
     result:
-      "Rebuilt a flaky end-to-end suite on self-healing automation and moved SAST, DAST and dependency scanning into every pull request — so security stopped being a launch-week scramble.",
-    metrics: ["Flaky rate → near zero", "Security in every PR", "Faster, calmer releases"],
+      "What the work would involve: rebuilding a flaky end-to-end suite on self-healing automation and moving SAST, DAST and dependency scanning into every pull request, so security stops being a launch-week scramble.",
+    metrics: ["Self-healing automation", "Security checks in every PR"],
   },
   {
-    client: "AI Product (LLM)",
+    client: "Example: AI product (LLM)",
     industry: "Generative AI · Customer-facing",
     tag: "AI/LLM Testing",
     result:
-      "Stood up an evaluation harness for hallucination, bias and relevance with prompt-injection guardrails, turning 'it feels right' into measurable, repeatable release criteria.",
-    metrics: ["LLM-as-a-Judge evals", "Prompt-injection guardrails", "Release confidence"],
+      "What the work would involve: an evaluation harness for hallucination, bias and relevance with prompt-injection guardrails, turning 'it feels right' into repeatable release criteria.",
+    metrics: ["LLM-as-a-Judge evals", "Prompt-injection guardrails"],
   },
   {
-    client: "High-Traffic Ecommerce",
+    client: "Example: high-traffic ecommerce",
     industry: "Scale · Peak-load events",
     tag: "Performance & Scale",
     result:
-      "Containerized cross-browser execution on Kubernetes and shifted load testing left with micro-benchmarks in PRs, catching performance regressions before peak-season traffic did.",
-    metrics: ["Regression: hours → minutes", "Parallel headless grid", "Perf caught in PRs"],
+      "What the work would involve: containerized cross-browser execution on Kubernetes and load testing shifted left with micro-benchmarks in pull requests, so performance regressions show up before peak traffic does.",
+    metrics: ["Parallel headless grid", "Load tests in PRs"],
   },
 ];
 
@@ -254,109 +254,69 @@ const TEAM_MEMBERS = [
   },
 ];
 
+/*
+ * QA is the delivery bench behind the CTO offer, not a separate price list.
+ * These cards route buyers into the approved ladder.
+ */
 const PACKAGES = [
   {
-    name: "QA Health Audit",
-    price: "$997",
-    period: "one-time",
+    name: "Launch Check",
+    price: "AED 9,500",
+    period: "$2,500 · £2,000 · 5 working days",
     description:
-      "A deep review of your testing, pipeline, security and performance posture — with a prioritized plan to fix it.",
+      "For AI-built MVPs (Lovable, Bolt, Cursor, Base44, Replit, v0): tests, load, security and payments checked by hand.",
     features: [
-      "Test coverage & flakiness audit",
-      "CI/CD pipeline & quality-gate review",
-      "Security & performance posture check",
-      "Prioritized remediation roadmap",
-      "30-minute strategy walkthrough call",
+      "What is tested today, and the critical gaps",
+      "A basic load test on key flows",
+      "Security: exposed keys, Supabase RLS, auth",
+      "Payments and webhooks",
+      "Written report with a keep / fix / rebuild verdict",
     ],
-    cta: "Book Your Audit",
+    cta: "See the Launch Check",
+    href: "/launch-check",
     highlighted: false,
   },
   {
-    name: "Test Automation Sprint",
-    price: "$4,997",
-    period: "60-day engagement",
+    name: "Production & Investor Readiness Review",
+    price: "AED 27,500",
+    period: "$7,500 · 2 weeks",
     description:
-      "An aggressive 60-day sprint to build resilient automation, kill flaky tests, and wire quality into your pipeline.",
+      "Code quality and testing reviewed alongside architecture, security, team and delivery process.",
     features: [
-      "Everything in QA Health Audit",
-      "Self-healing test automation build-out",
-      "CI/CD integration & quality gates",
-      "Flaky-test elimination",
-      "Risk-based regression selection",
-      "Weekly progress reports",
-      "Dedicated Slack channel",
+      "Tests on the critical paths, CI and release safety",
+      "Architecture, security and infrastructure",
+      "Team and delivery process",
+      "Investor-forwardable written report, presented live",
     ],
-    cta: "Start Your Sprint",
+    cta: "See the Readiness Review",
+    href: "/readiness-review",
     highlighted: true,
   },
   {
-    name: "Quality Engineering Retainer",
-    price: "$6,997",
-    period: "per month",
+    name: "Fractional CTO",
+    price: "AED 45,000",
+    period: "$14,000 per month · 2 days a week",
     description:
-      "Your fractional quality engineering team — automation, AI/LLM testing, security, performance and observability, owned end to end.",
+      "Ongoing quality engineering as part of the CTO role: automation, quality gates, security and performance, owned by someone accountable.",
     features: [
-      "Everything in Automation Sprint",
-      "AI / LLM system testing",
-      "Continuous security in CI (DevSecOps)",
-      "Shift-left performance testing",
-      "Observability-driven QA",
-      "Release-confidence reporting",
-      "Priority support (48hr SLA)",
+      "Test automation and CI/CD quality gates",
+      "Continuous security in the pipeline",
+      "Performance and observability",
+      "Weekly steering call plus written updates",
     ],
-    cta: "Apply for Retainer",
+    cta: "See Fractional CTO",
+    href: "/fractional-cto",
     highlighted: false,
   },
 ];
 
-const FAQS = [
-  {
-    question: "What does a QA and quality engineering engagement include?",
-    answer:
-      "Modern quality engineering across the whole delivery lifecycle: resilient test automation, AI/LLM system testing, performance and load testing shifted left, continuous security (SAST, DAST, SCA) in CI/CD, microservice contract testing and service virtualization, and observability-driven testing that feeds real production behaviour back into your suite. The focus is testing smarter, not just testing more.",
-  },
-  {
-    question: "How do you fix flaky tests?",
-    answer:
-      "Most flakiness comes from selector fragility against dynamic DOM structures — a small UI change breaks an XPath or CSS selector and a test fails even though the app works. We rebuild suites on self-healing frameworks (Playwright, testRigor, Katalon) that use multiple locators and context to find elements even when the original selector changes, so false failures stop eroding trust in automation.",
-  },
-  {
-    question: "Can you test AI and LLM features?",
-    answer:
-      "Yes. Because a large language model can return different responses to similar inputs, we evaluate qualities rather than a single expected output — hallucinations, bias, toxicity, truthfulness, relevance and prompt-injection resistance — using an LLM-as-a-Judge approach with tools like DeepEval, Langfuse and Promptfoo.",
-  },
-  {
-    question: "How much does QA cost?",
-    answer:
-      "Three engagement models: a one-time QA Health Audit from $997, a 60-day Test Automation Sprint from $4,997, and an ongoing Quality Engineering Retainer from $6,997/month. Each is scoped to your stack and risk profile with clear deliverables and timelines. Book a free QA audit call for a custom quote.",
-  },
-  {
-    question: "What testing tools do you use?",
-    answer:
-      "We are tool-agnostic and pick what fits your stack: Playwright, testRigor and Katalon for automation; DeepEval, Langfuse and Promptfoo for AI/LLM evaluation; Grafana k6, Locust and OpenTelemetry for performance; Snyk, SonarQube and OWASP ZAP for security; PactFlow, WireMock and Tricentis for integration; Tonic.ai, Delphix and K2view for test data; and Datadog, Dynatrace and Honeycomb for observability.",
-  },
-  {
-    question: "How quickly can you start?",
-    answer:
-      "QA audits and rescues usually start within a week. For a launch on fire — a broken pipeline, a security scare, or a release deadline — we offer priority onboarding. Book a free QA audit to discuss your timeline.",
-  },
-  {
-    question: "Do you work with our existing team and CI/CD?",
-    answer:
-      "Yes. We plug into your existing engineers, repositories and pipelines rather than replacing them — reviewing what you have, writing a remediation plan, and either implementing it ourselves or handing your team a clear spec. Most engagements end with a durable QA capability owned by your permanent team.",
-  },
-  {
-    question: "Who leads the engagement?",
-    answer:
-      "Every engagement is overseen by Mohit Sengar, an award-winning CTO with 14+ years of enterprise experience across AI, e-commerce, blockchain and digital transformation, and a 100% completion record across 40+ engagements. You get senior quality-engineering leadership, not a hand-off to juniors.",
-  },
-];
+const FAQS = QA_FAQS;
 
 const PROCESS_STEPS = [
   {
     step: "01",
-    title: "Free QA Audit",
-    description: "A 30-minute deep dive into your testing, pipeline, and biggest quality risks. No obligation.",
+    title: "Free Fit Call",
+    description: "A 30-minute call about your testing, pipeline, and biggest quality risks. No obligation.",
   },
   {
     step: "02",
@@ -389,6 +349,7 @@ function FAQItem({
   index: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   return (
     <Reveal delay={index * STAGGER.fast}>
       <div className="border border-white/10 rounded-2xl overflow-hidden hover:border-[#8DD9BF]/20 transition-colors">
@@ -396,6 +357,7 @@ function FAQItem({
           onClick={() => setIsOpen(!isOpen)}
           className="w-full flex items-center justify-between p-6 text-left cursor-pointer"
           aria-expanded={isOpen}
+          aria-controls={panelId}
         >
           <span className="text-lg font-medium text-white pr-4">
             {question}
@@ -409,20 +371,19 @@ function FAQItem({
             +
           </motion.span>
         </button>
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: EASE_OUT }}
-            >
-              <p className="px-6 pb-6 text-white/60 leading-relaxed">
-                {answer}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Always in the DOM (collapsed to height 0) so the answer is in the server HTML. */}
+        <motion.div
+          id={panelId}
+          initial={false}
+          animate={isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: EASE_OUT }}
+          className="overflow-hidden"
+          aria-hidden={!isOpen}
+        >
+          <p className="px-6 pb-6 text-white/60 leading-relaxed">
+            {answer}
+          </p>
+        </motion.div>
       </div>
     </Reveal>
   );
@@ -512,6 +473,7 @@ export default function QaPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "qa-lead", ...formData }),
       });
+      trackLead("qa-lead", "qa-lead-form", res.ok, res.status);
       if (!res.ok) {
         setFormStatus("error");
         return;
@@ -519,6 +481,7 @@ export default function QaPage() {
       setFormStatus("success");
       setFormData({ name: "", email: "", company: "", stage: "", message: "" });
     } catch {
+      trackLead("qa-lead", "qa-lead-form", false);
       setFormStatus("error");
     }
   };
@@ -539,10 +502,12 @@ export default function QaPage() {
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
           <a
-            href="#book-call"
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="bg-[#8DD9BF] text-black px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#A3E4CF] transition-colors"
           >
-            Free QA Audit
+            Book a Fit Call
           </a>
         </div>
       </nav>
@@ -557,16 +522,16 @@ export default function QaPage() {
 
         <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl">
-            <Reveal>
+            <div className="hero-rise">
               <div className="inline-flex items-center gap-2 bg-[#8DD9BF]/10 border border-[#8DD9BF]/20 rounded-full px-4 py-1.5 mb-8">
                 <span className="w-2 h-2 rounded-full bg-[#8DD9BF] animate-pulse" />
                 <span className="text-sm text-[#8DD9BF] font-medium">
                   Better Testing. Stronger Software.
                 </span>
               </div>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.1}>
+            <div className="hero-rise" style={{ animationDelay: "0.1s" }}>
               <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight mb-6">
                 We Build QA That Ships
                 <br />
@@ -575,24 +540,34 @@ export default function QaPage() {
                   Doesn&apos;t Break
                 </span>
               </h1>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.2}>
+            <div className="hero-rise" style={{ animationDelay: "0.2s" }}>
               <p className="text-lg md:text-xl text-white/60 max-w-2xl mb-10 leading-relaxed">
                 CTO-led quality engineering for teams shipping fast. From
                 self-healing test automation and AI/LLM testing to security in
                 CI/CD, shift-left performance, and observability — we solve the
                 ten biggest testing problems of 2026.
               </p>
-            </Reveal>
+              <p className="text-sm md:text-base text-white/45 max-w-2xl -mt-6 mb-10 leading-relaxed">
+                QA is part of Mohit Sengar&apos;s{" "}
+                <a href="/fractional-cto" className="text-[#8DD9BF] hover:underline">
+                  fractional CTO practice
+                </a>
+                : it&apos;s my delivery bench, the quality-engineering
+                capability behind every CTO engagement.
+              </p>
+            </div>
 
-            <Reveal delay={0.3}>
-              <div className="flex flex-col sm:flex-row gap-4 mb-16">
+            <div className="hero-rise" style={{ animationDelay: "0.3s" }}>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 mb-16">
                 <a
-                  href="#book-call"
+                  href={CALENDLY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center justify-center bg-[#8DD9BF] text-black px-8 py-4 rounded-full text-base font-semibold hover:bg-[#A3E4CF] transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  Book Free QA Audit
+                  Book a Free Fit Call
                   <svg
                     className="ml-2 w-5 h-5"
                     fill="none"
@@ -614,11 +589,17 @@ export default function QaPage() {
                 >
                   See the 10 Problems
                 </a>
+                <a
+                  href="#book-call"
+                  className="inline-flex items-center justify-center border border-[#8DD9BF]/40 text-[#8DD9BF] px-8 py-4 rounded-full text-base font-semibold hover:bg-[#8DD9BF]/10 transition-all"
+                >
+                  Send a Message
+                </a>
               </div>
-            </Reveal>
+            </div>
 
             {/* Stats bar */}
-            <Reveal delay={0.4}>
+            <div className="hero-rise" style={{ animationDelay: "0.4s" }}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
                 {STATS.map((stat, i) => (
                   <motion.div
@@ -635,13 +616,13 @@ export default function QaPage() {
                     <div className="text-3xl md:text-4xl font-bold text-[#8DD9BF]">
                       {stat.value}
                     </div>
-                    <div className="text-sm text-white/40 mt-1">
+                    <div className="text-sm text-white/50 mt-1">
                       {stat.label}
                     </div>
                   </motion.div>
                 ))}
               </div>
-            </Reveal>
+            </div>
           </div>
         </div>
       </section>
@@ -801,13 +782,13 @@ export default function QaPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">
-              What Good QA Actually Delivers
+              What the Work Looks Like
             </h2>
           </Reveal>
           <Reveal delay={0.15}>
             <p className="text-white/50 text-center max-w-2xl mx-auto mb-16">
-              Representative engagements — the kind of change quality
-              engineering makes when it&apos;s done right.
+              Illustrative examples, not client results: the kind of work
+              quality engineering involves when it&apos;s done right.
             </p>
           </Reveal>
 
@@ -900,8 +881,9 @@ export default function QaPage() {
             <p className="text-white/50 text-center max-w-2xl mx-auto mb-16">
               When you hire us, you get a cross-functional quality-engineering
               team — automation leads, SDETs, performance and security
-              engineers, and an AI/LLM QA specialist. Led by Mohit Sengar, an
-              award-winning CTO with 14+ years of enterprise experience.
+              engineers, and an AI/LLM QA specialist. Led by Mohit Sengar, a
+              Dubai-based CTO with 7+ years in the seat and 14+ years building
+              software.
             </p>
           </Reveal>
 
@@ -936,15 +918,24 @@ export default function QaPage() {
                     Led by Mohit Sengar
                   </h3>
                   <p className="text-[#8DD9BF] text-sm font-medium mb-4">
-                    Award-Winning CTO &bull; 14+ Years Enterprise Experience
-                    &bull; Internet 2.0 Conference Dubai 2024
+                    7+ Years as a CTO &bull; 14+ Years Building Software
+                    &bull; 40+ Companies
                   </p>
                   <p className="text-white/50 leading-relaxed max-w-2xl">
-                    Every engagement is personally overseen by Mohit — an
-                    award-winning CTO who has led technology and quality for
-                    startups and enterprises across AI, e-commerce, blockchain,
-                    and digital transformation. He doesn&apos;t just run your
-                    test suite; he architects your release confidence.
+                    Every engagement is personally overseen by Mohit, a CTO who
+                    has led technology and quality for startups and enterprises
+                    across AI, e-commerce, blockchain, and digital
+                    transformation. This QA practice is the delivery bench
+                    behind his{" "}
+                    <a href="/fractional-cto" className="text-[#8DD9BF] hover:underline">
+                      fractional CTO
+                    </a>{" "}
+                    work. He doesn&apos;t just run your test suite; he
+                    architects your release confidence.
+                  </p>
+                  <p className="text-white/35 text-xs mt-4">
+                    Credentials: Outstanding Leadership Award, Internet 2.0
+                    Conference, Dubai, February 2024.
                   </p>
                 </div>
               </div>
@@ -963,14 +954,14 @@ export default function QaPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">
-              How Much Does Quality Engineering Cost?
+              How Do You Buy Quality Engineering?
             </h2>
           </Reveal>
           <Reveal delay={0.15}>
             <p className="text-white/50 text-center max-w-2xl mx-auto mb-16">
-              Three clear engagements. No hidden fees. No scope creep. Pick the
-              one that matches where your quality is today — and where it needs
-              to be.
+              Quality engineering is my delivery bench, so it isn&apos;t sold as a
+              separate package. You get it through these fixed-fee reviews and
+              retainers, at my published prices.
             </p>
           </Reveal>
 
@@ -986,7 +977,7 @@ export default function QaPage() {
                 >
                   {pkg.highlighted && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#8DD9BF] text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                      Most Popular
+                      Most Common
                     </div>
                   )}
                   <div className="mb-6">
@@ -995,8 +986,8 @@ export default function QaPage() {
                       <span className="text-4xl font-bold text-[#8DD9BF]">
                         {pkg.price}
                       </span>
-                      <span className="text-sm text-white/40">{pkg.period}</span>
                     </div>
+                    <p className="text-sm text-white/50 mt-1">{pkg.period}</p>
                     <p className="text-white/50 mt-3 text-sm leading-relaxed">
                       {pkg.description}
                     </p>
@@ -1026,7 +1017,7 @@ export default function QaPage() {
                     ))}
                   </ul>
                   <a
-                    href="#book-call"
+                    href={pkg.href}
                     className={`block text-center py-4 rounded-full font-semibold transition-all ${
                       pkg.highlighted
                         ? "bg-[#8DD9BF] text-black hover:bg-[#A3E4CF]"
@@ -1050,11 +1041,11 @@ export default function QaPage() {
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="text-center">
                   <p className="text-4xl font-bold text-[#8DD9BF] mb-2">
-                    10x
+                    Risk-Based
                   </p>
-                  <p className="text-white/40 text-sm">
-                    faster regression with predictive, risk-based test selection
-                    instead of running the whole suite on every change
+                  <p className="text-white/50 text-sm">
+                    regression with predictive test selection instead of running
+                    the whole suite on every change
                   </p>
                 </div>
                 <div className="text-center">
@@ -1121,25 +1112,25 @@ export default function QaPage() {
               </Reveal>
               <Reveal delay={0.1}>
                 <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
-                  Book Your Free
+                  Book a Free
                   <br />
-                  <span className="text-[#8DD9BF]">QA Audit</span>
+                  <span className="text-[#8DD9BF]">Fit Call</span>
                 </h2>
               </Reveal>
               <Reveal delay={0.2}>
                 <p className="text-white/50 text-lg leading-relaxed mb-8">
-                  30 minutes. Zero obligation. We&apos;ll review your testing and
-                  pipeline live, pinpoint your biggest quality risks, and give
-                  you a concrete plan — whether you hire us or not.
+                  30 minutes. Zero obligation. Tell me about your tests, pipeline
+                  and release risks, and you&apos;ll get an honest read on what to
+                  fix first and which next step fits.
                 </p>
               </Reveal>
               <Reveal delay={0.3}>
                 <div className="space-y-4">
                   {[
-                    "Live review of your tests, pipeline & coverage",
-                    "Your top quality and release risks, ranked",
-                    "A prioritized plan for your stack",
-                    "Transparent pricing — no surprises",
+                    "Your tests, pipeline and coverage, talked through",
+                    "An honest read on your biggest quality risks",
+                    "Which first step fits: Launch Check, Readiness Review or a retainer",
+                    "Published prices — no surprises",
                   ].map((item) => (
                     <div key={item} className="flex items-center gap-3">
                       <svg
@@ -1159,6 +1150,21 @@ export default function QaPage() {
                       <span className="text-white/60">{item}</span>
                     </div>
                   ))}
+                </div>
+              </Reveal>
+              <Reveal delay={0.4}>
+                <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4">
+                  <a
+                    href={CALENDLY_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center bg-[#8DD9BF] text-black px-8 py-4 rounded-full text-base font-semibold hover:bg-[#A3E4CF] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    Book a call
+                  </a>
+                  <span className="text-sm text-white/50">
+                    Pick a 30-minute slot on my calendar: the fastest way to reach me.
+                  </span>
                 </div>
               </Reveal>
             </div>
@@ -1193,7 +1199,7 @@ export default function QaPage() {
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <form id="qa-lead-form" onSubmit={handleSubmit} className="space-y-5">
                     <div>
                       <label className="block text-sm text-white/60 mb-2">
                         Full Name *
@@ -1301,18 +1307,27 @@ export default function QaPage() {
                     >
                       {formStatus === "submitting"
                         ? "Sending..."
-                        : "Book My Free QA Audit"}
+                        : "Send My Message"}
                     </button>
                     {formStatus === "error" && (
                       <p className="text-sm text-red-400/90 text-center">
-                        Couldn&apos;t send right now — email{" "}
+                        Couldn&apos;t send right now.{" "}
                         <a
-                          href="mailto:mohit@sengarconsultancy.org"
+                          href={CALENDLY_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-[#8DD9BF] hover:underline"
                         >
-                          mohit@sengarconsultancy.org
+                          Book a call on my calendar
                         </a>{" "}
-                        directly and we&apos;ll get back within 24 hours.
+                        instead, or email{" "}
+                        <a
+                          href={`mailto:${CONTACT_EMAIL}`}
+                          className="text-[#8DD9BF] hover:underline"
+                        >
+                          {CONTACT_EMAIL}
+                        </a>{" "}
+                        and I&apos;ll get back within 24 hours.
                       </p>
                     )}
                     <p className="text-xs text-white/30 text-center">
@@ -1347,10 +1362,12 @@ export default function QaPage() {
           </Reveal>
           <Reveal delay={0.2}>
             <a
-              href="#book-call"
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center bg-[#8DD9BF] text-black px-10 py-5 rounded-full text-lg font-semibold hover:bg-[#A3E4CF] transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              Claim Your Free QA Audit Now
+              Book Your Free Fit Call
               <svg
                 className="ml-3 w-5 h-5"
                 fill="none"

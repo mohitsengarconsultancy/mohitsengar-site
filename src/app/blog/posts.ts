@@ -1,3 +1,10 @@
+import { CALENDLY_URL } from "@/lib/contact";
+
+/**
+ * Body paragraphs, list items and the CTA body may contain inline links written
+ * as [label](/path) or [label](https://...); the post page renders them as anchors.
+ * FAQ answers and answerFirst stay plain text (they feed JSON-LD).
+ */
 export interface PostSection {
   h2: string;
   body: string[];
@@ -15,6 +22,8 @@ export interface Post {
   metaTitle: string;
   description: string;
   date: string;
+  /** Last substantive edit (ISO date), used for dateModified. Defaults to `date`. */
+  updated?: string;
   readMinutes: number;
   tag: string;
   /** 2-3 sentence direct answer rendered right under the H1 (AEO). */
@@ -161,7 +170,7 @@ export const POSTS: Post[] = [
       heading: "Want a QA and quality-engineering setup that scales?",
       body: "Mohit Sengar helps teams put modern testing into practice — automation, CI/CD, continuous security, performance and observability — so you ship faster with fewer escapes.",
       label: "Book a Free Strategy Call",
-      href: "https://calendly.com/mohitsengarr",
+      href: CALENDLY_URL,
     },
   },
   {
@@ -214,7 +223,7 @@ export const POSTS: Post[] = [
       },
       {
         q: "Can I stay on Lovable in production?",
-        a: "Often yes — roughly half of hardened apps stay on Lovable with a fixed backend. Migration is for structural ceilings: complex permissions, custom backend logic, or scale.",
+        a: "Often, yes. Many apps can stay on Lovable once the backend is hardened. Others hit a structural ceiling, such as complex permissions, custom backend logic or scale, and are better migrated.",
       },
       {
         q: "What's the single most dangerous gap?",
@@ -268,7 +277,7 @@ export const POSTS: Post[] = [
       {
         h2: "What does a Lovable to WordPress migration cost?",
         body: [
-          "For a typical marketing site (5–15 pages, forms, blog), expect from $9,000 fixed-price with a 2–5 week timeline, including redirect mapping, integration re-wiring, a performance pass, and editor training. Complex sites — memberships, custom apps bolted on, large content archives — scope higher, which is exactly why a written scope before any commitment matters.",
+          "It depends on page count, integrations and how much content moves, so it should be quoted as a fixed price against a written scope. A typical marketing site (5–15 pages, forms, blog) takes two to five weeks, including redirect mapping, integration re-wiring, a performance pass, and editor training. Complex sites — memberships, custom apps bolted on, large content archives — scope higher, which is exactly why a written scope before any commitment matters.",
         ],
       },
     ],
@@ -288,9 +297,9 @@ export const POSTS: Post[] = [
     ],
     cta: {
       heading: "Thinking about migrating?",
-      body: "Book a free 30-minute review — you'll get a written migration plan and a fixed quote, whether or not we work together.",
-      label: "Book a Migration Review",
-      href: "https://calendly.com/mohitsengarr",
+      body: `Book a [free 30-minute fit call](${CALENDLY_URL}) for an honest first read on whether to migrate or stay. If it is an AI-built app and you want the answer in writing, the Launch Check ends in a written keep / fix / rebuild verdict in 5 working days.`,
+      label: "See the Launch Check",
+      href: "/launch-check",
     },
   },
   {
@@ -351,37 +360,65 @@ export const POSTS: Post[] = [
     ],
     cta: {
       heading: "Not sure what your generator left open?",
-      body: "A prototype audit covers RLS, auth, secrets, and webhooks — with a written remediation roadmap in 5–10 days.",
-      label: "Book a Security Review",
-      href: "https://calendly.com/mohitsengarr",
+      body: "The Launch Check covers RLS, auth, secrets, payments and webhooks in 5 working days, with a written report and a keep / fix / rebuild verdict. Fixed fee: AED 9,500 / $2,500 / £2,000.",
+      label: "See the Launch Check",
+      href: "/launch-check",
     },
   },
   {
     slug: "fractional-cto-cost-guide-2026",
     title: "How Much Does a Fractional CTO Cost in 2026?",
-    metaTitle: "Fractional CTO Cost Guide 2026 — Real Numbers",
+    metaTitle: "Fractional CTO Cost 2026: USD & UAE (AED) Prices",
     description:
-      "Real 2026 pricing for fractional CTOs: monthly retainers, hourly rates, what drives the price, and when a fractional beats a full-time hire.",
+      "Fractional CTO cost in 2026, USD and AED: typical retainer and hourly ranges, my published rates, and a UAE loaded-cost comparison with a full-time hire.",
     date: "2026-07-04",
-    readMinutes: 6,
+    updated: "2026-10-22",
+    readMinutes: 8,
     tag: "Fractional CTO",
     answerFirst:
-      "In 2026 a fractional CTO typically costs $5,000–$28,000 per month depending on hours and seniority, with senior independents commonly at $12,000–$28,000 for 10–20 hours a week. Hourly equivalents run $200–$450. Compare that with $300K–$450K+ a year for a full-time CTO in salary, equity and benefits — a fractional arrangement delivers the same strategic layer at roughly a quarter of the cost, with a two-week start instead of a six-month search.",
+      "In the ranges we typically see in 2026, a fractional CTO costs about $5,000–$28,000 a month depending on hours and seniority, or roughly $200–$450 an hour. A full-time CTO costs $300K–$450K+ a year in salary, equity and benefits, after a 3–6 month search. My own Fractional CTO tier, two days a week at $14,000 a month, is about half the loaded cost of a full-time hire and can start in 1–2 weeks. In the UAE the same tier is AED 45,000 a month, again about half the loaded cost.",
     sections: [
       {
         h2: "What do fractional CTO engagements actually cost?",
         body: [
-          "Three common shapes: a strategic retainer at 10–20 hours/week ($12K–$28K/month at the senior end) covering architecture, hiring, vendor decisions and delivery oversight; an advisory-only cadence — a few calls a month plus async review — from around $5K/month; and project-scoped leadership (a due-diligence review, a rebuild, an AI initiative) priced fixed, from $15K per project. Ranges move with seniority, scope, and how much hands-on building versus pure direction you need.",
+          "Three common shapes, with the typical ranges we see in proposals and conversations (indicative, not a survey): a strategic retainer at 10–20 hours a week (about $12K–$28K a month at the senior end) covering architecture, hiring, vendor decisions and delivery oversight; an advisory-only cadence — a few calls a month plus async review — from around $5K a month; and project-scoped leadership (a due-diligence review, a rebuild, an AI initiative) priced fixed, from about $15K per project. Ranges move with seniority, scope, and how much hands-on building versus pure direction you need.",
         ],
       },
       {
         h2: "Fractional vs full-time CTO: what's the real comparison?",
         body: [],
         list: [
-          "Annual cost — full-time: $300K–$450K+ with equity and benefits; fractional: typically 70–80% less for the strategic layer startups actually need pre-Series B.",
+          "Annual cost — full-time: $300K–$450K+ with equity and benefits; fractional: about half at two days a week (my Fractional CTO tier is $14,000 a month), and less on an advisory-only cadence.",
           "Time to start — full-time search: 3–6 months; fractional: 1–2 weeks.",
           "Risk — a wrong full-time hire costs 6–12 months and equity; a fractional engagement scales down or ends with notice.",
           "Signal — investors care that technical leadership exists and delivery is credible; a named fractional CTO with a track record satisfies that at seed and A.",
+        ],
+      },
+      {
+        h2: "What does a fractional CTO cost in the UAE (AED)?",
+        body: [
+          "2026 UAE recruiter salary guides put a full-time CTO's base pay at AED 60,000–150,000 a month, with most offers around AED 75,000–100,000. Base pay isn't the real cost. Add roughly 30% for the recruiting fee, visa, housing and end-of-service gratuity (which builds up at up to 8.33% of basic salary a year), and a full-time CTO costs the company about AED 100,000–130,000 a month.",
+          "A fractional CTO two days a week at AED 45,000 a month comes to about half that loaded cost, with no recruiting fee, visa or gratuity to fund, and a three-month minimum instead of an employment contract. In US dollars the same comparison is $300K–$450K+ a year for a full-time CTO against $14,000 a month.",
+          "For reference, these are my own published rates. AED prices are set for clients in the UAE and GCC, and USD prices for remote clients:",
+        ],
+        list: [
+          "Launch Check for AI-built MVPs — 5 working days, fixed fee: AED 9,500 ($2,500 / £2,000).",
+          "Production & Investor Readiness Review — 2 weeks, an investor-forwardable report presented live: AED 27,500 ($7,500).",
+          "Advisory — up to about 12 hours a month with monthly steering and async access: AED 18,000 a month ($5,000).",
+          "Fractional CTO — 2 days a week: AED 45,000 a month ($14,000).",
+          "Embedded CTO — 3 days a week: AED 75,000 a month ($22,000–$28,000).",
+        ],
+      },
+      {
+        h2: "Where should you start if you're not sure you need a retainer?",
+        body: [
+          "Signing a monthly retainer with someone you've never worked with is a big first step. A fixed-fee review lets you see how a fractional CTO thinks before you commit, and with me the review fee is credited in full against a retainer signed within 30 days. Retainers are billed monthly in advance, with a 3-month minimum and then one month's notice.",
+        ],
+        list: [
+          "Built it with Lovable, Bolt, Cursor, Base44, Replit or v0? Start with the [Launch Check](/launch-check): 5 working days on security, Supabase RLS, auth, payments, tests and load, ending in a keep / fix / rebuild verdict.",
+          "About to raise or scale? Start with the [Production & Investor Readiness Review](/readiness-review): 2 weeks, a report you can forward to investors, presented live.",
+          "Already know you need ongoing leadership? Go straight to [Fractional CTO](/fractional-cto): 2 days a week. When the stage calls for a full-time CTO, hiring one is a separate exit service at about one month's retainer.",
+          "Not sure yet? A free 30-minute fit call gets you an honest read on what your stage needs, including 'you don't need a CTO yet'.",
         ],
       },
       {
@@ -394,18 +431,18 @@ export const POSTS: Post[] = [
         h2: "What should be inside the engagement for that price?",
         body: [],
         list: [
-          "A written scope: hours, responsibilities, deliverables, exit terms.",
-          "Weekly steering call plus async written updates you can forward to investors.",
+          "A written scope: days per week, responsibilities, deliverables, exit terms.",
+          "A weekly steering call plus async written updates you can forward to investors (monthly steering on an advisory-only cadence).",
           "Everything in your accounts: repo, cloud, docs — no vendor lock-in.",
-          "Hiring support: writing the JD, screening, and technical interviews for your permanent team.",
-          "A handover path — the goal is to make themselves replaceable by your eventual full-time hire.",
+          "Hiring support for your engineering team: writing the JD, screening, and technical interviews.",
+          "A handover path to your eventual full-time CTO. Recruiting that CTO is usually priced separately; with me it is an exit service at about one month's retainer.",
         ],
       },
     ],
     faqs: [
       {
         q: "What does a fractional CTO cost per hour?",
-        a: "Senior operators run $200–$450/hour in 2026. Retainers price better than raw hourly for sustained work.",
+        a: "In the ranges we typically see, senior operators charge about $200–$450 an hour in 2026. Retainers price better than raw hourly for sustained work.",
       },
       {
         q: "How many hours a week do startups actually need?",
@@ -415,12 +452,16 @@ export const POSTS: Post[] = [
         q: "Do fractional CTOs take equity?",
         a: "Some blend cash and equity; many senior independents are cash-only to keep incentives simple. Equity-heavy offers usually signal a budget problem, not an alignment strategy.",
       },
+      {
+        q: "How much does a fractional CTO cost in Dubai or the UAE?",
+        a: "My published UAE rates are AED 18,000 a month for Advisory, AED 45,000 a month for a fractional CTO two days a week and AED 75,000 a month for an embedded CTO three days a week. A full-time CTO in the UAE costs about AED 100,000–130,000 a month once recruiting, visa, housing and end-of-service gratuity are added, so two days a week comes to about half the loaded cost. Fixed-fee starting points are AED 9,500 for a 5-day Launch Check and AED 27,500 for a 2-week Readiness Review.",
+      },
     ],
     cta: {
       heading: "Weighing fractional vs full-time?",
-      body: "A free 30-minute call gets you an honest read on what your stage actually needs — including 'you don't need me yet.'",
-      label: "Book a Strategy Call",
-      href: "https://calendly.com/mohitsengarr",
+      body: "A free 30-minute fit call gets you an honest read on what your stage actually needs — including 'you don't need me yet.' If a fixed-fee [Launch Check](/launch-check) or [Readiness Review](/readiness-review) is the right first step, the fee is credited in full against a retainer signed within 30 days.",
+      label: "Book a Free Fit Call",
+      href: CALENDLY_URL,
     },
   },
   {
@@ -480,9 +521,9 @@ export const POSTS: Post[] = [
     ],
     cta: {
       heading: "Already built it and wondering if it ships?",
-      body: "Bring it to a free 30-minute Build Review — written assessment in 48 hours, whichever tool you used.",
-      label: "Book a Build Review",
-      href: "https://calendly.com/mohitsengarr",
+      body: `Start with a [free 30-minute fit call](${CALENDLY_URL}) for an honest first read, whichever tool you used. For the answer in writing, the Launch Check covers security, Supabase RLS, auth, payments, tests and load in 5 working days and ends in a keep / fix / rebuild verdict.`,
+      label: "See the Launch Check",
+      href: "/launch-check",
     },
   },
 ];

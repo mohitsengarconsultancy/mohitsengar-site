@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useRef, FormEvent, ReactNode } from "react";
-import {
-  motion,
-  useInView,
-  AnimatePresence,
-} from "framer-motion";
+import { useState, useRef, useId, FormEvent, ReactNode } from "react";
+import { motion, useInView } from "framer-motion";
 import SiteFooter from "@/components/SiteFooter";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { CALENDLY_URL, CONTACT_EMAIL } from "@/lib/contact";
+import { trackLead } from "@/lib/analytics";
+import { SHOPIFY_FAQS } from "./faqs";
 
 /* ═══════════════════════════════════════════════════════════════
    ANIMATION TOKENS
@@ -69,11 +68,11 @@ function Reveal({
    DATA
    ═══════════════════════════════════════════════════════════════ */
 
+/* Career-wide facts about the lead, not Shopify-specific counts. */
 const STATS = [
-  { value: "$501K+", label: "Client Revenue Managed" },
-  { value: "40+", label: "Brands Trusted Us" },
-  { value: "100%", label: "Job Success Rate" },
-  { value: "28+", label: "Shopify Stores Built" },
+  { value: "7+", label: "Years as a CTO" },
+  { value: "14+", label: "Years Building Software" },
+  { value: "40+", label: "Companies, Career-Wide" },
 ];
 
 const SERVICES = [
@@ -82,79 +81,67 @@ const SERVICES = [
     title: "Theme Customization & Design",
     description:
       "Pixel-perfect Shopify themes built for conversions. Shrine, Dawn, and custom theme expertise that turns visitors into buyers.",
-    clients: "21 clients served",
   },
   {
     icon: "⚙️",
     title: "Store Setup & Configuration",
     description:
       "End-to-end Shopify store setup — from product architecture to payment gateways, shipping rules, and tax configuration.",
-    clients: "20 clients served",
   },
   {
     icon: "📈",
     title: "CRO & Conversion Optimization",
     description:
       "Data-driven conversion rate optimization that increases your revenue without increasing ad spend. A/B testing, funnel analysis, and checkout optimization.",
-    clients: "19 clients served",
   },
   {
     icon: "⚡",
     title: "Speed & Performance Optimization",
     description:
       "Sub-2-second load times. We audit, optimize, and supercharge your Shopify store speed for higher rankings and better conversions.",
-    clients: "18 clients served",
   },
   {
     icon: "🔌",
     title: "App Development & Integration",
     description:
       "Custom Shopify apps and third-party integrations — CRMs, ERPs, marketing tools, and payment processors wired seamlessly.",
-    clients: "10 clients served",
   },
   {
     icon: "🚀",
     title: "DTC Growth & Operations",
     description:
       "Full-stack DTC operator support — growth strategy, landing pages, product merchandising, and fulfillment optimization.",
-    clients: "7 clients served",
   },
 ];
 
 const INDUSTRIES = [
   {
     name: "Health & Supplements",
-    percentage: 25,
     color: "#8DD9BF",
     description: "Subscription models, compliance-ready, high-AOV funnels",
   },
   {
     name: "General Ecommerce",
-    percentage: 25,
     color: "#7BC4E8",
     description: "Multi-product catalogs, merchandising, cross-sell engines",
   },
   {
     name: "Fashion & Streetwear",
-    percentage: 21,
     color: "#D4A5E5",
     description: "Lookbooks, size guides, drop launches, brand storytelling",
   },
   {
     name: "Electronics & Tech",
-    percentage: 14,
     color: "#F5C87A",
     description: "Spec-heavy PDPs, comparison tools, warranty management",
   },
   {
     name: "Fitness & Sports",
-    percentage: 7,
     color: "#FF8A8A",
     description: "Community-driven, challenge funnels, subscription bundles",
   },
   {
     name: "Beauty & Skincare",
-    percentage: 4,
     color: "#FFB5D8",
     description: "Shade finders, ingredient transparency, review-driven UX",
   },
@@ -207,39 +194,11 @@ const PACKAGES = [
       "New feature implementation",
       "App integrations & custom builds",
       "DTC growth strategy & execution",
-      "Priority support (48hr SLA)",
       "Monthly growth review calls",
       "Revenue-tied KPI tracking",
     ],
     cta: "Apply for Retainer",
     highlighted: false,
-  },
-];
-
-const CASE_STUDIES = [
-  {
-    client: "Thomas M.",
-    industry: "Health & Supplements DTC",
-    spend: "$501K+",
-    result:
-      "Built and scaled a full DTC supplement brand on Shopify. Theme customization, subscription setup, CRO optimization, and ongoing growth operations.",
-    metrics: ["3x conversion lift", "Sub-1.8s load time", "40% repeat purchase rate"],
-  },
-  {
-    client: "Sam M.",
-    industry: "Sports & Fitness App",
-    spend: "$44K+",
-    result:
-      "Custom Shopify Plus build with sports app integration, inventory management, and mobile-first checkout optimization.",
-    metrics: ["2.5x mobile conversion", "Custom app integration", "65% faster checkout"],
-  },
-  {
-    client: "Lampros C.",
-    industry: "Premium Supplements",
-    spend: "$35K+",
-    result:
-      "Shrine theme expertise — premium theme customization, ingredient transparency pages, and subscription-first architecture.",
-    metrics: ["Shrine theme mastery", "45% AOV increase", "Premium brand positioning"],
   },
 ];
 
@@ -276,48 +235,7 @@ const TEAM_MEMBERS = [
   },
 ];
 
-const FAQS = [
-  {
-    question: "What makes you a top 1% Shopify expert?",
-    answer:
-      "We maintain a 100% job success rate across 40+ clients, with over $501K in managed client revenue. Our team specializes exclusively in the Shopify ecosystem — theme customization, CRO, speed optimization, and full DTC growth. We have deep vertical expertise in health, fashion, supplements, and electronics.",
-  },
-  {
-    question: "What Shopify services do you offer?",
-    answer:
-      "We offer comprehensive Shopify services: Store Setup & Configuration, Theme Customization & Design (including Shrine and Dawn), Conversion Rate Optimization, Speed & Performance Optimization, Custom App Development, Product Listing & Merchandising, Landing Page Design, DTC Growth Operations, and Dropshipping & Fulfillment setup.",
-  },
-  {
-    question: "How much does it cost to hire your Shopify experts?",
-    answer:
-      "We offer three engagement models: a one-time Shopify Store Audit ($497), a 60-day CRO Sprint ($2,997), and an ongoing Growth Retainer ($4,997/month). Each is scoped to your store's needs with clear deliverables. Book a free strategy call for a custom quote.",
-  },
-  {
-    question: "Which industries do you specialize in?",
-    answer:
-      "Health & Supplements (25%), General Ecommerce (25%), Fashion & Streetwear (21%), Electronics & Tech (14%), Fitness & Sports (7%), and Beauty & Skincare. Our vertical expertise means we understand the unique conversion patterns, compliance needs, and customer behavior in each industry.",
-  },
-  {
-    question: "How quickly can you start?",
-    answer:
-      "Typically within 48 hours of signing. For urgent needs like broken stores, critical bugs, or launch deadlines, we offer priority onboarding. Book a free strategy call to discuss your timeline.",
-  },
-  {
-    question: "Do you work with Shopify Plus stores?",
-    answer:
-      "Yes. We work across all Shopify plans including Shopify Plus. Our enterprise clients benefit from custom checkout, Shopify Scripts, Flow automations, and multi-currency/multi-language setups.",
-  },
-  {
-    question: "Can you be our long-term Shopify partner?",
-    answer:
-      "Absolutely. Our Growth Retainer is designed for brands that want an ongoing Shopify development and growth partner. 58% of our high-spend clients chose this model because they need a team that owns revenue outcomes, not just task execution.",
-  },
-  {
-    question: "Do you offer a guarantee?",
-    answer:
-      "We stand behind our work. Our Store Audit comes with a money-back guarantee if you don't find it valuable. For CRO Sprints, we set measurable KPIs upfront and report against them weekly. Our 100% job success rate across 40+ clients speaks for itself.",
-  },
-];
+const FAQS = SHOPIFY_FAQS;
 
 const PROCESS_STEPS = [
   {
@@ -356,6 +274,7 @@ function FAQItem({
   index: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   return (
     <Reveal delay={index * STAGGER.fast}>
       <div className="border border-white/10 rounded-2xl overflow-hidden hover:border-[#8DD9BF]/20 transition-colors">
@@ -363,6 +282,7 @@ function FAQItem({
           onClick={() => setIsOpen(!isOpen)}
           className="w-full flex items-center justify-between p-6 text-left cursor-pointer"
           aria-expanded={isOpen}
+          aria-controls={panelId}
         >
           <span className="text-lg font-medium text-white pr-4">
             {question}
@@ -371,24 +291,24 @@ function FAQItem({
             animate={{ rotate: isOpen ? 45 : 0 }}
             transition={{ duration: 0.2 }}
             className="text-[#8DD9BF] text-2xl flex-shrink-0"
+            aria-hidden="true"
           >
             +
           </motion.span>
         </button>
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: EASE_OUT }}
-            >
-              <p className="px-6 pb-6 text-white/60 leading-relaxed">
-                {answer}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Always in the DOM (collapsed to height 0) so the answer is in the server HTML. */}
+        <motion.div
+          id={panelId}
+          initial={false}
+          animate={isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: EASE_OUT }}
+          className="overflow-hidden"
+          aria-hidden={!isOpen}
+        >
+          <p className="px-6 pb-6 text-white/60 leading-relaxed">
+            {answer}
+          </p>
+        </motion.div>
       </div>
     </Reveal>
   );
@@ -419,6 +339,7 @@ export default function ShopifyExpertsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "shopify-lead", ...formData }),
       });
+      trackLead("shopify-lead", "shopify-lead-form", res.ok, res.status);
       if (!res.ok) {
         setFormStatus("error");
         return;
@@ -426,6 +347,7 @@ export default function ShopifyExpertsPage() {
       setFormStatus("success");
       setFormData({ name: "", email: "", store: "", revenue: "", message: "" });
     } catch {
+      trackLead("shopify-lead", "shopify-lead-form", false);
       setFormStatus("error");
     }
   };
@@ -440,13 +362,14 @@ export default function ShopifyExpertsPage() {
           </a>
           <div className="hidden md:flex items-center gap-8 text-sm text-white/60">
             <a href="#services" className="hover:text-white transition-colors">Services</a>
-            <a href="#results" className="hover:text-white transition-colors">Results</a>
             <a href="#team" className="hover:text-white transition-colors">Team</a>
             <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
           <a
-            href="#book-call"
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="bg-[#8DD9BF] text-black px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#A3E4CF] transition-colors"
           >
             Free Strategy Call
@@ -464,16 +387,16 @@ export default function ShopifyExpertsPage() {
 
         <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-32">
           <div className="max-w-4xl">
-            <Reveal>
+            <div className="hero-rise">
               <div className="inline-flex items-center gap-2 bg-[#8DD9BF]/10 border border-[#8DD9BF]/20 rounded-full px-4 py-1.5 mb-8">
                 <span className="w-2 h-2 rounded-full bg-[#8DD9BF] animate-pulse" />
                 <span className="text-sm text-[#8DD9BF] font-medium">
-                  Top 1% Shopify Experts on Upwork
+                  CTO-Led Shopify Experts
                 </span>
               </div>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.1}>
+            <div className="hero-rise" style={{ animationDelay: "0.1s" }}>
               <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight mb-6">
                 We Build Shopify Stores
                 <br />
@@ -482,21 +405,23 @@ export default function ShopifyExpertsPage() {
                   Print Money
                 </span>
               </h1>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.2}>
+            <div className="hero-rise" style={{ animationDelay: "0.2s" }}>
               <p className="text-lg md:text-xl text-white/60 max-w-2xl mb-10 leading-relaxed">
-                The top 1% Shopify experts trusted by 40+ DTC brands. We don&apos;t
+                Senior Shopify specialists, led by CTO Mohit Sengar. We don&apos;t
                 just build stores — we engineer revenue machines. From theme
                 customization to CRO, speed optimization, and full-stack growth
                 operations.
               </p>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.3}>
-              <div className="flex flex-col sm:flex-row gap-4 mb-16">
+            <div className="hero-rise" style={{ animationDelay: "0.3s" }}>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 mb-16">
                 <a
-                  href="#book-call"
+                  href={CALENDLY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center justify-center bg-[#8DD9BF] text-black px-8 py-4 rounded-full text-base font-semibold hover:bg-[#A3E4CF] transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Book Free Strategy Call
@@ -505,6 +430,7 @@ export default function ShopifyExpertsPage() {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -515,17 +441,17 @@ export default function ShopifyExpertsPage() {
                   </svg>
                 </a>
                 <a
-                  href="#results"
+                  href="#services"
                   className="inline-flex items-center justify-center bg-white/10 text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-white/15 transition-all"
                 >
-                  See Our Results
+                  See Our Services
                 </a>
               </div>
-            </Reveal>
+            </div>
 
             {/* Stats bar */}
-            <Reveal delay={0.4}>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div className="hero-rise" style={{ animationDelay: "0.4s" }}>
+              <div className="grid grid-cols-3 gap-6 md:gap-8">
                 {STATS.map((stat, i) => (
                   <motion.div
                     key={stat.label}
@@ -541,13 +467,13 @@ export default function ShopifyExpertsPage() {
                     <div className="text-3xl md:text-4xl font-bold text-[#8DD9BF]">
                       {stat.value}
                     </div>
-                    <div className="text-sm text-white/40 mt-1">
+                    <div className="text-sm text-white/50 mt-1">
                       {stat.label}
                     </div>
                   </motion.div>
                 ))}
               </div>
-            </Reveal>
+            </div>
           </div>
         </div>
       </section>
@@ -556,15 +482,13 @@ export default function ShopifyExpertsPage() {
       <section className="border-y border-white/5 py-8 bg-[#111]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-white/30 text-sm font-medium">
-            <span>Shopify Partners</span>
+            <span>CTO-Led Delivery</span>
             <span className="hidden md:inline text-white/10">|</span>
-            <span>100% Job Success</span>
+            <span>Theme &amp; Store Builds</span>
             <span className="hidden md:inline text-white/10">|</span>
-            <span>Top Rated Plus</span>
+            <span>CRO &amp; Speed</span>
             <span className="hidden md:inline text-white/10">|</span>
-            <span>40+ Happy Clients</span>
-            <span className="hidden md:inline text-white/10">|</span>
-            <span>Upwork Expert-Vetted</span>
+            <span>Shopify Plus</span>
           </div>
         </div>
       </section>
@@ -641,9 +565,6 @@ export default function ShopifyExpertsPage() {
                   <p className="text-white/50 leading-relaxed mb-4">
                     {service.description}
                   </p>
-                  <p className="text-sm text-[#8DD9BF]/60 font-medium">
-                    {service.clients}
-                  </p>
                 </div>
               </Reveal>
             ))}
@@ -661,14 +582,13 @@ export default function ShopifyExpertsPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">
-              We Know Your Niche
+              Built for Your Kind of Store
             </h2>
           </Reveal>
           <Reveal delay={0.15}>
             <p className="text-white/50 text-center max-w-2xl mx-auto mb-16">
-              Deep vertical expertise means we understand your customers,
-              compliance requirements, and conversion patterns — before we write
-              a single line of code.
+              Each kind of store converts differently. These are the patterns we
+              plan for before we write a single line of code.
             </p>
           </Reveal>
 
@@ -676,82 +596,15 @@ export default function ShopifyExpertsPage() {
             {INDUSTRIES.map((industry, i) => (
               <Reveal key={industry.name} delay={i * STAGGER.fast}>
                 <div className="bg-[#1A1A1A] border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-colors">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">{industry.name}</h3>
+                  <div className="flex items-center gap-3 mb-3">
                     <span
-                      className="text-sm font-bold px-3 py-1 rounded-full"
-                      style={{
-                        backgroundColor: `${industry.color}15`,
-                        color: industry.color,
-                      }}
-                    >
-                      {industry.percentage}%
-                    </span>
-                  </div>
-                  <div className="w-full h-1.5 bg-white/5 rounded-full mb-4 overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
+                      className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                       style={{ backgroundColor: industry.color }}
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${industry.percentage}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, ease: EASE_OUT, delay: 0.2 }}
+                      aria-hidden="true"
                     />
+                    <h3 className="text-lg font-semibold">{industry.name}</h3>
                   </div>
-                  <p className="text-sm text-white/40">{industry.description}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── CASE STUDIES / RESULTS ─── */}
-      <section id="results" className="py-24 md:py-32 bg-[#111]/50">
-        <div className="max-w-7xl mx-auto px-6">
-          <Reveal>
-            <p className="text-sm uppercase tracking-widest text-[#8DD9BF]/60 mb-4 text-center">
-              Proven Results
-            </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">
-              Real Stores. Real Revenue.
-            </h2>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <p className="text-white/50 text-center max-w-2xl mx-auto mb-16">
-              We don&apos;t show mockups. We show revenue numbers. Here&apos;s what
-              happens when you partner with the top 1%.
-            </p>
-          </Reveal>
-
-          <div className="grid lg:grid-cols-3 gap-8">
-            {CASE_STUDIES.map((study, i) => (
-              <Reveal key={study.client} delay={i * STAGGER.normal}>
-                <div className="bg-[#1A1A1A] border border-white/5 rounded-2xl p-8 h-full flex flex-col">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <p className="text-lg font-semibold">{study.client}</p>
-                      <p className="text-sm text-white/40">{study.industry}</p>
-                    </div>
-                    <span className="text-2xl font-bold text-[#8DD9BF]">
-                      {study.spend}
-                    </span>
-                  </div>
-                  <p className="text-white/50 leading-relaxed mb-6 flex-1">
-                    {study.result}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {study.metrics.map((metric) => (
-                      <span
-                        key={metric}
-                        className="text-xs bg-[#8DD9BF]/10 text-[#8DD9BF] px-3 py-1.5 rounded-full font-medium"
-                      >
-                        {metric}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-sm text-white/50">{industry.description}</p>
                 </div>
               </Reveal>
             ))}
@@ -815,8 +668,8 @@ export default function ShopifyExpertsPage() {
             <p className="text-white/50 text-center max-w-2xl mx-auto mb-16">
               When you hire us, you get an entire cross-functional team — developers,
               designers, CRO specialists, and strategists — all working on your
-              store. Led by Mohit Sengar, an award-winning CTO with 14+ years of
-              enterprise experience.
+              store. Led by Mohit Sengar, a Dubai-based CTO with 7+ years in the
+              seat and 14+ years building software.
             </p>
           </Reveal>
 
@@ -851,15 +704,19 @@ export default function ShopifyExpertsPage() {
                     Led by Mohit Sengar
                   </h3>
                   <p className="text-[#8DD9BF] text-sm font-medium mb-4">
-                    Award-Winning CTO &bull; 14+ Years Enterprise Experience
-                    &bull; Internet 2.0 Conference Dubai 2024
+                    7+ Years as a CTO &bull; 14+ Years Building Software
+                    &bull; 40+ Companies
                   </p>
                   <p className="text-white/50 leading-relaxed max-w-2xl">
-                    Every engagement is personally overseen by Mohit — an
-                    award-winning CTO who has led technology for startups and
-                    enterprises across AI, ecommerce, blockchain, and digital
-                    transformation. He doesn&apos;t just manage your project; he
-                    architects your growth strategy.
+                    Every engagement is personally overseen by Mohit, a CTO who
+                    has led technology for startups and enterprises across AI,
+                    ecommerce, blockchain, and digital transformation. He
+                    doesn&apos;t just manage your project; he architects your
+                    growth strategy.
+                  </p>
+                  <p className="text-white/35 text-xs mt-4">
+                    Credentials: Outstanding Leadership Award, Internet 2.0
+                    Conference, Dubai, February 2024.
                   </p>
                 </div>
               </div>
@@ -939,7 +796,9 @@ export default function ShopifyExpertsPage() {
                     ))}
                   </ul>
                   <a
-                    href="#book-call"
+                    href={CALENDLY_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className={`block text-center py-4 rounded-full font-semibold transition-all ${
                       pkg.highlighted
                         ? "bg-[#8DD9BF] text-black hover:bg-[#A3E4CF]"
@@ -952,45 +811,6 @@ export default function ShopifyExpertsPage() {
               </Reveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ─── SOCIAL PROOF STRIP ─── */}
-      <section className="py-16 border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <Reveal>
-            <div className="bg-[#1A1A1A] rounded-2xl p-8 md:p-12">
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-[#8DD9BF] mb-2">
-                    58%
-                  </p>
-                  <p className="text-white/40 text-sm">
-                    of high-spend clients choose us as their long-term growth
-                    partner, not just a one-time vendor
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-[#8DD9BF] mb-2">
-                    40%
-                  </p>
-                  <p className="text-white/40 text-sm">
-                    faster deal close with experienced $5K+ buyers who recognize
-                    expert-level work immediately
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-[#8DD9BF] mb-2">
-                    3-5x
-                  </p>
-                  <p className="text-white/40 text-sm">
-                    higher average ticket size on enterprise & AI integration
-                    projects beyond standard Shopify work
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -1073,6 +893,21 @@ export default function ShopifyExpertsPage() {
                   ))}
                 </div>
               </Reveal>
+              <Reveal delay={0.4}>
+                <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4">
+                  <a
+                    href={CALENDLY_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center bg-[#8DD9BF] text-black px-8 py-4 rounded-full text-base font-semibold hover:bg-[#A3E4CF] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    Book a call
+                  </a>
+                  <span className="text-sm text-white/50">
+                    Pick a 30-minute slot on the calendar: the fastest way to reach us.
+                  </span>
+                </div>
+              </Reveal>
             </div>
 
             {/* Right — form */}
@@ -1104,7 +939,7 @@ export default function ShopifyExpertsPage() {
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <form id="shopify-lead-form" onSubmit={handleSubmit} className="space-y-5">
                     <div>
                       <label className="block text-sm text-white/60 mb-2">
                         Full Name *
@@ -1213,14 +1048,23 @@ export default function ShopifyExpertsPage() {
                     </button>
                     {formStatus === "error" && (
                       <p className="text-sm text-red-400/90 text-center">
-                        Couldn&apos;t send right now — email{" "}
+                        Couldn&apos;t send right now.{" "}
                         <a
-                          href="mailto:mohit@sengarconsultancy.org"
+                          href={CALENDLY_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-[#8DD9BF] hover:underline"
                         >
-                          mohit@sengarconsultancy.org
+                          Book a call on the calendar
                         </a>{" "}
-                        directly and we&apos;ll get back within 24 hours.
+                        instead, or email{" "}
+                        <a
+                          href={`mailto:${CONTACT_EMAIL}`}
+                          className="text-[#8DD9BF] hover:underline"
+                        >
+                          {CONTACT_EMAIL}
+                        </a>{" "}
+                        and we&apos;ll get back within 24 hours.
                       </p>
                     )}
                     <p className="text-xs text-white/30 text-center">
@@ -1248,14 +1092,16 @@ export default function ShopifyExpertsPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-lg text-white/50 max-w-2xl mx-auto mb-10">
-              Every day you wait is revenue you leave on the table. The top 1% of
+              Every day you wait is revenue you leave on the table. The strongest
               Shopify stores are constantly testing, optimizing, and scaling.
               Let&apos;s get you there.
             </p>
           </Reveal>
           <Reveal delay={0.2}>
             <a
-              href="#book-call"
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center bg-[#8DD9BF] text-black px-10 py-5 rounded-full text-lg font-semibold hover:bg-[#A3E4CF] transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               Claim Your Free Strategy Call Now

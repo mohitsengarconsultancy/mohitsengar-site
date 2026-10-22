@@ -4,9 +4,35 @@ import { notFound } from "next/navigation";
 import SiteFooter from "@/components/SiteFooter";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { POSTS, getPost } from "../posts";
+import { CALENDLY_URL } from "@/lib/contact";
+import { PERSON_REF, SITE_URL } from "@/lib/person";
 
-const SITE_URL = "https://www.mohitsengar.org";
-const PERSON_REF = { "@id": `${SITE_URL}/#person` };
+const INLINE_LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+
+/** Render a post string, turning [label](href) into real links. */
+function renderInline(text: string, linkClass = "text-[#8DD9BF] hover:underline") {
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(INLINE_LINK)) {
+    const [whole, label, href] = m;
+    const at = m.index ?? 0;
+    if (at > last) out.push(text.slice(last, at));
+    out.push(
+      href.startsWith("/") ? (
+        <Link key={at} href={href} className={linkClass}>
+          {label}
+        </Link>
+      ) : (
+        <a key={at} href={href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+          {label}
+        </a>
+      )
+    );
+    last = at + whole.length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -32,6 +58,7 @@ export async function generateMetadata({
       url,
       siteName: "Mohit Sengar",
       publishedTime: post.date,
+      modifiedTime: post.updated ?? post.date,
       images: [
         {
           url: `${SITE_URL}${post.heroImage || "/images/hero.jpg"}`,
@@ -66,7 +93,7 @@ export default async function BlogPost({
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updated ?? post.date,
     url,
     image: `${SITE_URL}${post.heroImage || "/images/hero.jpg"}`,
     author: PERSON_REF,
@@ -87,6 +114,24 @@ export default async function BlogPost({
 
   const related = POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
 
+  const nextSteps = [
+    {
+      href: "/fractional-cto",
+      label: "Fractional CTO",
+      body: "A part-time CTO, two days a week, until you're ready to hire a full-time one.",
+    },
+    {
+      href: "/launch-check",
+      label: "Launch Check",
+      body: "Five working days on your AI-built MVP, with a written keep / fix / rebuild verdict.",
+    },
+    {
+      href: "/blog/fractional-cto-cost-guide-2026",
+      label: "Fractional CTO cost guide",
+      body: "What a fractional CTO costs in 2026, compared with a full-time hire.",
+    },
+  ].filter((l) => l.href !== `/blog/${post.slug}`);
+
   return (
     <main className="bg-[#0A0A0A] text-white min-h-screen">
       <script
@@ -104,7 +149,7 @@ export default async function BlogPost({
             Mohit <span className="text-[#8DD9BF]">Sengar</span>
           </Link>
           <a
-            href="https://calendly.com/mohitsengarr"
+            href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-[#8DD9BF] text-black px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#A3E4CF] transition-colors"
@@ -124,13 +169,24 @@ export default async function BlogPost({
 
       <article className="max-w-3xl mx-auto px-6 pt-10 pb-24">
         <header className="mb-10">
-          <div className="flex items-center gap-3 text-xs text-white/40 mb-4">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-white/50 mb-4">
             <span className="text-[#8DD9BF] bg-[#8DD9BF]/10 border border-[#8DD9BF]/20 rounded-full px-3 py-1 uppercase tracking-wider">
               {post.tag}
             </span>
             <time dateTime={post.date}>
               {new Date(post.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
             </time>
+            {post.updated && post.updated !== post.date && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>
+                  Updated{" "}
+                  <time dateTime={post.updated}>
+                    {new Date(post.updated).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  </time>
+                </span>
+              </>
+            )}
             <span aria-hidden="true">·</span>
             <span>{post.readMinutes} min read</span>
           </div>
@@ -144,7 +200,7 @@ export default async function BlogPost({
             <Link href="/resume" className="text-[#8DD9BF] hover:underline">
               Mohit Sengar
             </Link>{" "}
-            — fractional CTO, 14+ years, 40+ shipped engagements.
+            — Dubai-based fractional CTO, 7+ years as a CTO, 14+ years building software.
           </p>
         </header>
 
@@ -165,7 +221,7 @@ export default async function BlogPost({
               <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-4">{s.h2}</h2>
               {s.body.map((p, i) => (
                 <p key={i} className="text-white/60 leading-relaxed mb-4 text-[15px] md:text-base">
-                  {p}
+                  {renderInline(p)}
                 </p>
               ))}
               {s.list && (
@@ -175,7 +231,7 @@ export default async function BlogPost({
                       <span className="text-[#8DD9BF] flex-shrink-0 mt-0.5" aria-hidden="true">
                         →
                       </span>
-                      {li}
+                      <span>{renderInline(li)}</span>
                     </li>
                   ))}
                 </ul>
@@ -199,7 +255,7 @@ export default async function BlogPost({
           {/* CTA */}
           <aside className="bg-gradient-to-br from-[#8DD9BF]/10 to-transparent border border-[#8DD9BF]/25 rounded-2xl p-7 md:p-8">
             <h2 className="text-lg md:text-xl font-bold">{post.cta.heading}</h2>
-            <p className="text-white/55 text-sm md:text-[15px] mt-2">{post.cta.body}</p>
+            <p className="text-white/55 text-sm md:text-[15px] mt-2">{renderInline(post.cta.body)}</p>
             <a
               href={post.cta.href}
               {...(post.cta.href.startsWith("http")
@@ -210,6 +266,27 @@ export default async function BlogPost({
               {post.cta.label} →
             </a>
           </aside>
+
+          {/* Standard next steps */}
+          <section aria-labelledby="next-steps-heading">
+            <h2 id="next-steps-heading" className="text-lg md:text-xl font-bold tracking-tight mb-4">
+              Working on something like this?
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {nextSteps.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="group bg-white/[0.02] border border-white/[0.07] hover:border-[#8DD9BF]/30 rounded-xl p-5 transition-colors"
+                >
+                  <h3 className="font-semibold text-sm md:text-base group-hover:text-[#8DD9BF] transition-colors">
+                    {l.label} →
+                  </h3>
+                  <p className="text-white/50 text-sm leading-relaxed mt-2">{l.body}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
 
           {/* Related */}
           <section className="pt-4 border-t border-white/10">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { CountUp } from "./motion";
 
@@ -183,12 +183,14 @@ export function ArchitectureViz() {
   ];
 
   return (
-    <div ref={ref} className="mt-5 rounded-xl bg-white/[0.03] border border-white/[0.06] p-3">
+    <div ref={ref} className="mt-5 min-w-0 overflow-hidden rounded-xl bg-white/[0.03] border border-white/[0.06] p-3">
       <div className="flex items-center justify-between text-[10px] mb-2">
         <span className="text-mint font-semibold">System Architecture</span>
         <ExampleTag />
       </div>
-      <div className="flex items-center justify-between gap-1">
+      {/* Nodes may shrink (min-w-0 + truncate) so the row never sets a min-content
+          width wider than a 320-360px phone column. */}
+      <div className="flex items-center gap-0.5 sm:gap-1 min-w-0">
         {nodes.map((n, i) => {
           const isBottleneck = n.label === "Services";
           const border = isBottleneck
@@ -197,18 +199,18 @@ export function ArchitectureViz() {
               : "border-red-400/50"
             : n.color;
           return (
-            <div key={n.label} className="flex items-center">
+            <Fragment key={n.label}>
               <motion.div
-                className={`bg-white/[0.04] border ${border} rounded-lg px-2 py-1.5 text-center transition-colors duration-500`}
+                className={`min-w-0 flex-1 bg-white/[0.04] border ${border} rounded-lg px-0.5 sm:px-2 py-1.5 text-center transition-colors duration-500`}
                 initial={{ opacity: 0, y: 6 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
                 transition={{ duration: 0.45, ease: EASE_OUT, delay: i * 0.15 }}
               >
-                <div className="text-[9px] text-white/50 font-medium">{n.label}</div>
-                <div className="text-[8px] text-white/25">{n.sub}</div>
+                <div className="text-[8px] sm:text-[9px] text-white/50 font-medium truncate">{n.label}</div>
+                <div className="text-[7px] sm:text-[8px] text-white/25 truncate">{n.sub}</div>
               </motion.div>
               {i < 3 && (
-                <span className="relative mx-0.5 flex-shrink-0 w-3 h-3">
+                <span className="relative flex-shrink-0 w-3 h-3">
                   <svg className="w-3 h-3 text-white/15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                   {/* request packet travelling down the stack */}
                   {inView && !reduce && (
@@ -222,7 +224,7 @@ export function ArchitectureViz() {
                   )}
                 </span>
               )}
-            </div>
+            </Fragment>
           );
         })}
       </div>
@@ -245,40 +247,52 @@ export function ArchitectureViz() {
   );
 }
 
-/** Full-time vs fractional annual cost: the fractional bar shrinks from full-time cost to ~25%. */
+/**
+ * Monthly cost of CTO-level leadership in the UAE: full-time loaded cost vs the
+ * Fractional CTO tier. The fractional bar shrinks from full width to ~0.4, which is
+ * AED 45K against the AED 100K-130K loaded range (midpoint ~AED 115K).
+ */
 export function CostCompareBar() {
   const [ref, inView] = useOnceInView<HTMLDivElement>();
   return (
     <div ref={ref} className="mb-8 md:mb-10 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6 space-y-4">
-      <div className="text-xs text-white/40 uppercase tracking-wider">Annual cost of CTO-level leadership</div>
+      <div className="text-xs text-white/40 uppercase tracking-wider">Monthly cost of CTO-level leadership (UAE)</div>
       <div>
-        <div className="flex items-center justify-between text-xs mb-1.5">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs mb-1.5">
           <span className="text-white/50">Full-time CTO</span>
-          <span className="text-white/50 font-semibold">$300K-$450K+</span>
+          <span className="text-white/50 font-semibold">AED 100K-130K/month loaded</span>
         </div>
         <div className="h-2.5 rounded-full bg-white/[0.08]" />
       </div>
       <div>
-        <div className="flex items-center justify-between text-xs mb-1.5">
-          <span className="text-mint">Fractional CTO</span>
-          <motion.span
-            className="text-mint font-semibold"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: inView ? 1 : 0 }}
-            transition={{ duration: 0.4, delay: 1.3 }}
-          >
-            70-80% less
-          </motion.span>
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs mb-1.5">
+          <span className="text-mint">Fractional CTO, 2 days/week</span>
+          <span className="flex items-center gap-2">
+            <span className="text-mint font-semibold">AED 45,000/month</span>
+            <motion.span
+              className="bg-mint/10 text-mint font-semibold px-1.5 py-0.5 rounded"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: inView ? 1 : 0 }}
+              transition={{ duration: 0.4, delay: 1.3 }}
+            >
+              About half
+            </motion.span>
+          </span>
         </div>
         <div className="h-2.5 rounded-full bg-white/[0.04] overflow-hidden">
           <motion.div
             className="h-full rounded-full bg-mint origin-left"
             initial={{ scaleX: 1 }}
-            animate={{ scaleX: inView ? 0.25 : 1 }}
+            animate={{ scaleX: inView ? 0.4 : 1 }}
             transition={{ duration: 1.4, ease: EASE_OUT, delay: 0.4 }}
           />
         </div>
       </div>
+      <p className="text-[11px] text-white/30 leading-relaxed">
+        Full-time figure: 2026 UAE recruiter guides put CTO base pay at AED 60K-150K a month
+        (typically AED 75K-100K), plus about 30% for recruiting, visa, housing and end-of-service
+        gratuity.
+      </p>
     </div>
   );
 }
