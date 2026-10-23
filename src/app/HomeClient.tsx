@@ -144,8 +144,8 @@ const PROJECTS = [
 /* Verbatim quotes, shared with /resume and the service pages (src/lib/testimonials.ts). */
 const TESTIMONIALS = [
   { img: "/images/testimonial-nathan.jpeg", name: "Nathan Jaskot", role: "Client", text: QUOTES.nathan },
-  { img: "/images/testimonial-erlend.jpeg", name: "Erlend B\u00e5rli-Olsen", role: "APCOA Parkings GmbH", text: QUOTES.erlend },
-  { img: "/images/testimonial-emma.jpeg", name: "Emma Lucas", role: "Client", text: QUOTES.emma },
+  { img: "/images/testimonial-erlend.jpeg", name: "Erlend B\u00e5rli-Olsen", role: "Product Manager, APCOA Parkings GmbH", text: QUOTES.erlend },
+  { img: "/images/testimonial-emma.jpeg", name: "Emma Lucas", role: "Director of Operations, Canteenhub", text: QUOTES.emma },
   { img: "/images/testimonial-max.jpeg", name: "Max Aronsson", role: "Long-term Collaborator", text: QUOTES.max },
   { img: "/images/testimonial-nadia.jpeg", name: "Nadia O.", role: "Legal Tech Founder", text: QUOTES.nadia },
 ];
